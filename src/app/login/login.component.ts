@@ -36,10 +36,10 @@ export class LoginComponent implements OnInit {
   private _buildForm(): FormGroup {
     return new FormGroup({
       login: new FormControl('', Validators.compose([
-        Validators.required, Validators.minLength(2)
+        Validators.required
       ])),
       pwd: new FormControl('', Validators.compose([
-        Validators.required, Validators.minLength(2)
+        Validators.required
       ]))
     });
   }

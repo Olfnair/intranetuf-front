@@ -32,7 +32,7 @@ export class RestApiService {
    * @returns {Observable<R>}
    */
   fetchProjects(): Observable<any[]> {
-    return this._http.get(this._backendURL.allProjects, /*this._options()*/).map((res: Response) => {    
+    return this._http.get(this._backendURL.allProjects, /*this._options()*/).map((res: Response) => {
       if (res.status === 200) {
         return res.json().project;
       }
@@ -48,7 +48,7 @@ export class RestApiService {
    * @returns {Observable<R>}
    */
   fetchUsers(): Observable<any[]> {
-    return this._http.get(this._backendURL.allUsers, /*this._options()*/).map((res: Response) => {    
+    return this._http.get(this._backendURL.allUsers, /*this._options()*/).map((res: Response) => {
       if (res.status === 200) {
         return res.json().user;
       }
@@ -64,8 +64,8 @@ export class RestApiService {
      * @returns {RequestOptions}
      */
   private _options(headerList: Object = {}): RequestOptions {
-    const headers = new Headers(Object.assign({'Accept': 'application/json'}, headerList));
-    return new RequestOptions({headers: headers});
+    const headers = new Headers(Object.assign({ 'Accept': 'application/json' }, headerList));
+    return new RequestOptions({ headers: headers });
   }
 
 }

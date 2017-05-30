@@ -53,6 +53,7 @@ form.bordered button:hover {
 form.bordered button:disabled {
     background-color: #bbb;
     opacity: 1.0;
+    cursor: auto;
 }
 
 /* Extra style for the cancel button (red) */

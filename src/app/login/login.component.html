@@ -3,26 +3,22 @@
     <div class="container">
       
       <label>Identifiant</label>
-      <p [class.errors]="form.controls.login.dirty && form.controls.login.invalid">
+      <p [class.errors]="form.controls.login.touched && form.controls.login.invalid">
         <input type="text" placeholder="Identifiant" formControlName="login" required/>
-        <span *ngIf="form.controls.login.dirty && form.controls.login.errors?.required"><br>Veuillez indiquer votre identifiant</span>
-        <span *ngIf="form.controls.login.dirty && form.controls.login.errors?.minlength"><br>Au moins 2 caractères</span>
+        <span *ngIf="form.controls.login.touched && form.controls.login.errors?.required"><br>Veuillez indiquer votre identifiant</span>
       </p>
 
       <label>Mot de passe</label>
-      <p [class.errors]="form.controls.pwd.dirty && form.controls.pwd.invalid">
+      <p [class.errors]="form.controls.pwd.touched && form.controls.pwd.invalid">
         <input type="password" placeholder="Mot de passe" formControlName="pwd" required/>
-        <span *ngIf="form.controls.pwd.dirty && form.controls.pwd.errors?.required"><br>Veuillez indiquer votre mot de passe</span>
-        <span *ngIf="form.controls.pwd.dirty && form.controls.pwd.errors?.minlength"><br>Au moins 2 caractères</span>
+        <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.required"><br>Veuillez indiquer votre mot de passe</span>
       </p>
 
       <button type="submit" [disabled]="!form.valid">Connexion</button>
-      <!--<input type="checkbox" checked="checked"> Remember me-->
     </div>
 
     <div class="contCancel">
       <button type="button" class="cancelbtn" (click)=cancel()>Annuler</button>
-      <!--<span class="psw">Forgot <a href="#">password?</a></span>-->
     </div>
   </form>
 <section>
