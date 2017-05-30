@@ -1,20 +1,38 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-
 import { AppComponent } from './app.component';
+import { RestApiService } from "app/shared/rest-api.service";
+import { HomeComponent } from './home/home.component';
+import { RouterModule } from "@angular/router";
+import { APP_ROUTES } from './app.routes';
+import { ProjectlistComponent } from './projectlist/projectlist.component';
+import { NavbuttonComponent } from './shared/navbutton/navbutton.component';
+import { FileUploadService } from "app/shared/file-upload.service";
+import { LoginComponent } from './login/login.component';
+import { UserFormComponent } from './user-form/user-form.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    ProjectlistComponent,
+    NavbuttonComponent,
+    LoginComponent,
+    UserFormComponent,
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    HttpModule
+    ReactiveFormsModule,
+    HttpModule,
+    RouterModule,
+    APP_ROUTES
   ],
-  providers: [],
+  providers: [
+    RestApiService,
+    FileUploadService
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

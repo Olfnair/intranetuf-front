@@ -1,1 +1,85 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Bordered form */
+form.bordered {
+    /*text-align: center;*/
+    border: 3px solid #d1d1d1;
+    border-radius : 25px;
+    width: 100%;
+    margin: 0 auto;
+    color: #292929;
+    font-family: Verdana, "Times New Roman", Georgia, Serif;
+    font-size: 0.8em;
+}
+
+form.bordered label {
+    display: block;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-left: 5px;
+}
+
+/* Full-width inputs */
+form.bordered input[type=text], form.bordered input[type=password],
+  form.bordered input[type=email] {
+    width: 100%;
+    padding: 15px 20px;
+    margin: 0 auto;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+form.bordered button {
+    display: block;
+    background-color: #2CCF60;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px auto;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.8;
+}
+
+/* Add a hover effect for buttons */
+form.bordered button:hover {
+    opacity: 1.0;
+}
+
+form.bordered button:disabled {
+    background-color: #bbb;
+    opacity: 1.0;
+}
+
+/* Extra style for the cancel button (red) */
+form.bordered .cancelbtn {
+    width: 30%;
+    padding: 10px 18px;
+    margin-top: 8px;
+    margin-right: 30px;
+    position:relative;
+    background-color: #f43425;
+}
+
+/* Add padding to containers */
+form.bordered .container {
+    padding: 16px;
+}
+
+form.bordered .contCancel {
+    padding: 16px;
+    border-radius: 0px 0px 20px 20px;
+    background-color: #d1d1d1;
+}
+
+form.bordered p {
+    padding-bottom: 10px;
+}
+
+form.bordered .errors {
+    color: red;
+}

@@ -1,0 +1,21 @@
+<p>
+  home works!
+</p>
+
+<section class="menu">
+  <label>Menu</label>
+  <a [routerLink]="['/login']">Login</a>
+  <a [routerLink]="['/user']">Créer compte</a>
+  <a [routerLink]="['/projectlist']">Liste des projets</a>
+</section>
+
+<section>
+  <app-navbutton [path]="'/projectlist'" [value]="'Liste des projets'"></app-navbutton>
+  <app-navbutton [path]="'/user'" [value]="'Créer Compte'"></app-navbutton>
+  <app-navbutton [path]="'/login'" [value]="'Login'"></app-navbutton> 
+</section>
+
+<input type="button" (click)="coucou()" value="Afficher le texte">
+<section *ngIf="text !== ''">
+  {{text}}
+</section>

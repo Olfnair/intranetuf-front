@@ -1,0 +1,31 @@
+<p>
+  projects work !
+</p>
+
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Actif</th>
+    <th>Chemin</th>
+    <th>Nom</th>
+  </tr>
+  <tr *ngFor="let project of projects">
+    <td>{{project.id}}</td>
+    <td>{{project.active}}</td>
+    <td>{{project.filepath}}</td>
+    <td>{{project.name}}</td>
+  </tr>
+</table>
+
+<a target="_self" href="https://localhost:8443/IUF/rest/download/1" download>Download</a>
+
+<!--<form ngNoForm method="POST">-->
+  <!--Fichier à uploader : <input type="file" name="upfile" id="upfile"><br/>-->
+  <input type="file" (change)="onChange($event)" placeholder="Upload file">
+  <!--Notes à propos du fichier : <input type="text" name="note"><br/>-->
+  <section *ngIf="progress >= 0">
+    <progress value="{{progress}}" max="100">{{progress}} %</progress>
+  <section>
+  <br/>
+  <!--<input type="button" (click)=fileChange($event) value="Uploader">-->
+<!--</form>-->

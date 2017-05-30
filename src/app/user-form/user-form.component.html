@@ -1,0 +1,54 @@
+<section style="width: 50%; margin: auto;">
+  <form class="bordered" novalidate [formGroup]="form">
+    <div class="container">
+
+      <label>Nom</label>
+      <p [class.errors]="form.controls.name.dirty && form.controls.name.invalid">
+        <input type="text" placeholder="Votre nom" formControlName="name" required/>
+        <span *ngIf="form.controls.name.dirty && form.controls.name.errors?.required"><br>Veuillez indiquer votre nom</span>
+        <span *ngIf="form.controls.name.dirty && form.controls.name.errors?.minlength"><br>Au moins 2 caractères</span>
+      </p>
+
+      <label>Prénom</label>
+      <p [class.errors]="form.controls.firstname.dirty && form.controls.firstname.invalid">
+        <input type="text" placeholder="Votre prénom" formControlName="firstname" required/>
+        <span *ngIf="form.controls.firstname.dirty && form.controls.firstname.errors?.required"><br>Veuillez indiquer votre prénom</span>
+        <span *ngIf="form.controls.firstname.dirty && form.controls.firstname.errors?.minlength"><br>Au moins 2 caractères</span>
+      </p>
+
+      <label>Identifiant du compte</label>
+      <p [class.errors]="form.controls.login.dirty && form.controls.login.invalid">
+        <input type="text" placeholder="Identifiant pour vous connecter" formControlName="login" required/>
+        <span *ngIf="form.controls.login.dirty && form.controls.login.errors?.required"><br>Veuillez choisir un identifiant</span>
+        <span *ngIf="form.controls.login.dirty && form.controls.login.errors?.minlength"><br>Au moins 2 caractères</span>
+      </p>
+
+      <label>E-mail</label>
+      <p [class.errors]="form.controls.email.dirty && form.controls.email.invalid">
+        <input type="email" placeholder="Votre e-mail" formControlName="email" required/>
+        <span *ngIf="form.controls.email.dirty && form.controls.email.errors?.required"><br>Veuillez indiquer votre adresse e-mail</span>
+        <span *ngIf="form.controls.email.dirty && form.controls.email.errors?.email"><br>Veuillez entrer une adresse e-mail valide</span>
+      </p>
+
+      <label>Mot de passe</label>
+      <p [class.errors]="form.controls.pwd.dirty && form.controls.pwd.invalid">
+        <input type="password" placeholder="Entrez un mot de passe" formControlName="pwd" required (paste)="noPaste($event)"/>
+        <span *ngIf="form.controls.pwd.dirty && form.controls.pwd.errors?.required"><br>Veuillez choisir un mot de passe</span>
+        <span *ngIf="form.controls.pwd.dirty && form.controls.pwd.errors?.minlength"><br>Au moins 2 caractères</span>
+      </p>
+
+      <label>Confirmation du mot de passe</label>
+      <p [class.errors]="form.controls.pwd_confirm.dirty && form.controls.pwd_confirm.invalid">
+        <input type="password" placeholder="Confirmez le mot de passe" formControlName="pwd_confirm" required (paste)="noPaste($event)"/>
+        <span *ngIf="form.controls.pwd_confirm.dirty && form.controls.pwd_confirm.errors?.required"><br>Veuillez confirmer le mot de passe choisi</span>
+        <span *ngIf="form.controls.pwd_confirm.dirty && form.controls.pwd_confirm.errors?.minlength"><br>Au moins 2 caractères</span>
+      </p>
+
+      <button type="submit" [disabled]="!form.valid">Créer mon compte</button>
+    </div>
+
+    <div class="contCancel">
+      <button type="button" class="cancelbtn" (click)=cancel()>Annuler</button>
+    </div>
+  </form>
+<section>
