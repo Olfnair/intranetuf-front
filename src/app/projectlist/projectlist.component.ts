@@ -71,7 +71,7 @@ export class ProjectlistComponent implements OnInit {
     this._uploadService.upload([], fileList)
                        .finally(() => console.log('sent'))
                        .subscribe(
-                         //() => console.log('sent'),
+                         //() => console.log('sent ok'), // marche pas ???
                          error => console.log(error)
                        )
   }
