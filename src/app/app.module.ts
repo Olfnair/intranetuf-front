@@ -12,6 +12,8 @@ import { NavbuttonComponent } from './shared/navbutton/navbutton.component';
 import { FileUploadService } from "app/shared/file-upload.service";
 import { LoginComponent } from './login/login.component';
 import { UserFormComponent } from './user-form/user-form.component';
+import { HeaderComponent } from './header/header.component';
+import { ActivateAccountComponent } from './activate-account/activate-account.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { UserFormComponent } from './user-form/user-form.component';
     NavbuttonComponent,
     LoginComponent,
     UserFormComponent,
+    HeaderComponent,
+    ActivateAccountComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,8 @@
-<p>
-  projects work !
-</p>
+
+<section class="projectlist">
+  <a *ngFor="let project of projects" [routerLink]="['/home']">{{project.name}}</a>
+</section>
+
 
 <table>
   <tr>

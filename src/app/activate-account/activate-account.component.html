@@ -1,0 +1,23 @@
+<h1>Activation de votre compte (TODO : quel compte ?)</h1>
+
+<section style="width: 50%; margin: auto;">
+  <form novalidate class="bordered" [formGroup]="form">
+    <div class="container">
+
+      <label>Mot de passe</label>
+      <p [class.errors]="form.controls.pwd.touched && form.controls.pwd.invalid">
+        <input type="password" placeholder="Mot de passe" formControlName="pwd" required/>
+        <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.required"><br>Veuillez choisir un mot de passe</span>
+        <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.minlength"><br>Au moins {{minlength}} caractères</span>
+      </p>
+
+      <label>Confirmation du mot de passe</label>
+      <p [class.errors]="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.invalid">
+        <input type="password" placeholder="Retapez le mot de passe" formControlName="pwd_confirm" required/>
+        <span *ngIf="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.errors?.required"><br>Veuillez retaper le mot de passe choisi</span>
+      </p>
+
+      <button type="submit" [disabled]="!form.valid">Activer mon compte</button>
+    </div>
+  </form>
+<section>

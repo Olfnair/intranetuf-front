@@ -1,5 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
+
+/*titles*/
+h1 {
+    font-family: Verdana;
+    font-size: 1.5em;
+    text-align: center;
+    color: #9999bb;
+}
+
 /* Bordered form */
 form.bordered {
     /*text-align: center;*/
@@ -8,7 +17,7 @@ form.bordered {
     width: 100%;
     margin: 0 auto;
     color: #292929;
-    font-family: Verdana, "Times New Roman", Georgia, Serif;
+    font-family: Verdana;
     font-size: 0.8em;
 }
 

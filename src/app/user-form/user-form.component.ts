@@ -50,13 +50,13 @@ export class UserFormComponent implements OnInit {
       ])),
       email: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.email
-      ])),
+      ]))/*,
       pwd: new FormControl('', Validators.compose([
         Validators.required, Validators.minLength(2)
       ])),
       pwd_confirm: new FormControl('', Validators.compose([
         Validators.required, Validators.minLength(2)
-      ]))
+      ]))*/
     });
   }
 

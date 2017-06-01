@@ -64,7 +64,7 @@ export class RestApiService {
      * @returns {RequestOptions}
      */
   private _options(headerList: Object = {}): RequestOptions {
-    const headers = new Headers(Object.assign({ 'Accept': 'application/json' }, headerList));
+    const headers = new Headers(Object.assign({ 'Accept': 'application/json' }, headerList)); 
     return new RequestOptions({ headers: headers });
   }
 

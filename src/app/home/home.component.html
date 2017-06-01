@@ -1,7 +1,17 @@
-<p>
-  home works!
+<p class="welcomeMessage">
+  Bienvenue sur Intranet UF
 </p>
 
+<app-login></app-login>
+
+<section class="menu" style="margin-top: 200px;">
+  <label>Dev Menu</label>
+  <a [routerLink]="['/admin/create_user']">Créer compte</a>
+  <a [routerLink]="['/activate']">Activer compte</a>
+  <a [routerLink]="['/projectlist']">Home connecté</a>
+</section>
+
+<!--
 <section class="menu">
   <label>Menu</label>
   <a [routerLink]="['/login']">Login</a>
@@ -19,3 +29,4 @@
 <section *ngIf="text !== ''">
   {{text}}
 </section>
+-->

@@ -1,3 +1,5 @@
+<h1>Connexion</h1>
+
 <section style="width: 50%; margin: auto;">
   <form novalidate class="bordered" [formGroup]="form">
     <div class="container">
@@ -15,10 +17,6 @@
       </p>
 
       <button type="submit" [disabled]="!form.valid">Connexion</button>
-    </div>
-
-    <div class="contCancel">
-      <button type="button" class="cancelbtn" (click)=cancel()>Annuler</button>
     </div>
   </form>
 <section>

@@ -1,3 +1,29 @@
+.projectlist {
+    display: block;
+    width: 15%;
+}
+
+.projectlist a {
+    display: block;
+    text-decoration: none;
+    background-color: greenyellow;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    height: 2em;
+    width: 100%;
+}
+
+.projectlist a:visited {
+    text-decoration: none;
+}
+
+.projectlist a:hover {
+    text-decoration: none;
+    background-color: red;
+}
+
+
+
 table {
     border-collapse: collapse;
     border: 5px solid black;

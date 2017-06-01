@@ -1,3 +1,5 @@
+<h1>Créer un compte</h1>
+
 <section style="width: 50%; margin: auto;">
   <form class="bordered" novalidate [formGroup]="form">
     <div class="container">
@@ -30,6 +32,7 @@
         <span *ngIf="form.controls.email.touched && form.controls.email.errors?.email"><br>Veuillez entrer une adresse e-mail valide</span>
       </p>
 
+      <!--
       <label>Mot de passe</label>
       <p [class.errors]="form.controls.pwd.touched && form.controls.pwd.invalid">
         <input type="password" placeholder="Entrez un mot de passe" formControlName="pwd" required (paste)="noPaste($event)"/>
@@ -43,6 +46,7 @@
         <span *ngIf="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.errors?.required"><br>Veuillez confirmer le mot de passe choisi</span>
         <span *ngIf="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.errors?.minlength"><br>Au moins 2 caractères</span>
       </p>
+      -->
 
       <button type="submit" [disabled]="!form.valid">Créer mon compte</button>
     </div>
