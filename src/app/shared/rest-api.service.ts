@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from "@angular/http";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs";
+import { SessionService } from "app/shared/session.service";
+import { Credentials } from "app/entities/credentials";
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -9,11 +11,7 @@ export class RestApiService {
 
   private _backendURL: any;
 
-  get backendURL() {
-    return this._backendURL;
-  }
-
-  constructor(private _http: Http) {
+  constructor(private _http: Http, private session: SessionService) {   
     this._backendURL = {};
 
     // build backend base url
@@ -26,13 +24,17 @@ export class RestApiService {
     Object.keys(environment.backend.endpoints).forEach(k => this._backendURL[k] = `${baseUrl}${environment.backend.endpoints[k]}`);
   }
 
+  get backendURL() {
+    return this._backendURL;
+  }
+
   /**
-   * Function to return list of 'url'
+   * Function to return list of projects
    *
    * @returns {Observable<R>}
    */
   fetchProjects(): Observable<any[]> {
-    return this._http.get(this._backendURL.allProjects, /*this._options()*/).map((res: Response) => {
+    return this._http.get(this._backendURL.allProjects, this._options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().project;
       }
@@ -48,7 +50,7 @@ export class RestApiService {
    * @returns {Observable<R>}
    */
   fetchUsers(): Observable<any[]> {
-    return this._http.get(this._backendURL.allUsers, /*this._options()*/).map((res: Response) => {
+    return this._http.get(this._backendURL.allUsers , this._options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().user;
       }
@@ -64,7 +66,7 @@ export class RestApiService {
      * @returns {RequestOptions}
      */
   private _options(headerList: Object = {}): RequestOptions {
-    const headers = new Headers(Object.assign({ 'Accept': 'application/json' }, headerList)); 
+    const headers = new Headers(Object.assign({ 'Accept': 'application/json', 'Authorization': 'Bearer ' + this.session.authToken }, headerList)); 
     return new RequestOptions({ headers: headers });
   }
 

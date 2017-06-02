@@ -1,11 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 
 // APP COMPONENTS
-import { HomeComponent } from "app/home/home.component";
-import { ProjectlistComponent } from "app/projectlist/projectlist.component";
-import { LoginComponent } from "app/login/login.component";
-import { UserFormComponent } from "app/user-form/user-form.component";
-import { ActivateAccountComponent } from "app/activate-account/activate-account.component";
+import { HomeComponent } from "app/pages/home/home.component";
 
 // APP COMPONENTS
 //import { PeopleComponent } from "./people";
