@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SessionService } from "app/shared/session.service";
 
 @Component({
   selector: 'app-home',
@@ -6,8 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit { 
-  constructor() { }
+  constructor(private _session: SessionService) { }
 
   ngOnInit() {
+  }
+
+  get logged() {
+    return this._session.logged;
   }
 }

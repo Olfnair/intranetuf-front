@@ -3,7 +3,7 @@
     <a [routerLink]="['/']"><span class="border"></span><p>Accueil</p><span class="border"></span></a>
   </div>
   <div class="rightButtonsDiv">
-    <a [routerLink]="['/']"><span class="border"></span><p>Déconnexion</p><span class="border"></span></a>
-    <a [routerLink]="['/']"><span class="border"></span><p>Administration</p><span class="border"></span></a>
+    <a *ngIf="logged" [routerLink]="['/']" (click)="disconnect()"><span class="border"></span><p>Déconnexion</p><span class="border"></span></a>
+    <a *ngIf="logged && admin" [routerLink]="['/']"><span class="border"></span><p>Administration</p><span class="border"></span></a>
   </div>
 </section>

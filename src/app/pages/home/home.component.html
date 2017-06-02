@@ -1,8 +1,9 @@
-<p class="welcomeMessage">
+<p *ngIf="!logged" class="welcomeMessage">
   Bienvenue sur Intranet UF
 </p>
 
-<app-login></app-login>
+<app-login *ngIf="!logged"></app-login>
+<app-projectlist *ngIf="logged"></app-projectlist>
 
 <section class="menu" style="margin-top: 200px;">
   <label>Dev Menu</label>

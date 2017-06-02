@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { RestApiService } from "app/shared/rest-api.service";
+import { SessionService } from "app/shared/session.service";
 
 @Component({
   selector: 'app-login',
@@ -11,9 +11,11 @@ import { RestApiService } from "app/shared/rest-api.service";
 export class LoginComponent implements OnInit {
   // private property to store form value
   private _form: FormGroup;
+  private _loginFail: boolean;
 
-  constructor(private _router: Router, private _restService: RestApiService) {
+  constructor(private _router: Router, private _session: SessionService) {
     this._form = this._buildForm();
+    this._loginFail = false;
   }
 
   ngOnInit() {
@@ -23,15 +25,27 @@ export class LoginComponent implements OnInit {
     return this._form;
   }
 
+  get loginFail(): boolean {
+    return this._loginFail;
+  }
+
+  private _loginFailure(): void {
+    this._loginFail = true;
+    this._form = this._buildForm(); 
+  }
+
+  private _loginSuccess(): void {
+    this._loginFail = false;
+    this._router.navigate(['/home']);
+  }
+
   submit() {  
     let login: string = this._form.value.login;
     let password: string = this._form.value.pwd;
-    this._restService.authUser(this._form.value.login, this._form.value.pwd).subscribe(
-      data => data ? console.log('ok') : console.log('pas ok')
+    this._session.login(this._form.value.login, this._form.value.pwd).subscribe(
+      data => data ? this._loginSuccess() : this._loginFailure(),
+      error => this._loginFailure()
     );
-    
-    console.log(this._form.value.login);
-    console.log(this._form.value.pwd);
   }
 
   cancel() {

@@ -41,6 +41,7 @@ export class SessionService {
         return false;
       }
       this._authToken = res.text();
+      this._logged = true;
       return true;
     });
   }

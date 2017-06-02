@@ -16,7 +16,10 @@
         <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.required"><br>Veuillez indiquer votre mot de passe</span>
       </p>
 
-      <button type="submit" (click)="submit()" [disabled]="!form.valid">Connexion</button>
+      <p [class.errors]="loginFail && form.pristine">
+        <button type="submit" (click)="submit()" [disabled]="!form.valid">Connexion</button>
+        <span *ngIf="loginFail && form.pristine"><br>Identifiants invalides !</span>
+      </p>
     </div>
   </form>
 <section>
