@@ -9,6 +9,12 @@ import { APP_ROUTES } from './app.routes';
 import { NavbuttonComponent } from './shared/navbutton/navbutton.component';
 import { FileUploadService } from "app/shared/file-upload.service";
 import { SessionService } from "app/shared/session.service";
+import { HomeComponent } from "app/pages/home/home.component";
+import { ProjectlistComponent } from "app/pages/projectlist/projectlist.component";
+import { LoginComponent } from "app/pages/login/login.component";
+import { UserFormComponent } from "app/pages/user-form/user-form.component";
+import { HeaderComponent } from "app/pages/header/header.component";
+import { ActivateAccountComponent } from "app/pages/activate-account/activate-account.component";
 
 @NgModule({
   declarations: [

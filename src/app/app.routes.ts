@@ -2,11 +2,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 // APP COMPONENTS
 import { HomeComponent } from "app/pages/home/home.component";
-
-// APP COMPONENTS
-//import { PeopleComponent } from "./people";
-//import { UpdateComponent } from "./update";
-//import { PersonComponent } from "./person";
+import { ProjectlistComponent } from "app/pages/projectlist/projectlist.component";
+import { UserFormComponent } from "app/pages/user-form/user-form.component";
+import { ActivateAccountComponent } from "app/pages/activate-account/activate-account.component";
 
 const ROUTES: Routes = [
     {path: '', redirectTo: 'home', pathMatch: 'full'},
