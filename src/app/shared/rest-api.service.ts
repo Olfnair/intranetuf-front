@@ -66,9 +66,7 @@ export class RestApiService {
      * @returns {RequestOptions}
      */
   private _options(headerList: Object = {}): RequestOptions {
-    console.log(this.session.authToken);
     const headers = new Headers(Object.assign({ 'Accept': 'application/json', 'Authorization': 'Bearer ' + this.session.authToken }, headerList));
-    console.log(this.session.authToken);
     return new RequestOptions({ headers: headers });
   }
 
