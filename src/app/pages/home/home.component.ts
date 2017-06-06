@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  get logged() {
+  get logged(): boolean {
     return this._session.logged;
   }
 }

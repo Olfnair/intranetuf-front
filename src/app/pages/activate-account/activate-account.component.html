@@ -1,23 +1,30 @@
-<h1>Activation de votre compte (TODO : quel compte ?)</h1>
-
 <section style="width: 50%; margin: auto;">
-  <form novalidate class="bordered" [formGroup]="form">
-    <div class="container">
+  <md-card>
+    <md-card-title class="centerText">Activation de votre compte (TODO : quel compte ?)</md-card-title>
 
-      <label>Mot de passe</label>
-      <p [class.errors]="form.controls.pwd.touched && form.controls.pwd.invalid">
-        <input type="password" placeholder="Mot de passe" formControlName="pwd" required/>
-        <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.required"><br>Veuillez choisir un mot de passe</span>
-        <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.minlength"><br>Au moins {{minlength}} caractères</span>
-      </p>
+    <md-card-content>
+      <form novalidate [formGroup]="form" (ngSubmit)="submit()">
+        <md-input-container class="blockContainer">
+          <input mdInput type="password" placeholder="Mot de passe" formControlName="pwd" required/>
+          <md-error *ngIf="form.controls.pwd.errors?.required">Veuillez choisir un mot de passe</md-error>
+          <md-error *ngIf="form.controls.pwd.errors?.minlength">Au moins {{minlength}} caractères</md-error>
+        </md-input-container>
 
-      <label>Confirmation du mot de passe</label>
-      <p [class.errors]="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.invalid">
-        <input type="password" placeholder="Retapez le mot de passe" formControlName="pwd_confirm" required/>
-        <span *ngIf="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.errors?.required"><br>Veuillez retaper le mot de passe choisi</span>
-      </p>
+        <md-input-container class="blockContainer">
+          <input mdInput type="password" placeholder="Confirmation du mot de passe" formControlName="pwd_confirm" required/>
+          <md-error>Veuillez retaper le mot de passe choisi</md-error>
+        </md-input-container>
 
-      <button type="submit" [disabled]="!form.valid">Activer mon compte</button>
-    </div>
-  </form>
-<section>
+        <input type="submit" [disabled]="! (form.valid && form.controls.pwd.value == form.controls.pwd_confirm.value)" style="display: none"/>
+
+        <p class="errors" *ngIf="form.controls.pwd.touched && form.controls.pwd_confirm.touched && form.controls.pwd.value != form.controls.pwd_confirm.value">
+          Les 2 mots de passe sont différents !
+        </p>
+      </form>
+    </md-card-content>
+
+    <md-card-actions>
+      <button md-raised-button class="submitButton" color="primary" type="submit" (click)="submit()" [disabled]="! (form.valid && form.controls.pwd.value == form.controls.pwd_confirm.value)">Activer mon compte</button>
+    </md-card-actions>
+  </md-card>
+</section>

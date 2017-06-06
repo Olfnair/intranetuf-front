@@ -1,9 +1,9 @@
 .header {
-    background-color: #303030;
-    width: 100%;
-    height: 4em;
-    margin-bottom: 15px;
     background-image: linear-gradient(to right, #000000, #898989);
+}
+
+.header .flex {
+  flex: 1 1 auto;
 }
 
 .header a {
@@ -14,7 +14,7 @@
     border-right: 1px solid#ccc;
     border-left: 1px solid #ccc;
     height: 100%;
-    margin: 0;
+    margin: 0 auto;
 }
 
 .header a .border {
@@ -27,9 +27,10 @@
     width: 1px;
 }
 
-.header a p {
+.header a .label {
     color: #ffffff;
-    margin: auto 10px;
+    margin: auto 0.5em;
+    font-size: 0.8em;
 }
 
 .header a:hover {
@@ -37,7 +38,7 @@
     text-decoration: none;
 }
 
-.header a:hover p {
+.header a:hover .label {
     color: #dbdbdb;
 }
 
@@ -48,13 +49,10 @@
 .header .rightButtonsDiv {
     display: flex;
     height: 100%;
-    margin-right: 5px;
-    float: right;
 }
 
 .header .leftButtonsDiv {
     display: flex;
     height: 100%;
-    margin-left: 5px;
     float: left;
 }

@@ -18,15 +18,15 @@ export class UserFormComponent implements OnInit {
   ngOnInit() {
   }
 
-  get form() {
+  get form(): FormGroup {
     return this._form;
   }
 
-  cancel() {
+  cancel(): void {
     this._router.navigate(['/home']);
   }
 
-  noPaste(event: Event) {
+  noPaste(event: Event): void {
     event.preventDefault();
   }
 
@@ -50,13 +50,7 @@ export class UserFormComponent implements OnInit {
       ])),
       email: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.email
-      ]))/*,
-      pwd: new FormControl('', Validators.compose([
-        Validators.required, Validators.minLength(2)
-      ])),
-      pwd_confirm: new FormControl('', Validators.compose([
-        Validators.required, Validators.minLength(2)
-      ]))*/
+      ]))
     });
   }
 

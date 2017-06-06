@@ -30,7 +30,7 @@ export class NavbuttonComponent {
     this._value = value;
   }
 
-  navigate() {
+  navigate(): void {
     this._router.navigate([this._path]);
   }
 }

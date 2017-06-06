@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  get form() {
+  get form(): FormGroup {
     return this._form;
   }
 
@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
     this._router.navigate(['/home']);
   }
 
-  submit() {  
+  submit(): void {  
     let login: string = this._form.value.login;
     let password: string = this._form.value.pwd;
     this._session.login(this._form.value.login, this._form.value.pwd).subscribe(

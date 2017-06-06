@@ -1,9 +1,12 @@
-<section class="header">
-  <div class="leftButtonsDiv">
-    <a [routerLink]="['/']"><span class="border"></span><p>Accueil</p><span class="border"></span></a>
-  </div>
-  <div class="rightButtonsDiv">
-    <a *ngIf="logged" [routerLink]="['/']" (click)="disconnect()"><span class="border"></span><p>Déconnexion</p><span class="border"></span></a>
-    <a *ngIf="logged && admin" [routerLink]="['/']"><span class="border"></span><p>Administration</p><span class="border"></span></a>
-  </div>
-</section>
+<md-toolbar class="header">
+  <span class="leftButtonsDiv">
+    <a [routerLink]="['/']"><span class="border"></span><span class="label">Accueil</span><span class="border"></span></a>
+  </span>
+
+  <span class="flex"></span>
+
+  <span class="rightButtonsDiv">
+    <a *ngIf="logged" [routerLink]="['/']" (click)="disconnect()"><span class="border"></span><span class="label">Déconnexion</span><span class="border"></span></a>
+    <a *ngIf="logged && admin" [routerLink]="['/']"><span class="border"></span><span class="label">Administration</span><span class="border"></span></a>
+  </span>
+</md-toolbar>

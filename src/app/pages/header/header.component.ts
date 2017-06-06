@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
     return true;
   }
 
-  disconnect() {
+  disconnect(): void {
     this._session.logout();
   }
 

@@ -21,11 +21,11 @@ export class SessionService {
                   + environment.backend.endpoints.auth;
   }
 
-  get authToken() {
+  get authToken(): string {
     return this._authToken;
   }
 
-  get logged() {
+  get logged(): boolean {
     return this._logged;
   }
 

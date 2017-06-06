@@ -20,7 +20,7 @@ export class FileUploadService {
     }).share();
   }
 
-  get progress$() {
+  get progress$(): any {
     return this._progress$;
   }
 

@@ -1,58 +1,40 @@
-<h1>Créer un compte</h1>
-
 <section style="width: 50%; margin: auto;">
-  <form class="bordered" novalidate [formGroup]="form">
-    <div class="container">
+  <md-card>
+    <md-card-title class="centerText">Créer un compte</md-card-title>
 
-      <label>Nom</label>
-      <p [class.errors]="form.controls.name.touched && form.controls.name.invalid">
-        <input type="text" placeholder="Votre nom" formControlName="name" required/>
-        <span *ngIf="form.controls.name.touched && form.controls.name.errors?.required"><br>Veuillez indiquer votre nom</span>
-        <span *ngIf="form.controls.name.touched && form.controls.name.errors?.minlength"><br>Au moins 2 caractères</span>
-      </p>
+    <md-card-content>
+      <form novalidate [formGroup]="form" (ngSubmit)="submit()">
+        <md-input-container class="blockContainer">
+          <input mdInput type="text" placeholder="Nom" formControlName="name" required/>
+          <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer votre nom</md-error>
+          <md-error *ngIf="form.controls.name.errors?.minlength">Au moins 2 caractères</md-error>
+        </md-input-container>
 
-      <label>Prénom</label>
-      <p [class.errors]="form.controls.firstname.touched && form.controls.firstname.invalid">
-        <input type="text" placeholder="Votre prénom" formControlName="firstname" required/>
-        <span *ngIf="form.controls.firstname.touched && form.controls.firstname.errors?.required"><br>Veuillez indiquer votre prénom</span>
-        <span *ngIf="form.controls.firstname.touched && form.controls.firstname.errors?.minlength"><br>Au moins 2 caractères</span>
-      </p>
+        <md-input-container class="blockContainer">
+          <input mdInput type="text" placeholder="Prénom" formControlName="firstname" required/>
+          <md-error *ngIf="form.controls.firstname.errors?.required">Veuillez indiquer votre prénom</md-error>
+          <md-error *ngIf="form.controls.firstname.errors?.minlength">Au moins 2 caractères</md-error>
+        </md-input-container>
 
-      <label>Identifiant du compte</label>
-      <p [class.errors]="form.controls.login.touched && form.controls.login.invalid">
-        <input type="text" placeholder="Identifiant pour vous connecter" formControlName="login" required/>
-        <span *ngIf="form.controls.login.touched && form.controls.login.errors?.required"><br>Veuillez choisir un identifiant</span>
-        <span *ngIf="form.controls.login.touched && form.controls.login.errors?.minlength"><br>Au moins 2 caractères</span>
-      </p>
+        <md-input-container class="blockContainer">
+          <input mdInput type="text" placeholder="Identifiant (Login)" formControlName="login" required/>
+          <md-error *ngIf="form.controls.login.errors?.required">Veuillez choisir un identifiant</md-error>
+          <md-error *ngIf="form.controls.login.errors?.minlength">Au moins 2 caractères</md-error>
+        </md-input-container>
 
-      <label>E-mail</label>
-      <p [class.errors]="form.controls.email.touched && form.controls.email.invalid">
-        <input type="email" placeholder="Votre e-mail" formControlName="email" required/>
-        <span *ngIf="form.controls.email.touched && form.controls.email.errors?.required"><br>Veuillez indiquer votre adresse e-mail</span>
-        <span *ngIf="form.controls.email.touched && form.controls.email.errors?.email"><br>Veuillez entrer une adresse e-mail valide</span>
-      </p>
+        <md-input-container class="blockContainer">
+          <input mdInput type="email" placeholder="E-mail" formControlName="email" required/>
+          <md-error *ngIf="form.controls.email.errors?.required">Veuillez indiquer votre adresse e-mail</md-error>
+          <md-error *ngIf="form.controls.email.errors?.email">Veuillez entrer une adresse e-mail valide</md-error>
+        </md-input-container>
 
-      <!--
-      <label>Mot de passe</label>
-      <p [class.errors]="form.controls.pwd.touched && form.controls.pwd.invalid">
-        <input type="password" placeholder="Entrez un mot de passe" formControlName="pwd" required (paste)="noPaste($event)"/>
-        <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.required"><br>Veuillez choisir un mot de passe</span>
-        <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.minlength"><br>Au moins 2 caractères</span>
-      </p>
+        <input type="submit" [disabled]="!form.valid" style="display: none"/>
+      </form>
+    </md-card-content>
 
-      <label>Confirmation du mot de passe</label>
-      <p [class.errors]="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.invalid">
-        <input type="password" placeholder="Confirmez le mot de passe" formControlName="pwd_confirm" required (paste)="noPaste($event)"/>
-        <span *ngIf="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.errors?.required"><br>Veuillez confirmer le mot de passe choisi</span>
-        <span *ngIf="form.controls.pwd_confirm.touched && form.controls.pwd_confirm.errors?.minlength"><br>Au moins 2 caractères</span>
-      </p>
-      -->
-
-      <button type="submit" [disabled]="!form.valid">Créer mon compte</button>
-    </div>
-
-    <div class="contCancel">
-      <button type="button" class="cancelbtn" (click)=cancel()>Annuler</button>
-    </div>
-  </form>
-<section>
+    <md-card-actions align="end">
+      <button md-raised-button class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!form.valid">Créer le compte</button>
+      <button md-raised-button class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
+    </md-card-actions>
+  </md-card>
+</section>

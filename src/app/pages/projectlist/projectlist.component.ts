@@ -16,7 +16,7 @@ export class ProjectlistComponent implements OnInit {
   private _projects: any[];
   private _progress: number = -1;
 
-  get projects() {
+  get projects(): any[] {
     return this._projects;
   }
   
@@ -30,7 +30,7 @@ export class ProjectlistComponent implements OnInit {
       });
   }
 
-  get progress() {
+  get progress(): number {
     return this._progress;
   }
 
@@ -38,7 +38,7 @@ export class ProjectlistComponent implements OnInit {
     this._restService.fetchProjects().subscribe((projects: any[]) => this._projects = projects);
   }
 
-  fileChange(event) {
+  fileChange(event): void {
     let fileList: FileList = event.target.files;
     if(fileList.length > 0) {
       let file: File = fileList[0];
@@ -58,7 +58,7 @@ export class ProjectlistComponent implements OnInit {
     }
   }
 
-  onChange(event) {
+  onChange(event): void {
     console.log('onChange');
     let fileList: FileList = event.target.files;
     if(fileList.length <= 0) {

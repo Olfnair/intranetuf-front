@@ -20,15 +20,18 @@ export class ActivateAccountComponent implements OnInit {
   ngOnInit() {
   }
 
-  get form() {
+  get form(): FormGroup {
     return this._form;
   }
 
-  get minlength() {
+  get minlength(): number {
     return ActivateAccountComponent.minlength;
   }
 
-  cancel() {
+  submit(): void {
+  }
+
+  cancel(): void {
     this._router.navigate(['/home']);
   }
 

@@ -1,25 +1,29 @@
-<h1>Connexion</h1>
-
 <section style="width: 50%; margin: auto;">
-  <form novalidate class="bordered" [formGroup]="form">
-    <div class="container">
-      
-      <label>Identifiant</label>
-      <p [class.errors]="form.controls.login.touched && form.controls.login.invalid">
-        <input type="text" placeholder="Identifiant" formControlName="login" required/>
-        <span *ngIf="form.controls.login.touched && form.controls.login.errors?.required"><br>Veuillez indiquer votre identifiant</span>
-      </p>
+  <md-card>
+    <md-card-title class="centerText">Connexion</md-card-title>
 
-      <label>Mot de passe</label>
-      <p [class.errors]="form.controls.pwd.touched && form.controls.pwd.invalid">
-        <input type="password" placeholder="Mot de passe" formControlName="pwd" required/>
-        <span *ngIf="form.controls.pwd.touched && form.controls.pwd.errors?.required"><br>Veuillez indiquer votre mot de passe</span>
-      </p>
+    <md-card-content>
+      <form novalidate [formGroup]="form" (ngSubmit)="submit()">
+        <md-input-container class="blockContainer">
+          <input mdInput type="text" placeholder="Identifiant" formControlName="login" required>
+          <md-error>Veuillez indiquer votre identifiant</md-error>
+        </md-input-container>
 
-      <p [class.errors]="loginFail && form.pristine">
-        <button type="submit" (click)="submit()" [disabled]="!form.valid">Connexion</button>
-        <span *ngIf="loginFail && form.pristine"><br>Identifiants invalides !</span>
-      </p>
-    </div>
-  </form>
-<section>
+        <md-input-container class="blockContainer">
+          <input mdInput type="password" placeholder="Mot de passe" formControlName="pwd" required/>
+          <md-error>Veuillez indiquer votre mot de passe</md-error>
+        </md-input-container>
+
+        <input type="submit" [disabled]="!form.valid" style="display: none"/>
+
+        <p class="errors" *ngIf="loginFail && form.pristine">
+          Identifiants invalides !
+        </p>
+      </form>
+    </md-card-content>
+
+    <md-card-actions>
+      <button md-raised-button class="submitButton" color="primary" type="submit" (click)="submit()" [disabled]="!form.valid">Connexion</button>
+    </md-card-actions>
+  </md-card>
+</section>
