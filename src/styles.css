@@ -33,13 +33,13 @@ h1 {
 
 .submitButton2 {
     display: inline-block;
-    width: 48%;
+    width: 60%;
     height: 4em;
 }
 
 .cancelButton {
     display: inline-block;
-    width: 48%;
+    width: 37%;
     height: 4em;
 }
 

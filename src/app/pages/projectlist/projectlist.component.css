@@ -1,3 +1,38 @@
+.navProject {
+    display: inline-block;
+    max-width: 15%;
+    max-height: 75%;
+    overflow: auto;
+    padding: 0;
+    margin: 2em auto;
+}
+
+.navproject md-card-content {
+    padding: 0;
+    margin: 0;
+}
+
+.navProject .add {
+    margin: 0.3em 0.3em 1.0em 0.3em;
+}
+
+.navProject .pbutton {
+    display: block;
+    width: 100%;
+    border-radius: 0px;
+    text-align: left;
+}
+
+.navProject .title {
+    padding: 0.3em 0;
+    margin: 0;
+    background-color: #ddd;
+    text-align: center;
+}
+
+
+
+
 .projectlist {
     display: block;
     width: 15%;
@@ -25,6 +60,7 @@
 
 
 table {
+    display: inline-table;
     border-collapse: collapse;
     border: 5px solid black;
     width: 65%;

@@ -15,6 +15,9 @@ export class ProjectlistComponent implements OnInit {
 
   private _projects: any[];
   private _progress: number = -1;
+  
+  // conserve l'id du projet selectionné
+  private _selected: number = -1;
 
   get projects(): any[] {
     return this._projects;
@@ -30,12 +33,20 @@ export class ProjectlistComponent implements OnInit {
       });
   }
 
+  ngOnInit() {
+    this._restService.fetchProjects().subscribe((projects: any[]) => this._projects = projects);
+  }
+
   get progress(): number {
     return this._progress;
   }
 
-  ngOnInit() {
-    this._restService.fetchProjects().subscribe((projects: any[]) => this._projects = projects);
+  get selected(): number {
+    return this._selected;
+  }
+
+  select(id: number): void {
+    this._selected = id;
   }
 
   fileChange(event): void {
