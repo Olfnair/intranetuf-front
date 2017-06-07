@@ -10,15 +10,44 @@
     /*background-image: linear-gradient(to right, #000000, #898989);
 }*/
 
+md-tooltip {
+    display: none;
+}
+
 md-toolbar .flex {
   flex: 1 1 auto;
 }
 
-md-toolbar a, a:hover, a:visited {
+md-toolbar a, a:visited {
     text-align: center;
     text-decoration : none;
+    opacity: 0.8;
+}
+
+md-toolbar a:hover {
+    text-align: center;
+    text-decoration : none;
+    opacity: 1.0;
+}
+
+md-toolbar md-icon {
+    color: #cccccc;
+}
+
+md-toolbar a .label {
     color: #ffffff;
     font-size: 0.7em;
+    padding-left: 0.3em;
+}
+
+md-toolbar .right {
+    margin-left: 0.5em;
+}
+
+@media screen and (max-width: 600px) {
+    md-toolbar a .label {
+        display: none;
+    }
 }
 
 /*.header a {

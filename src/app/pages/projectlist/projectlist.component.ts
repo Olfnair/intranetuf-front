@@ -16,13 +16,10 @@ export class ProjectlistComponent implements OnInit {
   private _projects: any[];
   private _progress: number = -1;
   private _select$: EventEmitter<number>;
+  private _opened: boolean = false;
   
   // conserve l'id du projet selectionné
   private _selected: number = -1;
-
-  get projects(): any[] {
-    return this._projects;
-  }
   
   constructor(private _restService: RestApiService, private _http: Http, private _uploadService: FileUploadService, private _zone: NgZone) {
     this._select$ = new EventEmitter();
@@ -39,6 +36,10 @@ export class ProjectlistComponent implements OnInit {
     this._restService.fetchProjects().subscribe((projects: any[]) => this._projects = projects);
   }
 
+  get projects(): any[] {
+    return this._projects;
+  }
+
   get progress(): number {
     return this._progress;
   }
@@ -49,6 +50,14 @@ export class ProjectlistComponent implements OnInit {
 
   get selected(): number {
     return this._selected;
+  }
+
+  get opened(): boolean {
+    return this._opened;
+  }
+
+  toggle(): void {
+    this._opened = ! this._opened;
   }
 
   @Output ('select') get select$(): EventEmitter<number> {

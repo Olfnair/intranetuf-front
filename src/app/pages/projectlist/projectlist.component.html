@@ -1,19 +1,26 @@
-<md-card class="navProject">
-  <md-card-title class="title">Projets</md-card-title>
-  <md-card-content>
-    <button md-mini-fab class="add"><md-icon>create_new_folder</md-icon></button>
-    <md-nav-list dense>
-      <div *ngFor="let project of projects">
-        <md-list-item *ngIf="selected == project.id" class="selected">
-          <span md-line>{{project.name}}</span>
-        </md-list-item>
-        <md-list-item *ngIf="selected != project.id" (click)="select(project.id)">
-          <span md-line>{{project.name}}</span>
-        </md-list-item>
-      </div>
-    </md-nav-list>
-  </md-card-content>
-</md-card>
+<section>
+  <div>
+    <button md-mini-fab class="toggle" (click)="toggle()"><md-icon>list</md-icon></button>
+  </div>
+  <div>
+    <md-card class="navProject" [class.hide]="! opened">
+      <md-card-title class="title">Projets</md-card-title>
+      <md-card-content>
+        <button md-mini-fab class="add"><md-icon>create_new_folder</md-icon></button>
+        <md-nav-list dense>
+          <div *ngFor="let project of projects">
+            <md-list-item *ngIf="selected == project.id" class="selected">
+              <span md-line>{{project.name}}</span>
+            </md-list-item>
+            <md-list-item *ngIf="selected != project.id" (click)="select(project.id)">
+              <span md-line>{{project.name}}</span>
+            </md-list-item>
+          </div>
+        </md-nav-list>
+      </md-card-content>
+    </md-card>
+  </div>
+</section>
 
 <!--
 <table>

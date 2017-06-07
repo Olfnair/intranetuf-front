@@ -1,12 +1,17 @@
 <md-toolbar color="primary">
-  <span class="leftButtonsDiv">
-    <a [routerLink]="['/']"><span class="border"></span><span class="label"><md-icon>home</md-icon> Accueil</span><span class="border"></span></a>
-  </span>
+  <a [routerLink]="['/']" mdTooltip="Accueil" mdTooltipPosition="below">
+    <md-icon>home</md-icon>
+    <span class="label">Accueil</span>
+  </a>
 
   <span class="flex"></span>
 
-  <span class="rightButtonsDiv">
-    <a *ngIf="logged" [routerLink]="['/']" (click)="disconnect()"><span class="border"></span><span class="label"><md-icon>input</md-icon> Déconnexion</span><span class="border"></span></a>
-    <a *ngIf="logged && admin" [routerLink]="['/']"><span class="border"></span><span class="label"><md-icon>build</md-icon> Administration</span><span class="border"></span></a>
-  </span>
+  <a *ngIf="logged" class="right" [routerLink]="['/']" (click)="disconnect()" mdTooltip="Déconnexion" mdTooltipPosition="below">
+    <md-icon>input</md-icon>
+    <span class="label">Déconnexion</span>
+  </a>
+  <a *ngIf="logged && admin" class="right" [routerLink]="['/']" mdTooltip="Administration" mdTooltipPosition="below">
+    <md-icon>build</md-icon>
+    <span class="label">Administration</span>
+  </a>
 </md-toolbar>

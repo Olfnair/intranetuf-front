@@ -2,12 +2,32 @@
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 
-/*titles*/
-h1 {
-    font-family: Verdana;
-    font-size: 1.5em;
-    text-align: center;
-    color: #9999bb;
+
+body {
+    background-color: #f3f3f3;
+}
+
+.container {
+    width: 50%;
+    margin: auto;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        width: 65%;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .container {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        width: 92%;
+    }
 }
 
 .blockContainer {
