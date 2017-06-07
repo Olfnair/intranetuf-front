@@ -1,12 +1,27 @@
-.header {
-    background-image: linear-gradient(to right, #000000, #898989);
-}
+/*.header {
+    /*background: rgba(252,234,187,1);
+	background: -moz-linear-gradient(-45deg, rgba(252,234,187,1) 0%, rgba(215,128,43,1) 54%, rgba(252,205,77,1) 100%);
+	background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(252,234,187,1)), color-stop(54%, rgba(215,128,43,1)), color-stop(100%, rgba(252,205,77,1)));
+	background: -webkit-linear-gradient(-45deg, rgba(252,234,187,1) 0%, rgba(215,128,43,1) 54%, rgba(252,205,77,1) 100%);
+	background: -o-linear-gradient(-45deg, rgba(252,234,187,1) 0%, rgba(215,128,43,1) 54%, rgba(252,205,77,1) 100%);
+	background: -ms-linear-gradient(-45deg, rgba(252,234,187,1) 0%, rgba(215,128,43,1) 54%, rgba(252,205,77,1) 100%);
+	background: linear-gradient(135deg, rgba(252,234,187,1) 0%, rgba(215,128,43,1) 54%, rgba(252,205,77,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fceabb', endColorstr='#fccd4d', GradientType=1 );
+    /*background-image: linear-gradient(to right, #000000, #898989);
+}*/
 
-.header .flex {
+md-toolbar .flex {
   flex: 1 1 auto;
 }
 
-.header a {
+md-toolbar a, a:hover, a:visited {
+    text-align: center;
+    text-decoration : none;
+    color: #ffffff;
+    font-size: 0.7em;
+}
+
+/*.header a {
     display: flex;
     text-align: center;
     text-decoration : none;
@@ -55,4 +70,4 @@
     display: flex;
     height: 100%;
     float: left;
-}
+}*/

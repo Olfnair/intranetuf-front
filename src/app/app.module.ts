@@ -20,6 +20,7 @@ import { ActivateAccountComponent } from "app/pages/activate-account/activate-ac
 import { MaterialModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
+import { FilelistComponent } from './pages/filelist/filelist.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import 'hammerjs';
     UserFormComponent,
     HeaderComponent,
     ActivateAccountComponent,
+    FilelistComponent,
   ],
   imports: [
     BrowserModule,

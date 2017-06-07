@@ -1,15 +1,29 @@
 .navProject {
     display: inline-block;
-    max-width: 15%;
-    max-height: 75%;
-    overflow: auto;
     padding: 0;
-    margin: 2em auto;
+    margin: 2em 3em 2em 0em;
+    max-width: 15vw;
 }
 
-.navproject md-card-content {
+.navProject md-nav-list {
+    width: 100%;
     padding: 0;
-    margin: 0;
+}
+
+.navProject md-list-item {
+    width: 100%;
+}
+
+.navProject .selected {
+    background-color: #673ab7;
+    color: #ffffff;
+}
+
+.navProject md-card-content {
+    display: block;
+    width: 100%;
+    max-height: 75vh;
+    overflow: auto;
 }
 
 .navProject .add {
@@ -18,13 +32,14 @@
 
 .navProject .pbutton {
     display: block;
-    width: 100%;
+    min-width: 100%;
     border-radius: 0px;
     text-align: left;
+    margin-right: 1.5em;
 }
 
 .navProject .title {
-    padding: 0.3em 0;
+    padding: 0.3em 0.2em;
     margin: 0;
     background-color: #ddd;
     text-align: center;

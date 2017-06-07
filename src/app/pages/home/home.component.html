@@ -3,7 +3,11 @@
 </p>
 
 <app-login *ngIf="!logged"></app-login>
-<app-projectlist *ngIf="logged"></app-projectlist>
+
+<div *ngIf="logged" style="display: flex;">
+  <app-projectlist (select)="selectProject($event)"></app-projectlist>
+  <app-filelist [project]="selectedProject"></app-filelist>
+</div>
 
 <section class="menu" style="margin-top: 200px;">
   <label>Dev Menu</label>

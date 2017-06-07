@@ -1,16 +1,21 @@
 <md-card class="navProject">
   <md-card-title class="title">Projets</md-card-title>
   <md-card-content>
-    <div>
-      <button md-mini-fab class="add"><md-icon>create_new_folder</md-icon></button>
-    </div>
-    <div *ngFor="let project of projects">
-      <button md-raised-button *ngIf="selected == project.id" class="pbutton" color="primary" (click)="select(project.id)">{{project.name}}</button>
-      <button md-raised-button *ngIf="selected != project.id" class="pbutton" (click)="select(project.id)">{{project.name}}</button>
-    </div>
+    <button md-mini-fab class="add"><md-icon>create_new_folder</md-icon></button>
+    <md-nav-list dense>
+      <div *ngFor="let project of projects">
+        <md-list-item *ngIf="selected == project.id" class="selected">
+          <span md-line>{{project.name}}</span>
+        </md-list-item>
+        <md-list-item *ngIf="selected != project.id" (click)="select(project.id)">
+          <span md-line>{{project.name}}</span>
+        </md-list-item>
+      </div>
+    </md-nav-list>
   </md-card-content>
 </md-card>
 
+<!--
 <table>
   <tr>
     <th>Id</th>
@@ -28,13 +33,10 @@
 
 <a target="_self" href="https://localhost:8443/IUF/rest/download/1" download>Download</a>
 
-<!--<form ngNoForm method="POST">-->
-  <!--Fichier à uploader : <input type="file" name="upfile" id="upfile"><br/>-->
+
   <input type="file" (change)="onChange($event)" placeholder="Upload file">
-  <!--Notes à propos du fichier : <input type="text" name="note"><br/>-->
   <section *ngIf="progress >= 0">
     <progress value="{{progress}}" max="100">{{progress}} %</progress>
   <section>
   <br/>
-  <!--<input type="button" (click)=fileChange($event) value="Uploader">-->
-<!--</form>-->
+-->

@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, Input, EventEmitter, Output } from '@angular/core';
 import { RestApiService } from "app/shared/rest-api.service";
 import { RequestOptions, Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
@@ -15,6 +15,7 @@ export class ProjectlistComponent implements OnInit {
 
   private _projects: any[];
   private _progress: number = -1;
+  private _select$: EventEmitter<number>;
   
   // conserve l'id du projet selectionné
   private _selected: number = -1;
@@ -24,6 +25,7 @@ export class ProjectlistComponent implements OnInit {
   }
   
   constructor(private _restService: RestApiService, private _http: Http, private _uploadService: FileUploadService, private _zone: NgZone) {
+    this._select$ = new EventEmitter();
     this._projects = [];
     this._uploadService.progress$.subscribe(data => {
       this._zone.run(() => {
@@ -41,12 +43,21 @@ export class ProjectlistComponent implements OnInit {
     return this._progress;
   }
 
+  @Input() set selected(id: number) {
+    this._selected = id;
+  }
+
   get selected(): number {
     return this._selected;
   }
 
+  @Output ('select') get select$(): EventEmitter<number> {
+    return this._select$;
+  }
+
   select(id: number): void {
     this._selected = id;
+    this._select$.emit(this._selected);
   }
 
   fileChange(event): void {
