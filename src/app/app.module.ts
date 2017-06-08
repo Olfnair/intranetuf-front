@@ -15,12 +15,12 @@ import { LoginComponent } from "app/pages/login/login.component";
 import { UserFormComponent } from "app/pages/user-form/user-form.component";
 import { HeaderComponent } from "app/pages/header/header.component";
 import { ActivateAccountComponent } from "app/pages/activate-account/activate-account.component";
+import { FilelistComponent } from './pages/filelist/filelist.component';
 
 // Material Design
 import { MaterialModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
-import { FilelistComponent } from './pages/filelist/filelist.component';
 
 @NgModule({
   declarations: [

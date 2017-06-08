@@ -4,10 +4,16 @@
 
 <app-login *ngIf="!logged"></app-login>
 
-<div *ngIf="logged" style="display: flex;">
-  <app-projectlist (select)="selectProject($event)"></app-projectlist>
-  <app-filelist [project]="selectedProject"></app-filelist>
-</div>
+<table *ngIf="logged" style="width:100%;">
+  <tr>
+    <td style="vertical-align: top;">
+      <app-projectlist (select)="selectProject($event)"></app-projectlist>
+    </td>
+    <td style="width:100%; vertical-align: top;">
+      <app-filelist [project]="selectedProject"></app-filelist>
+    </td>
+  </tr>
+</table>
 
 <section class="menu" style="margin-top: 200px;">
   <label>Dev Menu</label>

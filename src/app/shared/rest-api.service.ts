@@ -44,6 +44,17 @@ export class RestApiService {
     });
   }
 
+  fetchFilesByProject(id: number): Observable<any[]> {
+    return this._http.get(this._backendURL.filesByProject + id.toString(), this._options()).map((res: Response) => {
+      if (res.status === 200) {
+        return res.json().file;
+      }
+      else {
+        return [];
+      }
+    });
+  }
+
   /**
    * Function to return list of users
    *

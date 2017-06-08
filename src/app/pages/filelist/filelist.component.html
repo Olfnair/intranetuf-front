@@ -1,7 +1,28 @@
-<md-card style="display: inline-block;">
+<md-card>
   <md-card-content>
     <p>
       Projet choisi : {{project}}
     </p>
+
+    <table class="dataTable">
+      <thead>
+        <tr>
+          <th>Nom du fichier</th>
+          <th>Version</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of files">
+          <td>{{file.filename}}</td>
+          <td>{{file.version}}</td>
+          <td>huhuhhuhuhuhhu</td>
+        </tr>
+      </tbody>
+    </table>
   </md-card-content>
 </md-card>
+
+
+
+
+<!--<md-icon md-list-icon>folder</md-icon>-->

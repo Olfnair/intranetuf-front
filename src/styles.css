@@ -1,8 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-
-
 body {
     background-color: #f3f3f3;
 }
@@ -28,6 +26,27 @@ body {
     .container {
         width: 92%;
     }
+}
+
+table.dataTable {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    /*border-collapse: separate;
+    border-spacing: 25px 0px;*/
+}
+
+table.dataTable thead {
+    height: 3em;
+}
+
+table.dataTable th, td {
+    text-align: left;
+}
+
+table.dataTable tr {
+    height: 2em;
 }
 
 .blockContainer {
