@@ -9,13 +9,14 @@
         <tr>
           <th>Nom du fichier</th>
           <th>Version</th>
+          <th>Date d'upload</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let file of files">
           <td>{{file.filename}}</td>
           <td>{{file.version}}</td>
-          <td>huhuhhuhuhuhhu</td>
+          <td>{{file.date_upload}}</td>
         </tr>
       </tbody>
     </table>
