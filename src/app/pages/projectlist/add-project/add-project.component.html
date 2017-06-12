@@ -1,0 +1,15 @@
+<section>
+  <h2 md-dialog-title>Créer un nouveau projet</h2>
+  <form novalidate [formGroup]="form">
+    <md-input-container class="blockContainer">
+      <input mdInput type="text" placeholder="Nom du projet" formControlName="name" required/>
+      <md-error>Veuillez indiquer le nom du nouveau projet</md-error>
+    </md-input-container>
+    <button type="submit" [disabled]="!form.valid" [md-dialog-close]="form.controls.name.value" style="display: none"></button>
+  </form>
+  <md-dialog-actions>
+    <button md-raised-button class="submitButton2" color="primary" type="submit" [disabled]="!form.valid" [md-dialog-close]="form.controls.name.value">Créer le projet</button>
+    <span style="min-width: 0.3em;"></span>
+    <button md-raised-button class="cancelButton" color="warn" type="button" md-dialog-close>Annuler</button>
+  </md-dialog-actions>
+</section>

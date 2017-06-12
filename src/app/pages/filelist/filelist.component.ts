@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RestApiService } from "app/shared/rest-api.service";
+import { Project } from "app/entities/project";
 
 @Component({
   selector: 'app-filelist',
@@ -7,7 +8,7 @@ import { RestApiService } from "app/shared/rest-api.service";
   styleUrls: ['./filelist.component.css']
 })
 export class FilelistComponent implements OnInit {
-  private _project: number = -1;
+  private _project: Project = undefined;
   private _files: any[] = [];
   
   constructor(private _restService: RestApiService) { }
@@ -15,12 +16,14 @@ export class FilelistComponent implements OnInit {
   ngOnInit() {
   }
 
-  @Input() set project(project: number) {
+  @Input() set project(project: Project) {
     this._project = project;
-    this._restService.fetchFilesByProject(project).subscribe((files: any[]) => this._files = files);
+    if(project) {
+      this._restService.fetchFilesByProject(project).subscribe((files: any[]) => this._files = files);
+    }
   }
 
-  get project(): number {
+  get project(): Project {
     return this._project;
   }
 

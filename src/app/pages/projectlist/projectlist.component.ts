@@ -2,9 +2,12 @@ import { Component, OnInit, NgZone, Input, EventEmitter, Output } from '@angular
 import { RestApiService } from "app/shared/rest-api.service";
 import { RequestOptions, Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
+import { FileUploadService } from "app/shared/file-upload.service";
+import { AddProjectComponent } from "app/pages/projectlist/add-project/add-project.component";
+import { MdDialog } from "@angular/material";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { FileUploadService } from "app/shared/file-upload.service";
+import { Project } from "app/entities/project";
 
 @Component({
   selector: 'app-projectlist',
@@ -13,15 +16,19 @@ import { FileUploadService } from "app/shared/file-upload.service";
 })
 export class ProjectlistComponent implements OnInit {
 
-  private _projects: any[];
+  private _projects: Project[];
   private _progress: number = -1;
-  private _select$: EventEmitter<number>;
+  private _select$: EventEmitter<Project>;
   private _opened: boolean = false;
   
   // conserve l'id du projet selectionné
-  private _selected: number = -1;
+  private _selectedProject: Project = undefined;
   
-  constructor(private _restService: RestApiService, private _http: Http, private _uploadService: FileUploadService, private _zone: NgZone) {
+  constructor(private _restService: RestApiService,
+      private _http: Http,
+      private _dialog: MdDialog,
+      private _uploadService: FileUploadService,
+      private _zone: NgZone) {
     this._select$ = new EventEmitter();
     this._projects = [];
     this._uploadService.progress$.subscribe(data => {
@@ -36,7 +43,7 @@ export class ProjectlistComponent implements OnInit {
     this._restService.fetchProjects().subscribe((projects: any[]) => this._projects = projects);
   }
 
-  get projects(): any[] {
+  get projects(): Project[] {
     return this._projects;
   }
 
@@ -44,12 +51,12 @@ export class ProjectlistComponent implements OnInit {
     return this._progress;
   }
 
-  @Input() set selected(id: number) {
-    this._selected = id;
+  @Input() set selected(project: Project) {
+    this._selectedProject = project;
   }
 
-  get selected(): number {
-    return this._selected;
+  get selected(): Project {
+    return this._selectedProject;
   }
 
   get opened(): boolean {
@@ -60,13 +67,28 @@ export class ProjectlistComponent implements OnInit {
     this._opened = ! this._opened;
   }
 
-  @Output ('select') get select$(): EventEmitter<number> {
+  add(): void {
+    let dialogRef = this._dialog.open(AddProjectComponent);
+    dialogRef.afterClosed().subscribe(projectName => {
+      if(projectName) {
+        this._restService.createProject(projectName).subscribe(
+          (project: Project) => {
+            this._restService.fetchProjects().subscribe((projects: Project[]) => this._projects = projects);
+            this.select(project); // wtf ?
+          },
+          err => console.log(err)
+        );
+      }
+    });
+  }
+
+  @Output ('select') get select$(): EventEmitter<Project> {
     return this._select$;
   }
 
-  select(id: number): void {
-    this._selected = id;
-    this._select$.emit(this._selected);
+  select(project: Project): void {
+    this._selectedProject = project;
+    this._select$.emit(this._selectedProject);
   }
 
   fileChange(event): void {

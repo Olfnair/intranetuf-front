@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from "app/shared/session.service";
+import { Project } from "app/entities/project";
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,7 @@ import { SessionService } from "app/shared/session.service";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  private _selectedProject: number = -1;
+  private _selectedProject: Project = undefined;
 
   constructor(private _session: SessionService) { }
 
@@ -18,11 +19,11 @@ export class HomeComponent implements OnInit {
     return this._session.logged;
   }
 
-  get selectedProject(): number {
+  get selectedProject(): Project {
     return this._selectedProject;
   }
 
-  selectProject(id: number): void {
-    this._selectedProject = id;
+  selectProject(project: Project): void {
+    this._selectedProject = project;
   }
 }

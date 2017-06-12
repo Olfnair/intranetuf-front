@@ -16,6 +16,7 @@ import { UserFormComponent } from "app/pages/user-form/user-form.component";
 import { HeaderComponent } from "app/pages/header/header.component";
 import { ActivateAccountComponent } from "app/pages/activate-account/activate-account.component";
 import { FilelistComponent } from './pages/filelist/filelist.component';
+import { AddProjectComponent } from './pages/projectlist/add-project/add-project.component';
 
 // Material Design
 import { MaterialModule } from '@angular/material';
@@ -33,6 +34,10 @@ import 'hammerjs';
     HeaderComponent,
     ActivateAccountComponent,
     FilelistComponent,
+    AddProjectComponent,
+  ],
+  entryComponents: [
+    AddProjectComponent
   ],
   imports: [
     BrowserModule,

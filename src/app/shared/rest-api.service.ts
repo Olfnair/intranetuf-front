@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { SessionService } from "app/shared/session.service";
 import { Credentials } from "app/entities/credentials";
 import 'rxjs/add/operator/map';
+import { Project } from "app/entities/project";
 
 @Injectable()
 export class RestApiService {
@@ -33,7 +34,7 @@ export class RestApiService {
    *
    * @returns {Observable<R>}
    */
-  fetchProjects(): Observable<any[]> {
+  fetchProjects(): Observable<Project[]> {
     return this._http.get(this._backendURL.allProjects, this._options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().project;
@@ -44,14 +45,25 @@ export class RestApiService {
     });
   }
 
-  fetchFilesByProject(id: number): Observable<any[]> {
-    return this._http.get(this._backendURL.filesByProject + id.toString(), this._options()).map((res: Response) => {
+  fetchFilesByProject(project: Project): Observable<any[]> {
+    return this._http.get(this._backendURL.filesByProject + project.id.toString(), this._options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().file;
       }
       else {
         return [];
       }
+    });
+  }
+
+  /**
+   * Function to create project
+   *
+   * @returns {Observable<boolean>}
+   */
+  createProject(name: string): Observable<Project> {
+    return this._http.post(this._backendURL.allProjects, {project: new Project(name)}).map((res: Response) => {
+      return res.json().project;
     });
   }
 

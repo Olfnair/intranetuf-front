@@ -4,7 +4,7 @@
 
 <app-login *ngIf="!logged"></app-login>
 
-<table *ngIf="logged" style="width:100%;">
+<table *ngIf="logged" cellspacing="0" style="width:100%; border-collapse: collapse;">
   <tr>
     <td style="vertical-align: top;">
       <app-projectlist (select)="selectProject($event)"></app-projectlist>

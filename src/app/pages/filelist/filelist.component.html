@@ -1,8 +1,12 @@
-<md-card>
+<md-card *ngIf="! project">
   <md-card-content>
-    <p>
-      Projet choisi : {{project}}
-    </p>
+    <p>Selectionnez un projet dans la liste...<p>
+  </md-card-content>
+</md-card>
+
+<md-card *ngIf="project">
+  <md-card-content>
+    <h2>Projet : {{project.name}}</h2>
 
     <table class="dataTable">
       <thead>
@@ -13,17 +17,20 @@
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td>
+            <button md-mini-fab class="add" (click)="add()"><md-icon>add</md-icon></button>
+          </td>
+        </tr>
         <tr *ngFor="let file of files">
           <td>{{file.filename}}</td>
           <td>{{file.version}}</td>
-          <td>{{file.date_upload}}</td>
+          <!--<td>{{file.date_upload.day}}/{{file.date_upload.month}}/{{file.date_upload.year}}</td>-->
         </tr>
       </tbody>
     </table>
   </md-card-content>
 </md-card>
-
-
 
 
 <!--<md-icon md-list-icon>folder</md-icon>-->
