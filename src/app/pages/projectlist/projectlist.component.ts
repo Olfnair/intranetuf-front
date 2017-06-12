@@ -4,7 +4,7 @@ import { RequestOptions, Http, Headers } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import { FileUploadService } from "app/shared/file-upload.service";
 import { AddProjectComponent } from "app/pages/projectlist/add-project/add-project.component";
-import { MdDialog } from "@angular/material";
+import { MdDialog, MdDialogRef } from "@angular/material";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Project } from "app/entities/project";
@@ -20,8 +20,9 @@ export class ProjectlistComponent implements OnInit {
   private _progress: number = -1;
   private _select$: EventEmitter<Project>;
   private _opened: boolean = false;
+  private _dialogRef: MdDialogRef<AddProjectComponent> = undefined;
   
-  // conserve l'id du projet selectionné
+  // ref sur le projet sélectionné
   private _selectedProject: Project = undefined;
   
   constructor(private _restService: RestApiService,
@@ -63,23 +64,34 @@ export class ProjectlistComponent implements OnInit {
     return this._opened;
   }
 
+  isSelected(project: Project): boolean {
+    return this._selectedProject && this._selectedProject.id == project.id;
+  }
+
   toggle(): void {
     this._opened = ! this._opened;
   }
 
   add(): void {
-    let dialogRef = this._dialog.open(AddProjectComponent);
-    dialogRef.afterClosed().subscribe(projectName => {
+    this._dialogRef = this._dialog.open(AddProjectComponent, {data: this});
+    this._dialogRef.afterClosed().subscribe(projectName => {
       if(projectName) {
         this._restService.createProject(projectName).subscribe(
           (project: Project) => {
             this._restService.fetchProjects().subscribe((projects: Project[]) => this._projects = projects);
-            this.select(project); // wtf ?
+            this.select(project);
           },
           err => console.log(err)
         );
       }
+      this._dialogRef = undefined;
     });
+  }
+
+  closeAddDlg(projectName: string): void {
+    if(this._dialogRef) {
+      this._dialogRef.close(projectName);
+    }
   }
 
   @Output ('select') get select$(): EventEmitter<Project> {

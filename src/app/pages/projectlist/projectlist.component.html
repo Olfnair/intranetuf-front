@@ -1,18 +1,16 @@
 <section>
-  <div>
-    <button md-mini-fab class="toggle" (click)="toggle()"><md-icon>list</md-icon></button>
-  </div>
+  <button md-mini-fab class="toggle" (click)="toggle()" mdTooltip="Liste des projets" mdTooltipPosition="below"><md-icon>list</md-icon></button>
   <div>
     <md-card class="navProject" [class.hide]="! opened">
       <md-card-title class="title">Projets</md-card-title>
-      <md-card-content>
-        <button md-mini-fab class="add" (click)="add()"><md-icon>create_new_folder</md-icon></button>
+      <md-card-content>  
+        <button md-mini-fab class="add" (click)="add()" mdTooltip="Nouveau projet" mdTooltipPosition="after"><md-icon>create_new_folder</md-icon></button>
         <md-nav-list dense>
           <div *ngFor="let project of projects">
-            <md-list-item *ngIf="selected == project" class="selected">
+            <md-list-item *ngIf="isSelected(project)" class="selected">
               <span md-line>{{project.name}}</span>
             </md-list-item>
-            <md-list-item *ngIf="selected != project" (click)="select(project)">
+            <md-list-item *ngIf="! isSelected(project)" (click)="select(project)">
               <span md-line>{{project.name}}</span>
             </md-list-item>
           </div>
