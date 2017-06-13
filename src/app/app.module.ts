@@ -22,6 +22,7 @@ import { AddProjectComponent } from './pages/projectlist/add-project/add-project
 import { MaterialModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
+import { AddFileComponent } from './pages/add-file/add-file.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import 'hammerjs';
     ActivateAccountComponent,
     FilelistComponent,
     AddProjectComponent,
+    AddFileComponent,
   ],
   entryComponents: [
     AddProjectComponent

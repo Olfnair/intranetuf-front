@@ -1,0 +1,18 @@
+<section class="container">
+  <md-card>
+    <md-card-title class="centerText">Ajouter un fichier</md-card-title>
+
+    <md-card-content>
+      <form novalidate [formGroup]="form" (ngSubmit)="submit()">
+        <md-input-container class="blockContainer">
+          <input mdInput type="text" placeholder="Nom" formControlName="name" required/>
+          <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer votre nom</md-error>
+          <md-error *ngIf="form.controls.name.errors?.minlength">Au moins 2 caractères</md-error>
+        </md-input-container>
+
+    <md-card-actions align="end">
+      <button md-raised-button class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!form.valid">Créer le compte</button>
+      <button md-raised-button class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
+    </md-card-actions>
+  </md-card>
+</section>

@@ -11,7 +11,7 @@
 }*/
 
 md-tooltip {
-    display: none;
+  display: none;
 }
 
 md-toolbar .flex {
@@ -19,84 +19,33 @@ md-toolbar .flex {
 }
 
 md-toolbar a, a:visited {
-    text-align: center;
-    text-decoration : none;
-    opacity: 0.8;
+  text-align: center;
+  text-decoration : none;
+  opacity: 0.8;
 }
 
 md-toolbar a:hover {
-    text-align: center;
-    text-decoration : none;
-    opacity: 1.0;
+  text-align: center;
+  text-decoration : none;
+  opacity: 1.0;
 }
 
 md-toolbar md-icon {
-    color: #cccccc;
+  color: #cccccc;
 }
 
 md-toolbar a .label {
-    color: #ffffff;
-    font-size: 0.7em;
-    padding-left: 0.3em;
+  color: #ffffff;
+  font-size: 0.7em;
+  padding-left: 0.3em;
 }
 
 md-toolbar .right {
-    margin-left: 0.5em;
+  margin-left: 0.5em;
 }
 
 @media screen and (max-width: 600px) {
-    md-toolbar a .label {
-        display: none;
-    }
+  md-toolbar a .label {
+    display: none;
+  }
 }
-
-/*.header a {
-    display: flex;
-    text-align: center;
-    text-decoration : none;
-    background-image: linear-gradient(to top, #414141, #ccc);
-    border-right: 1px solid#ccc;
-    border-left: 1px solid #ccc;
-    height: 100%;
-    margin: 0 auto;
-}
-
-.header a .border {
-    background-image: linear-gradient(to top, #414141, #ccc);
-    width: 1px;
-}
-
-.header a:hover .border {
-    background-image: linear-gradient(to bottom, #414141, #ccc);
-    width: 1px;
-}
-
-.header a .label {
-    color: #ffffff;
-    margin: auto 0.5em;
-    font-size: 0.8em;
-}
-
-.header a:hover {
-    background-image: linear-gradient(to bottom, #414141, #ccc);
-    text-decoration: none;
-}
-
-.header a:hover .label {
-    color: #dbdbdb;
-}
-
-.header a:visited {
-    text-decoration : none;
-}
-
-.header .rightButtonsDiv {
-    display: flex;
-    height: 100%;
-}
-
-.header .leftButtonsDiv {
-    display: flex;
-    height: 100%;
-    float: left;
-}*/

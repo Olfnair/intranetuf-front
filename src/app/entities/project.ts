@@ -1,11 +1,9 @@
 export class Project {
-    public id: number;
-    public name: string;
-    public active: boolean;
+  public id: number = undefined;
+  public name: string = undefined;
+  public active: boolean = true;
 
-    constructor(name: string) {
-        this.name = name;
-        this.id = undefined;
-        this.active = undefined;
-    }
+  constructor(name: string) {
+    this.name = name;
+  }
 }

@@ -6,6 +6,8 @@ import { SessionService } from "app/shared/session.service";
 import { Credentials } from "app/entities/credentials";
 import 'rxjs/add/operator/map';
 import { Project } from "app/entities/project";
+import { User } from "app/entities/user";
+import { File } from "app/entities/file";
 
 @Injectable()
 export class RestApiService {
@@ -45,8 +47,19 @@ export class RestApiService {
     });
   }
 
-  fetchFilesByProject(project: Project): Observable<any[]> {
+  fetchFilesByProject(project: Project): Observable<File[]> {
     return this._http.get(this._backendURL.filesByProject + project.id.toString(), this._options()).map((res: Response) => {
+      if (res.status === 200) {
+        return res.json().file;
+      }
+      else {
+        return [];
+      }
+    });
+  }
+
+  createFile(file: File) {
+    return this._http.post(this._backendURL.allFiles, {file: file}, this._options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().file;
       }
@@ -62,7 +75,7 @@ export class RestApiService {
    * @returns {Observable<boolean>}
    */
   createProject(name: string): Observable<Project> {
-    return this._http.post(this._backendURL.allProjects, {project: new Project(name)}).map((res: Response) => {
+    return this._http.post(this._backendURL.allProjects, {project: new Project(name)}, this._options()).map((res: Response) => {
       return res.json().project;
     });
   }
@@ -72,8 +85,8 @@ export class RestApiService {
    *
    * @returns {Observable<R>}
    */
-  fetchUsers(): Observable<any[]> {
-    return this._http.get(this._backendURL.allUsers , this._options()).map((res: Response) => {
+  fetchUsers(): Observable<User[]> {
+    return this._http.get(this._backendURL.allUsers, this._options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().user;
       }

@@ -16,7 +16,9 @@ export const environment = {
       oneProject: '/IUF/rest/entities.project/:id',
       upload: '/IUF/rest/upload',
       auth: '/IUF/rest/auth',
-      filesByProject: '/IUF/rest/entities.file/project/'
+      allFiles: '/IUF/rest/entities.file',
+      filesByProject: '/IUF/rest/entities.file/project/',
+      allVersions: '/IUF/rest/entities.version',
     }
   }
 };
