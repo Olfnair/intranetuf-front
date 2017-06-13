@@ -17,12 +17,13 @@ import { HeaderComponent } from "app/pages/header/header.component";
 import { ActivateAccountComponent } from "app/pages/activate-account/activate-account.component";
 import { FilelistComponent } from './pages/filelist/filelist.component';
 import { AddProjectComponent } from './pages/projectlist/add-project/add-project.component';
+import { AddFileComponent } from './pages/add-file/add-file.component';
+import { InputFileComponent } from './shared/input-file/input-file.component';
 
 // Material Design
 import { MaterialModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
-import { AddFileComponent } from './pages/add-file/add-file.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { AddFileComponent } from './pages/add-file/add-file.component';
     FilelistComponent,
     AddProjectComponent,
     AddFileComponent,
+    InputFileComponent,
   ],
   entryComponents: [
     AddProjectComponent

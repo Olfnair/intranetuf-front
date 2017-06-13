@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RestApiService } from "app/shared/rest-api.service";
 import { Project } from "app/entities/project";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-filelist',
@@ -11,7 +12,7 @@ export class FilelistComponent implements OnInit {
   private _project: Project = undefined;
   private _files: any[] = [];
   
-  constructor(private _restService: RestApiService) { }
+  constructor(private _restService: RestApiService, private _router: Router) { }
 
   ngOnInit() {
   }
@@ -29,6 +30,10 @@ export class FilelistComponent implements OnInit {
 
   get files(): any[] {
     return this._files;
+  }
+
+  add(): void {
+    this._router.navigate(['/add_file']);
   }
 
 }
