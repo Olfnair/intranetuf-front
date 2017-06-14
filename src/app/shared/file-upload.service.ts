@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { environment } from "environments/environment";
+import {File as FileEntity} from "app/entities/file";
 import 'rxjs/Rx';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class FileUploadService {
     this._url = environment.backend.protocol + "://"
               + environment.backend.host + ":"
               + environment.backend.port
-              + environment.backend.endpoints.upload;
+              + environment.backend.endpoints.allFiles;
     this._progress$ = Observable.create(observer => {
       this._progressObserver = observer
     }).share();
@@ -24,13 +25,16 @@ export class FileUploadService {
     return this._progress$;
   }
 
-  upload(params: string[], files: FileList): Observable<any> {
+  upload(params: string[], file: File, fileEntity: FileEntity): Observable<any> {
     return Observable.create(observer => {
       let formData: FormData = new FormData(), xhr: XMLHttpRequest = new XMLHttpRequest();
 
-      for (let i = 0; i < files.length; i++) {
+      /*for (let i = 0; i < files.length; i++) {
         formData.append("file", files[i], files[i].name);
-      }
+      }*/
+
+      formData.append("entity", new Blob([JSON.stringify({file: fileEntity})], {type: "application/json"}));
+      formData.append("file", file);
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {

@@ -13,7 +13,8 @@ const ROUTES: Routes = [
     {path: 'projectlist', component: ProjectlistComponent},
     {path: 'admin/create_user', component: UserFormComponent},
     {path: 'activate', component: ActivateAccountComponent},
-    {path: 'add_file', component: AddFileComponent},
+    {path: 'add_file/:projectId', component: AddFileComponent},
+    {path: 'add_file/:projectId/:fileId', component: AddFileComponent},
     //{path: 'edit/:id', component: UpdateComponent},
     //{path: 'person/:id', component: PersonComponent}
 ];

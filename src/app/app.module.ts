@@ -19,6 +19,7 @@ import { FilelistComponent } from './pages/filelist/filelist.component';
 import { AddProjectComponent } from './pages/projectlist/add-project/add-project.component';
 import { AddFileComponent } from './pages/add-file/add-file.component';
 import { InputFileComponent } from './shared/input-file/input-file.component';
+import { TruncatePipe } from './shared/truncate.pipe';
 
 // Material Design
 import { MaterialModule } from '@angular/material';
@@ -39,6 +40,7 @@ import 'hammerjs';
     AddProjectComponent,
     AddFileComponent,
     InputFileComponent,
+    TruncatePipe,
   ],
   entryComponents: [
     AddProjectComponent

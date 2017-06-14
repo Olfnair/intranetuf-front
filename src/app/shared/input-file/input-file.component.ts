@@ -7,8 +7,8 @@ import { Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@
   styleUrls: ['./input-file.component.css']
 })
 export class InputFileComponent {
-  private _accept: string;
-  private _fileSelect$: EventEmitter<File[]> = new EventEmitter();
+  private _accept: string = '\'*/*\'';
+  private _fileSelect$: EventEmitter<File> = new EventEmitter();
 
   @ViewChild('inputFile') nativeInputFile: ElementRef;
 
@@ -20,9 +20,13 @@ export class InputFileComponent {
     return this._files && this._files.length || 0;
   }
 
+  get file(): File {
+    return this._files[0];
+  }
+
   onNativeInputFileSelect(event): void {
     this._files = event.target.files;
-    this._fileSelect$.emit(this._files);
+    this._fileSelect$.emit(this._files[0]);
   }
 
   selectFile(): void {
@@ -37,7 +41,7 @@ export class InputFileComponent {
     this._accept = accept;
   }
 
-  @Output('fileSelect') get fileSelect$(): EventEmitter<File[]> {
+  @Output('fileSelect') get fileSelect$(): EventEmitter<File> {
     return this._fileSelect$;
   }
 }

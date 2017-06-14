@@ -75,7 +75,9 @@ export class RestApiService {
    * @returns {Observable<boolean>}
    */
   createProject(name: string): Observable<Project> {
-    return this._http.post(this._backendURL.allProjects, {project: new Project(name)}, this._options()).map((res: Response) => {
+    let project = new Project();
+    project.name = name;
+    return this._http.post(this._backendURL.allProjects, {project: project}, this._options()).map((res: Response) => {
       return res.json().project;
     });
   }

@@ -123,7 +123,7 @@ export class ProjectlistComponent implements OnInit {
     }
   }
 
-  onChange(event): void {
+  /*onChange(event): void {
     console.log('onChange');
     let fileList: FileList = event.target.files;
     if(fileList.length <= 0) {
@@ -132,11 +132,11 @@ export class ProjectlistComponent implements OnInit {
     this._progress = 0;
     let file: File = fileList[0];
     console.log(file);
-    this._uploadService.upload([], fileList)
+    this._uploadService.upload([], file)
                        .finally(() => console.log('sent'))
                        .subscribe(
                          //() => console.log('sent ok'), // marche pas ???
                          error => console.log(error)
                        )
-  }
+  }*/
 }

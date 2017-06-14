@@ -1,10 +1,10 @@
 export class User {
-  private id: number = undefined;
-  private name: string = undefined;
-  private firstname: string = undefined;
-  private email: string = undefined;
-  private login: string = undefined;
-  private password: string = undefined;
+  public id: number = undefined;
+  public name: string = undefined;
+  public firstname: string = undefined;
+  public email: string = undefined;
+  public login: string = undefined;
+  public password: string = undefined;
 
   constructor() {
   }

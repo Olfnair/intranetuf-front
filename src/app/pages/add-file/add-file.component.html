@@ -4,17 +4,21 @@
 
     <md-card-content>
       <form novalidate [formGroup]="form" (ngSubmit)="submit()">
-        <input-file (onFileSelect)="onFileSelect($event)" [accept]="'image/*'">
-          <span class="nofiles">Choisir un fichier</span>
-          <span class="selected">Fichier sélectionné</span>
+        <input-file (fileSelect)="fileSelect($event)" [accept]="'*/*'">
+          <span class="buttonText">Choisir un fichier</span>
         </input-file>
+        <div class="margin"></div>
+        <md-input-container class="blockContainer">
+          <input mdInput type="text" placeholder="Nom du fichier choisi" formControlName="filename" required/>
+          <md-error>Veuillez choisir un fichier à ajouter</md-error>
+        </md-input-container>
 
-        <input type="submit" [disabled]="!form.valid" style="display: none" />
+        <input type="submit" [disabled]="!isValidForm" style="display: none" />
       </form>
     </md-card-content>
 
     <md-card-actions align="end">
-      <button md-raised-button class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!form.valid">Ajouter le fichier</button>
+      <button md-raised-button class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!isValidForm">Ajouter le fichier</button>
       <button md-raised-button class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
     </md-card-actions>
   </md-card>

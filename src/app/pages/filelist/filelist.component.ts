@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { RestApiService } from "app/shared/rest-api.service";
 import { Project } from "app/entities/project";
 import { Router } from "@angular/router";
+import { TruncatePipe} from "app/shared/truncate.pipe";
 
 @Component({
   selector: 'app-filelist',
@@ -33,7 +34,7 @@ export class FilelistComponent implements OnInit {
   }
 
   add(): void {
-    this._router.navigate(['/add_file']);
+    this._router.navigate(['/add_file', this._project.id]);
   }
 
 }

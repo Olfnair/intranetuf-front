@@ -12,8 +12,10 @@
       <thead>
         <tr>
           <th>Nom du fichier</th>
+          <th>Auteur</th>
           <th>Version</th>
           <th>Date d'upload</th>
+          <th>statut</th>
         </tr>
       </thead>
       <tbody>
@@ -23,9 +25,11 @@
           </td>
         </tr>
         <tr *ngFor="let file of files">
-          <td>{{file.filename}}</td>
-          <td>{{file.version}}</td>
-          <!--<td>{{file.date_upload.day}}/{{file.date_upload.month}}/{{file.date_upload.year}}</td>-->
+          <td>{{file.version?.filename | truncate:30}}</td>
+          <td>{{file.author?.firstname}} {{file.author?.name}}</td>
+          <td>{{file.version?.num}}</td>
+          <td>{{file.version?.date_upload?.day}}/{{file.version?.date_upload?.month}}/{{file.version?.date_upload?.year}}</td>
+          <td>{{file.version?.status}}</td>
         </tr>
       </tbody>
     </table>
