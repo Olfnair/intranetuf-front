@@ -8,8 +8,6 @@ import { Project } from "app/entities/project";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  private _selectedProject: Project = undefined;
-
   constructor(private _session: SessionService) { }
 
   ngOnInit() {
@@ -20,10 +18,10 @@ export class HomeComponent implements OnInit {
   }
 
   get selectedProject(): Project {
-    return this._selectedProject;
+    return this._session.selectedProject;
   }
 
   selectProject(project: Project): void {
-    this._selectedProject = project;
+    this._session.selectedProject = project;
   }
 }

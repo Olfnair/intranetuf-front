@@ -4,21 +4,22 @@ import { environment } from "environments/environment";
 import { Observable } from "rxjs";
 import { Credentials } from "app/entities/credentials";
 import 'rxjs/add/operator/map';
+import { Project } from "app/entities/project";
 
 @Injectable()
 export class SessionService {
 
-  private _authToken: string;
-  private _logged: boolean;
-  private _authUrl: string;
+  private _authToken: string = '';
+  private _logged: boolean = false;
+  private _authUrl: string = environment.backend.protocol + "://"
+                           + environment.backend.host + ":"
+                           + environment.backend.port
+                           + environment.backend.endpoints.auth;
+
+  // mémorise le projet selectionné pour toute la session
+  private _selectedProject: Project = undefined;
 
   constructor(private _http: Http) {
-    this._authToken = '';
-    this._logged = false;
-    this._authUrl =  environment.backend.protocol + "://"
-                  + environment.backend.host + ":"
-                  + environment.backend.port
-                  + environment.backend.endpoints.auth;
   }
 
   get authToken(): string {
@@ -27,6 +28,14 @@ export class SessionService {
 
   get logged(): boolean {
     return this._logged;
+  }
+
+  get selectedProject(): Project {
+    return this._selectedProject;
+  }
+
+  set selectedProject(project : Project) {
+    this._selectedProject = project;
   }
 
   /**
@@ -49,6 +58,7 @@ export class SessionService {
   logout(): void {
     this._authToken = '';
     this._logged = false;
+    this._selectedProject = undefined;
   }
 
 }

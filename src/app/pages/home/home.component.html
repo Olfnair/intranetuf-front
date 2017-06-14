@@ -7,7 +7,7 @@
 <table *ngIf="logged" cellspacing="0" style="width:100%; border-collapse: collapse;">
   <tr>
     <td style="vertical-align: top;">
-      <app-projectlist (select)="selectProject($event)"></app-projectlist>
+      <app-projectlist [selected]="selectedProject" (select)="selectProject($event)"></app-projectlist>
     </td>
     <td style="width:100%; vertical-align: top;">
       <app-filelist [project]="selectedProject"></app-filelist>
