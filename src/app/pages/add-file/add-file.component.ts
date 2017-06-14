@@ -65,9 +65,6 @@ export class AddFileComponent implements OnInit {
 
   submit(): void {
     let version: Version = new Version();
-    let author: User = new User();
-    // l'auteur est géré par le backend
-    // this._file.author = author;
     if(this._newVersionMode) {
       // TODO : nouvelle version
     }
