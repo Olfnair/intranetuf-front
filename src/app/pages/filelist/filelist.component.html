@@ -11,6 +11,11 @@
     <table class="dataTable">
       <thead>
         <tr>
+          <td>
+            <button md-mini-fab class="add" (click)="add()" mdTooltip="Ajouter un fichier" mdTooltipPosition="after"><md-icon>add</md-icon></button>
+          </td>
+        </tr>
+        <tr>
           <th>Nom du fichier</th>
           <th>Auteur</th>
           <th>Version</th>
@@ -19,11 +24,6 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-            <button md-mini-fab class="add" (click)="add()" mdTooltip="Ajouter un fichier" mdTooltipPosition="after"><md-icon>add</md-icon></button>
-          </td>
-        </tr>
         <tr *ngFor="let file of files">
           <td>{{file.version?.filename | truncate:30}}</td>
           <td>{{file.author?.firstname}} {{file.author?.name}}</td>

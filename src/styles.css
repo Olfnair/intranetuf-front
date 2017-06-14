@@ -37,7 +37,7 @@ table.dataTable {
     border-spacing: 25px 0px;*/
 }
 
-table.dataTable thead {
+table.dataTable thead tr {
     height: 3em;
 }
 
@@ -45,7 +45,7 @@ table.dataTable th, td {
     text-align: left;
 }
 
-table.dataTable tr {
+table.dataTable tbody tr {
     height: 2em;
 }
 
