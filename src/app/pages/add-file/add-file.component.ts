@@ -8,6 +8,7 @@ import { Version } from "app/entities/version";
 import { User } from "app/entities/user";
 import { Date } from "app/entities/date";
 import { FileUploadService } from "app/shared/file-upload.service";
+import { SessionService } from "app/shared/session.service";
 
 @Component({
   selector: 'app-add-file',
@@ -22,11 +23,14 @@ export class AddFileComponent implements OnInit {
   private _file: FileEntity = new FileEntity();
   private _newVersionMode: boolean = false;
 
-  constructor(private _uploadService: FileUploadService, private _router: Router, private _route: ActivatedRoute) {
+  constructor(private _uploadService: FileUploadService, private _router: Router, private _route: ActivatedRoute, private _session: SessionService) {
     this._form = this._buildForm();
   }
 
   ngOnInit() {
+    if(! this._session.logged) {
+      this._router.navigate(['/home']);
+    }
     this._paramsSub = this._route.params.subscribe(params => {
       this._project.id = +params['projectId'] || undefined;
       this._file.id = +params['fileId'] || undefined;
