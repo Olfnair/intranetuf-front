@@ -32,12 +32,12 @@ export class ProjectlistComponent implements OnInit {
       private _zone: NgZone) {
     this._select$ = new EventEmitter();
     this._projects = [];
-    this._uploadService.progress$.subscribe(data => {
+    /*this._uploadService.progress$.subscribe(data => {
       this._zone.run(() => {
           console.log('progress = '+data);
           this._progress = data;
         });
-      });
+      });*/
   }
 
   ngOnInit() {
@@ -103,7 +103,7 @@ export class ProjectlistComponent implements OnInit {
     this._select$.emit(this._selectedProject);
   }
 
-  fileChange(event): void {
+  /*fileChange(event): void {
     let fileList: FileList = event.target.files;
     if(fileList.length > 0) {
       let file: File = fileList[0];
@@ -121,7 +121,7 @@ export class ProjectlistComponent implements OnInit {
             error => console.log(error)
           )
     }
-  }
+  }*/
 
   /*onChange(event): void {
     console.log('onChange');

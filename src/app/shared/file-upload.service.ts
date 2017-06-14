@@ -7,8 +7,9 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class FileUploadService {
-  private _progress$: any;
-  private _progressObserver: Observer<any>;
+  private _progressValue: number
+  private _progress$: Observable<number>;
+  private _progressObserver: Observer<number>;
   private _url: string;
 
   constructor() {
@@ -16,29 +17,30 @@ export class FileUploadService {
               + environment.backend.host + ":"
               + environment.backend.port
               + environment.backend.endpoints.allFiles;
-    this._progress$ = Observable.create(observer => {
-      this._progressObserver = observer
+    this._progress$ = Observable.create((observer: Observer<number>) => {
+      this._progressObserver = observer;
     }).share();
+    this._progress$.subscribe((value: number) => this._progressValue = value);
   }
 
-  get progress$(): any {
+  get progressValue(): number {
+    return this._progressValue;
+  }
+
+  get progress$(): Observable<number> {
     return this._progress$;
   }
 
-  upload(params: string[], file: File, fileEntity: FileEntity): Observable<any> {
+  upload(params: string[], file: File, fileEntity: FileEntity): Observable<void> {
     return Observable.create(observer => {
       let formData: FormData = new FormData(), xhr: XMLHttpRequest = new XMLHttpRequest();
 
-      /*for (let i = 0; i < files.length; i++) {
-        formData.append("file", files[i], files[i].name);
-      }*/
-
       formData.append("entity", new Blob([JSON.stringify({file: fileEntity})], {type: "application/json"}));
-      formData.append("file", file);
+      formData.append("file", file, file.name);
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-          if (xhr.status === 201) {
+          if (xhr.status >= 200 && xhr.status < 300) {
             observer.complete();
           } else {
             observer.error(xhr.response);
@@ -47,8 +49,8 @@ export class FileUploadService {
       };
 
       xhr.upload.onprogress = (event) => {
-        this._progress$ = Math.round(event.loaded / event.total * 100);
-        this._progressObserver.next(this._progress$);
+        //this._progress$ = Math.round(event.loaded / event.total * 100);
+        this._progressObserver.next(Math.round(event.loaded / event.total * 100));
       };
 
       //xhr.timeout = 10000; // time in milliseconds

@@ -61,30 +61,23 @@ export class AddFileComponent implements OnInit {
 
   submit(): void {
     let version: Version = new Version();
-    let date: Date = new Date();
     let author: User = new User();
-    date.year = 2017;
-    date.month = 6;
-    date.day = 15;
     // l'auteur est géré par le backend
     // this._file.author = author;
-    /*if(this._newVersionMode) {
-
+    if(this._newVersionMode) {
+      // TODO : nouvelle version
     }
-    else {*/
-      //this._file.author = new User();
-      //this._file.author.id =
-      version.date_upload = date;
+    else {
       version.filename = this.filename;
       this._file.version = version;
       this._file.project = this._project;
       this._uploadService.upload([], this._uploadFile, this._file)
-                       .finally(() => console.log('sent'))
+                       //.finally(() => console.log('sent'))
                        .subscribe(
                          //() => console.log('sent ok'), // marche pas ???
                          error => console.log(error)
                        )
-    //}
+    }
     this._router.navigate(['/home']);
   }
 
