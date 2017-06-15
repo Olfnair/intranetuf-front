@@ -38,7 +38,7 @@ table.dataTable {
 }
 
 table.dataTable thead tr {
-    height: 3em;
+    height: 4em;
 }
 
 table.dataTable th, td {
@@ -46,7 +46,7 @@ table.dataTable th, td {
 }
 
 table.dataTable tbody tr {
-    height: 2em;
+    height: 3em;
 }
 
 .blockContainer {

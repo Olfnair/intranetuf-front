@@ -1,6 +1,7 @@
 <section class="container">
   <md-card>
-    <md-card-title class="centerText">Ajouter un fichier</md-card-title>
+    <md-card-title *ngIf="! newVersionMode" class="centerText">Ajouter un fichier</md-card-title>
+    <md-card-title *ngIf="newVersionMode" class="centerText">Ajouter une nouvelle version</md-card-title>
 
     <md-card-content>
       <form novalidate [formGroup]="form" (ngSubmit)="submit()">

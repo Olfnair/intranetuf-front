@@ -50,6 +50,10 @@ export class AddFileComponent implements OnInit {
     return this._file && this._uploadFile.name || '';
   }
 
+  get newVersionMode(): boolean {
+    return this._newVersionMode;
+  }
+
   fileSelect(file: File): void {
     this._uploadFile = file;
     this._form.controls.filename.setValue(this._uploadFile.name);
@@ -64,22 +68,28 @@ export class AddFileComponent implements OnInit {
   }
 
   submit(): void {
+    let entityType: string;
+    let entity: any;
     let version: Version = new Version();
+    version.filename = this.filename;
     if(this._newVersionMode) {
-      // TODO : nouvelle version
+      version.file = this._file;
+      entityType = 'version';
+      entity = version;
     }
     else {
-      version.filename = this.filename;
       this._file.version = version;
       this._file.project = this._project;
-      this._uploadService.upload([], this._uploadFile, this._file)
-                       //.finally(() => console.log('sent'))
-                       .subscribe(
-                         //() => console.log('sent ok'), // marche pas ???
-                         error => console.log(error)
-                       )
+      entityType = 'file';
+      entity = this._file;
     }
-    this._router.navigate(['/home']);
+    this._uploadService.upload([], this._uploadFile, entityType, entity)
+                       .finally(() => this._router.navigate(['/home']))
+                       .subscribe(
+                         error => console.log(error)
+                         //() => this._router.navigate(['/home']) // marche pas ???
+                       )
+    // this._router.navigate(['/home']);
   }
 
   cancel(): void {

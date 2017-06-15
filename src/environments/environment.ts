@@ -14,11 +14,11 @@ export const environment = {
       oneUser: '/IUF/rest/entities.user/:id',
       allProjects: '/IUF/rest/entities.project',
       oneProject: '/IUF/rest/entities.project/:id',
-      upload: '/IUF/rest/upload',
       auth: '/IUF/rest/auth',
       allFiles: '/IUF/rest/entities.file',
       filesByProject: '/IUF/rest/entities.file/project/',
       allVersions: '/IUF/rest/entities.version',
+      download: '/IUF/rest/download/'
     }
   }
 };

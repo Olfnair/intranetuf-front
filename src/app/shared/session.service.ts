@@ -5,11 +5,12 @@ import { Observable } from "rxjs";
 import { Credentials } from "app/entities/credentials";
 import 'rxjs/add/operator/map';
 import { Project } from "app/entities/project";
+import { AuthToken } from "app/entities/auth-token";
 
 @Injectable()
 export class SessionService {
 
-  private _authToken: string = '';
+  private _authToken: AuthToken = undefined;
   private _logged: boolean = false;
   private _authUrl: string = environment.backend.protocol + "://"
                            + environment.backend.host + ":"
@@ -22,8 +23,12 @@ export class SessionService {
   constructor(private _http: Http) {
   }
 
+  get userId(): number {
+    return this._authToken ? this._authToken.u : undefined;
+  } 
+
   get authToken(): string {
-    return this._authToken;
+    return JSON.stringify(this._authToken);
   }
 
   get logged(): boolean {
@@ -49,14 +54,14 @@ export class SessionService {
       if(res.status !== 200) {
         return false;
       }
-      this._authToken = res.text();
+      this._authToken = res.json();
       this._logged = true;
       return true;
     });
   }
 
   logout(): void {
-    this._authToken = '';
+    this._authToken = undefined;
     this._logged = false;
     this._selectedProject = undefined;
   }

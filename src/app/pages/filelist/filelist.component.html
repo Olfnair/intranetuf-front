@@ -20,7 +20,7 @@
           <th>Auteur</th>
           <th>Version</th>
           <th>Date d'upload</th>
-          <th>statut</th>
+          <th>Statut</th>
         </tr>
       </thead>
       <tbody>
@@ -30,6 +30,8 @@
           <td>{{file.version?.num}}</td>
           <td>{{file.version?.date_upload?.day}}/{{file.version?.date_upload?.month}}/{{file.version?.date_upload?.year}}</td>
           <td>{{file.version?.status}}</td>
+          <td *ngIf="file.version && file.version.status == 0"><a md-raised-button color="primary" mdTooltip="Télécharger" mdTooltipPosition="above" target="_self" [href]="downloadLink(file.id)" download><md-icon>file_download</md-icon></a>
+          <td *ngIf="file.author && file.author.id == userId"><a md-raised-button color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above" target="_self" [routerLink]="['/add_file', project.id, file.id]" download><md-icon>file_upload</md-icon></a>
         </tr>
       </tbody>
     </table>

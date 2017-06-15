@@ -2,7 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { RestApiService } from "app/shared/rest-api.service";
 import { Project } from "app/entities/project";
 import { Router } from "@angular/router";
-import { TruncatePipe} from "app/shared/truncate.pipe";
+import { TruncatePipe } from "app/shared/truncate.pipe";
+import { Response } from "@angular/http";
+import { SessionService } from "app/shared/session.service";
+import { environment } from "environments/environment";
+import 'rxjs/Rx';
 
 @Component({
   selector: 'app-filelist',
@@ -12,16 +16,20 @@ import { TruncatePipe} from "app/shared/truncate.pipe";
 export class FilelistComponent implements OnInit {
   private _project: Project = undefined;
   private _files: any[] = [];
-  
-  constructor(private _restService: RestApiService, private _router: Router) { }
+  private _url = environment.backend.protocol + "://"
+              + environment.backend.host + ":"
+              + environment.backend.port
+              + environment.backend.endpoints.download;
+
+  constructor(private _session: SessionService, private _restService: RestApiService, private _router: Router) { }
 
   ngOnInit() {
   }
 
   @Input() set project(project: Project) {
     this._project = project;
-    if(project) {
-      this._restService.fetchFilesByProject(project).subscribe((files: any[]) => this._files = files);
+    if (this._project) {
+      this._restService.fetchFilesByProject(this._project).subscribe((files: any[]) => this._files = files);
     }
   }
 
@@ -33,8 +41,16 @@ export class FilelistComponent implements OnInit {
     return this._files;
   }
 
+  get userId(): number {
+    return this._session.userId;
+  }
+
   add(): void {
     this._router.navigate(['/add_file', this._project.id]);
+  }
+
+  downloadLink(fileId: number): string {
+    return this._url + fileId + '?token="' + encodeURIComponent(this._session.authToken) + '"';
   }
 
 }

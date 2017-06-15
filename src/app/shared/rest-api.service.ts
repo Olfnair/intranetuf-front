@@ -103,8 +103,8 @@ export class RestApiService {
      *
      * @returns {RequestOptions}
      */
-  private _options(headerList: Object = {}): RequestOptions {
-    const headers = new Headers(Object.assign({ 'Accept': 'application/json', 'Authorization': 'Bearer ' + this.session.authToken }, headerList));
+  private _options(accept: string = 'application/json', headerList: Object = {}): RequestOptions {
+    const headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + this.session.authToken }, headerList));
     return new RequestOptions({ headers: headers });
   }
 
