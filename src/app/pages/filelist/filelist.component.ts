@@ -3,6 +3,7 @@ import { RestApiService } from "app/shared/rest-api.service";
 import { Project } from "app/entities/project";
 import { Router } from "@angular/router";
 import { TruncatePipe } from "app/shared/truncate.pipe";
+import { NumberLenPipe } from "app/shared/number-len.pipe";
 import { Response } from "@angular/http";
 import { SessionService } from "app/shared/session.service";
 import { environment } from "environments/environment";
@@ -49,8 +50,8 @@ export class FilelistComponent implements OnInit {
     this._router.navigate(['/add_file', this._project.id]);
   }
 
-  downloadLink(fileId: number): string {
-    return this._url + fileId + '?token="' + encodeURIComponent(this._session.authToken) + '"';
+  downloadLink(versionId: number): string {
+    return this._url + versionId + '?token="' + encodeURIComponent(this._session.authToken) + '"';
   }
 
 }

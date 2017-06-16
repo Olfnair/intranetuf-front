@@ -9,6 +9,8 @@ import { User } from "app/entities/user";
 import { Date } from "app/entities/date";
 import { FileUploadService } from "app/shared/file-upload.service";
 import { SessionService } from "app/shared/session.service";
+import { MdDialogRef, MdDialog } from "@angular/material";
+import { ProgressComponent } from "app/shared/progress/progress.component";
 
 @Component({
   selector: 'app-add-file',
@@ -22,8 +24,16 @@ export class AddFileComponent implements OnInit {
   private _project: Project = new Project();
   private _file: FileEntity = new FileEntity();
   private _newVersionMode: boolean = false;
+  private _progressModal: MdDialogRef<ProgressComponent> = undefined;
+  private _uploadProgress: number = 0;
+  private _aborted: boolean = false;
 
-  constructor(private _uploadService: FileUploadService, private _router: Router, private _route: ActivatedRoute, private _session: SessionService) {
+  constructor(
+      private _uploadService: FileUploadService,
+      private _router: Router,
+      private _route: ActivatedRoute,
+      private _session: SessionService,
+      private _dialog: MdDialog) {
     this._form = this._buildForm();
   }
 
@@ -83,10 +93,19 @@ export class AddFileComponent implements OnInit {
       entityType = 'file';
       entity = this._file;
     }
+    this._aborted = false;
+    this._uploadProgress = 0;
+    this.openProgressModal();
+    this._uploadService.progress$.subscribe((uploadProgress: number) => this._uploadProgress = uploadProgress)
     this._uploadService.upload([], this._uploadFile, entityType, entity)
-                       .finally(() => this._router.navigate(['/home']))
+                       .finally(() => {
+                         if(! this._aborted) {
+                           this.closeProgressModal();
+                           this._router.navigate(['/home']);
+                         }
+                       })
                        .subscribe(
-                         error => console.log(error)
+                         error => this.closeProgressModal()
                          //() => this._router.navigate(['/home']) // marche pas ???
                        )
     // this._router.navigate(['/home']);
@@ -94,6 +113,23 @@ export class AddFileComponent implements OnInit {
 
   cancel(): void {
     this._router.navigate(['/home']);
+  }
+
+  openProgressModal(): void {
+    this._progressModal = this._dialog.open(ProgressComponent, {data: this});
+    this._progressModal.afterClosed().subscribe(totalProgress => {
+      if(totalProgress == undefined || totalProgress < 100) {
+        this._aborted = true;
+        this._uploadService.abort();
+      }
+      this._progressModal = undefined;
+    });
+  }
+
+  closeProgressModal(): void {
+    if(this._progressModal) {
+      this._progressModal.close(this._uploadProgress);
+    }
   }
 
   /**

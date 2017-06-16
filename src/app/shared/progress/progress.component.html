@@ -1,0 +1,8 @@
+<section>
+  <h2 md-dialog-title>Upload en cours...</h2>
+  <md-dialog-content>
+      <md-progress-spinner class="spinner" color="primary" [value]="progress"></md-progress-spinner>
+      <p class="centerText">{{progress}} %</p>
+      <p *ngIf="progress >= 100" class="centerText">En attente...</p>
+  </md-dialog-content>
+</section>

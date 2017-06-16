@@ -20,6 +20,8 @@ import { AddProjectComponent } from './pages/projectlist/add-project/add-project
 import { AddFileComponent } from './pages/add-file/add-file.component';
 import { InputFileComponent } from './shared/input-file/input-file.component';
 import { TruncatePipe } from './shared/truncate.pipe';
+import { NumberLenPipe } from './shared/number-len.pipe';
+import { ProgressComponent } from './shared/progress/progress.component';
 
 // Material Design
 import { MaterialModule } from '@angular/material';
@@ -41,9 +43,12 @@ import 'hammerjs';
     AddFileComponent,
     InputFileComponent,
     TruncatePipe,
+    NumberLenPipe,
+    ProgressComponent,
   ],
   entryComponents: [
-    AddProjectComponent
+    AddProjectComponent,
+    ProgressComponent
   ],
   imports: [
     BrowserModule,

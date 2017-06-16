@@ -33,8 +33,8 @@ table.dataTable {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 5px;
-    /*border-collapse: separate;
-    border-spacing: 25px 0px;*/
+    border-collapse: collapse;
+    /*border-spacing: 25px 0px;*/
 }
 
 table.dataTable thead tr {
@@ -47,6 +47,15 @@ table.dataTable th, td {
 
 table.dataTable tbody tr {
     height: 3em;
+}
+
+table.dataTable tbody tr.oddRow {
+    background-color: #C1BFFF;
+    width: 100%;
+}
+
+table.dataTable thead tr.columnTitles {
+    background-color: #d1d1d1;
 }
 
 .blockContainer {

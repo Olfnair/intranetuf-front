@@ -15,23 +15,28 @@
             <button md-mini-fab class="add" (click)="add()" mdTooltip="Ajouter un fichier" mdTooltipPosition="after"><md-icon>add</md-icon></button>
           </td>
         </tr>
-        <tr>
-          <th>Nom du fichier</th>
+        <tr class="columnTitles">
+          <th>Fichier</th>
           <th>Auteur</th>
           <th>Version</th>
           <th>Date d'upload</th>
           <th>Statut</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let file of files">
-          <td>{{file.version?.filename | truncate:30}}</td>
+        <tr *ngFor="let file of files; let i = index" [class.oddRow]="i % 2">
+          <td>
+            <span mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0">{{file.version?.filename | truncate:30}}</span>
+          </td>
           <td>{{file.author?.firstname}} {{file.author?.name}}</td>
           <td>{{file.version?.num}}</td>
-          <td>{{file.version?.date_upload?.day}}/{{file.version?.date_upload?.month}}/{{file.version?.date_upload?.year}}</td>
+          <td>{{file.version?.date_upload?.day | numberLen:2}}/{{file.version?.date_upload?.month | numberLen:2}}/{{file.version?.date_upload?.year | numberLen:4}}</td>
           <td>{{file.version?.status}}</td>
-          <td *ngIf="file.version && file.version.status == 0"><a md-raised-button color="primary" mdTooltip="Télécharger" mdTooltipPosition="above" target="_self" [href]="downloadLink(file.id)" download><md-icon>file_download</md-icon></a>
-          <td *ngIf="file.author && file.author.id == userId"><a md-raised-button color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above" target="_self" [routerLink]="['/add_file', project.id, file.id]" download><md-icon>file_upload</md-icon></a>
+          <td>
+            <span *ngIf="file.version && file.version.status == 0"><a md-raised-button color="primary" mdTooltip="Télécharger" mdTooltipPosition="above" target="_self" [href]="downloadLink(file.version.id)" download><md-icon>file_download</md-icon></a></span>
+            <span *ngIf="file.author && file.author.id == userId"><a md-raised-button color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above" [routerLink]="['/add_file', project.id, file.id]" download><md-icon>file_upload</md-icon></a></span>
+          </td>
         </tr>
       </tbody>
     </table>
