@@ -1,0 +1,13 @@
+.tableRow {
+  display: table-row;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.inactive {
+  color: #a1a1a1;
+}
+
+label {
+  color: #313131;
+}

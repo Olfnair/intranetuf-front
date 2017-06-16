@@ -11,12 +11,12 @@
     <table class="dataTable">
       <thead>
         <tr>
-          <td>
+          <td style="padding-left: 0.5em;">
             <button md-mini-fab class="add" (click)="add()" mdTooltip="Ajouter un fichier" mdTooltipPosition="after"><md-icon>add</md-icon></button>
           </td>
         </tr>
         <tr class="columnTitles">
-          <th>Fichier</th>
+          <th><app-sort-button>Fichier</app-sort-button></th>
           <th>Auteur</th>
           <th>Version</th>
           <th>Date d'upload</th>
@@ -42,6 +42,3 @@
     </table>
   </md-card-content>
 </md-card>
-
-
-<!--<md-icon md-list-icon>folder</md-icon>-->

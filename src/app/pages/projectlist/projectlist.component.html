@@ -3,14 +3,14 @@
   <div>
     <md-card class="navProject" [class.hide]="! opened">
       <md-card-title class="title">Projets</md-card-title>
-      <md-card-content>  
+      <md-card-content pa>  
         <button md-mini-fab class="add" (click)="add()" mdTooltip="Nouveau projet" mdTooltipPosition="after"><md-icon>create_new_folder</md-icon></button>
         <md-nav-list dense>
           <div *ngFor="let project of projects">
-            <md-list-item *ngIf="isSelected(project)" class="selected">
+            <md-list-item *ngIf="isSelected(project)" class="selected no-padding">
               <span md-line>{{project.name}}</span>
             </md-list-item>
-            <md-list-item *ngIf="! isSelected(project)" (click)="select(project)">
+            <md-list-item *ngIf="! isSelected(project)" (click)="select(project)" class="no-padding">
               <span md-line>{{project.name}}</span>
             </md-list-item>
           </div>
@@ -19,29 +19,3 @@
     </md-card>
   </div>
 </section>
-
-<!--
-<table>
-  <tr>
-    <th>Id</th>
-    <th>Actif</th>
-    <th>Chemin</th>
-    <th>Nom</th>
-  </tr>
-  <tr *ngFor="let project of projects">
-    <td>{{project.id}}</td>
-    <td>{{project.active}}</td>
-    <td>{{project.filepath}}</td>
-    <td>{{project.name}}</td>
-  </tr>
-</table>
-
-<a target="_self" href="https://localhost:8443/IUF/rest/download/1" download>Download</a>
-
-
-  <input type="file" (change)="onChange($event)" placeholder="Upload file">
-  <section *ngIf="progress >= 0">
-    <progress value="{{progress}}" max="100">{{progress}} %</progress>
-  <section>
-  <br/>
--->

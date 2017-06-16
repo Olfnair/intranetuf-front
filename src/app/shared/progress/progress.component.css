@@ -1,7 +1,23 @@
+.spinnerContainer {
+    position: relative;
+}
+
 .spinner {
     margin: 0 auto;
 }
 
+.spinnerText {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    top: 0px;
+    left: 0px;
+    /*margin-bottom: 50%;*/
+    transform: translateY(50%);
+    text-align: center;
+}
+
 .centerText {
-    text-align : center;
+    text-align: center;
 }

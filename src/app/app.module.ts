@@ -27,6 +27,7 @@ import { ProgressComponent } from './shared/progress/progress.component';
 import { MaterialModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
+import { SortButtonComponent } from './shared/sort-button/sort-button.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import 'hammerjs';
     TruncatePipe,
     NumberLenPipe,
     ProgressComponent,
+    SortButtonComponent,
   ],
   entryComponents: [
     AddProjectComponent,
