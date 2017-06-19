@@ -12,7 +12,7 @@ import { SessionService } from "app/shared/session.service";
 import { HomeComponent } from "app/pages/home/home.component";
 import { ProjectlistComponent } from "app/pages/projectlist/projectlist.component";
 import { LoginComponent } from "app/pages/login/login.component";
-import { UserFormComponent } from "app/pages/user-form/user-form.component";
+import { UserFormComponent } from "app/pages/admin/user-form/user-form.component";
 import { HeaderComponent } from "app/pages/header/header.component";
 import { ActivateAccountComponent } from "app/pages/activate-account/activate-account.component";
 import { FilelistComponent } from './pages/filelist/filelist.component';
@@ -22,12 +22,15 @@ import { InputFileComponent } from './shared/input-file/input-file.component';
 import { TruncatePipe } from './shared/truncate.pipe';
 import { NumberLenPipe } from './shared/number-len.pipe';
 import { ProgressComponent } from './shared/progress/progress.component';
+import { SortButtonComponent } from './shared/sort-button/sort-button.component';
+import { AdminPanelComponent } from './pages/admin/admin-panel/admin-panel.component';
 
 // Material Design
 import { MaterialModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
-import { SortButtonComponent } from './shared/sort-button/sort-button.component';
+import { DatatableComponent } from './shared/datatable/datatable.component';
+import { DatableRowComponent } from './shared/datatable/datable-row/datable-row.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,9 @@ import { SortButtonComponent } from './shared/sort-button/sort-button.component'
     NumberLenPipe,
     ProgressComponent,
     SortButtonComponent,
+    AdminPanelComponent,
+    DatatableComponent,
+    DatableRowComponent,
   ],
   entryComponents: [
     AddProjectComponent,

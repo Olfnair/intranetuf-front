@@ -96,7 +96,6 @@ export class AddFileComponent implements OnInit {
     this._aborted = false;
     this._uploadProgress = 0;
     this.openProgressModal();
-    this._uploadService.progress$.subscribe((uploadProgress: number) => this._uploadProgress = uploadProgress)
     this._uploadService.upload([], this._uploadFile, entityType, entity)
                        .finally(() => {
                          if(! this._aborted) {
@@ -106,9 +105,7 @@ export class AddFileComponent implements OnInit {
                        })
                        .subscribe(
                          error => this.closeProgressModal()
-                         //() => this._router.navigate(['/home']) // marche pas ???
                        )
-    // this._router.navigate(['/home']);
   }
 
   cancel(): void {
@@ -116,7 +113,8 @@ export class AddFileComponent implements OnInit {
   }
 
   openProgressModal(): void {
-    this._progressModal = this._dialog.open(ProgressComponent, {data: this});
+    this._uploadService.progress$.subscribe((uploadProgress: number) => this._uploadProgress = uploadProgress)
+    this._progressModal = this._dialog.open(ProgressComponent, {data: this._uploadService.progress$});
     this._progressModal.afterClosed().subscribe(totalProgress => {
       if(totalProgress == undefined || totalProgress < 100) {
         this._aborted = true;

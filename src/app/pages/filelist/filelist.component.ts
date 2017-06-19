@@ -1,12 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RestApiService } from "app/shared/rest-api.service";
 import { Project } from "app/entities/project";
+import { File } from "app/entities/file";
 import { Router } from "@angular/router";
 import { TruncatePipe } from "app/shared/truncate.pipe";
 import { NumberLenPipe } from "app/shared/number-len.pipe";
 import { Response } from "@angular/http";
 import { SessionService } from "app/shared/session.service";
 import { environment } from "environments/environment";
+import { Observable } from "rxjs/Observable";
 import 'rxjs/Rx';
 
 @Component({
@@ -16,7 +18,7 @@ import 'rxjs/Rx';
 })
 export class FilelistComponent implements OnInit {
   private _project: Project = undefined;
-  private _files: any[] = [];
+  private _files: File[] = [];
   private _url = environment.backend.protocol + "://"
               + environment.backend.host + ":"
               + environment.backend.port
@@ -38,7 +40,7 @@ export class FilelistComponent implements OnInit {
     return this._project;
   }
 
-  get files(): any[] {
+  get files(): File[] {
     return this._files;
   }
 

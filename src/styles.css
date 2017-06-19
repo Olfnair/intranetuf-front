@@ -1,10 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+/* overides material : */ 
 .mat-nav-list[dense] .no-padding .mat-list-item-content {
   padding: 0 2px !important;
 }
 
+.mat-tab-labels {
+  background-color: #ccc;
+}
+
+
+/* global */
 body {
   background-color: #f3f3f3;
 }

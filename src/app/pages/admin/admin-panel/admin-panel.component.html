@@ -1,0 +1,12 @@
+<section>
+  <h2>Pannel d'Administration {{selectedTab}}</h2>
+  <md-tab-group (selectChange)="setSelectedTab($event)">
+    <md-tab label="Créer un utilisateur" class="padding">
+      <app-user-form></app-user-form>
+    </md-tab>
+    <md-tab label="Two" class="padding">
+      <h1>Some more tab content</h1>
+      <p>...</p>
+    </md-tab>
+  </md-tab-group>
+</section>

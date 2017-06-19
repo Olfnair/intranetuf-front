@@ -1,0 +1,13 @@
+h2 {
+  text-align: center;
+}
+
+md-card-title {
+  text-align: center;
+}
+
+md-tab-group {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #ffffff;
+}

@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, Inject, NgZone } from '@angular/core';
 import { AddFileComponent } from "app/pages/add-file/add-file.component";
 import { FileUploadService } from "app/shared/file-upload.service";
 import { Subscription } from "rxjs/Subscription";
+import { MD_DIALOG_DATA } from '@angular/material';
+import { Observable } from "rxjs/Observable";
 
 @Component({
   selector: 'app-progress',
@@ -12,10 +14,15 @@ export class ProgressComponent implements OnInit {
   private _progress: number = 0;
   private _sub: Subscription;
 
-  constructor(private _uploadService: FileUploadService, private _zone: NgZone) { }
+  constructor(@Inject(MD_DIALOG_DATA) private _obs: Observable<number>, private _uploadService: FileUploadService, private _zone: NgZone) { }
 
   ngOnInit() {
-    this._sub = this._uploadService.progress$.subscribe((value: number) => {
+    /*this._sub = this._uploadService.progress$.subscribe((value: number) => {
+      this._zone.run(() => {
+        this._progress = value;
+      });
+    });*/
+    this._sub = this._obs.subscribe((value: number) => {
       this._zone.run(() => {
         this._progress = value;
       });
