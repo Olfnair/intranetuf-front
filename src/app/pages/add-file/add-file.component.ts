@@ -29,16 +29,16 @@ export class AddFileComponent implements OnInit {
   private _aborted: boolean = false;
 
   constructor(
-      private _uploadService: FileUploadService,
-      private _router: Router,
-      private _route: ActivatedRoute,
-      private _session: SessionService,
-      private _dialog: MdDialog) {
+    private _uploadService: FileUploadService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _session: SessionService,
+    private _dialog: MdDialog) {
     this._form = this._buildForm();
   }
 
   ngOnInit() {
-    if(! this._session.logged) {
+    if (!this._session.logged) {
       this._router.navigate(['/home']);
     }
     this._paramsSub = this._route.params.subscribe(params => {
@@ -82,7 +82,7 @@ export class AddFileComponent implements OnInit {
     let entity: any;
     let version: Version = new Version();
     version.filename = this.filename;
-    if(this._newVersionMode) {
+    if (this._newVersionMode) {
       version.file = this._file;
       entityType = 'version';
       entity = version;
@@ -96,16 +96,17 @@ export class AddFileComponent implements OnInit {
     this._aborted = false;
     this._uploadProgress = 0;
     this.openProgressModal();
-    this._uploadService.upload([], this._uploadFile, entityType, entity)
-                       .finally(() => {
-                         if(! this._aborted) {
-                           this.closeProgressModal();
-                           this._router.navigate(['/home']);
-                         }
-                       })
-                       .subscribe(
-                         error => this.closeProgressModal()
-                       )
+    let uploadSub: Subscription = this._uploadService.upload([], this._uploadFile, entityType, entity)
+      .finally(() => {
+        uploadSub.unsubscribe();
+        if (!this._aborted) {
+          this.closeProgressModal();
+          this._router.navigate(['/home']);
+        }
+      })
+      .subscribe(
+      error => this.closeProgressModal()
+      )
   }
 
   cancel(): void {
@@ -113,19 +114,25 @@ export class AddFileComponent implements OnInit {
   }
 
   openProgressModal(): void {
-    this._uploadService.progress$.subscribe((uploadProgress: number) => this._uploadProgress = uploadProgress)
-    this._progressModal = this._dialog.open(ProgressComponent, {data: this._uploadService.progress$});
-    this._progressModal.afterClosed().subscribe(totalProgress => {
-      if(totalProgress == undefined || totalProgress < 100) {
-        this._aborted = true;
-        this._uploadService.abort();
-      }
-      this._progressModal = undefined;
-    });
+    let uploadSub: Subscription = this._uploadService.progress$
+      .finally(() => uploadSub.unsubscribe())
+      .subscribe((uploadProgress: number) => this._uploadProgress = uploadProgress)
+    this._progressModal = this._dialog.open(ProgressComponent, { data: this._uploadService.progress$ });
+    let progressModalSub: Subscription = this._progressModal.afterClosed()
+      .finally(() => {
+        progressModalSub.unsubscribe();
+        this._progressModal = undefined;
+      })
+      .subscribe(totalProgress => {
+        if (totalProgress == undefined || totalProgress < 100) {
+          this._aborted = true;
+          this._uploadService.abort();
+        }
+      });
   }
 
   closeProgressModal(): void {
-    if(this._progressModal) {
+    if (this._progressModal) {
       this._progressModal.close(this._uploadProgress);
     }
   }
@@ -139,7 +146,7 @@ export class AddFileComponent implements OnInit {
      */
   private _buildForm(): FormGroup {
     return new FormGroup({
-      filename: new FormControl({value: '', disabled: true}, Validators.compose([
+      filename: new FormControl({ value: '', disabled: true }, Validators.compose([
         Validators.required
       ]))
     });

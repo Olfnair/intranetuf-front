@@ -12,7 +12,14 @@
 
 
 /* global */
+html {
+  height: 100%;
+}
+
 body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   background-color: #f3f3f3;
 }
 
@@ -39,7 +46,7 @@ body {
   }
 }
 
-table.dataTable {
+/*table.dataTable {
   width: 100%;
   background-color: #ffffff;
   border: 1px solid #ddd;
@@ -66,7 +73,7 @@ table.dataTable tbody tr.oddRow {
 
 table.dataTable thead tr.columnTitles {
   background-color: #d1d1d1;
-}
+}*/
 
 .blockContainer {
   width: 100%;

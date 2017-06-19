@@ -1,21 +1,18 @@
-<!--<md-card>
-  <md-card-content>-->
-    <table class="dataTable">
+<md-card>
+  <md-card-content>
+    <ng-content select="datatable-title"></ng-content>
+    <table class="dataTable" cellspacing="0">
       <thead>
+        <ng-content select="datatable-header"></ng-content>
         <tr class="columnTitles">
-          <th><app-sort-button>Fichier</app-sort-button></th>
-          <th>Auteur</th>
-          <th>Version</th>
-          <th>Date d'upload</th>
-          <th>Statut</th>
-          <th></th>
+          <th *ngFor="let column of columns">{{column}}</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of data; let i = index" [class.oddRow]="i % 2">
-          <ng-template ngFor let-item [ngForOf]="[item]" [ngForTemplate]="contentTpl"></ng-template>
+        <tr *ngFor="let item of data; let odd = odd" [class.oddRow]="odd" style="width: 100%">
+          <ng-template [ngTemplateOutlet]="contentTpl" [ngOutletContext]="{item: item}"></ng-template>
         </tr>
       </tbody>
     </table>
-  <!--</md-card-content>
-</md-card>-->
+  </md-card-content>
+</md-card>

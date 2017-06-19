@@ -10,6 +10,7 @@ import { SessionService } from "app/shared/session.service";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/Rx';
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   selector: 'app-filelist',
@@ -17,6 +18,7 @@ import 'rxjs/Rx';
   styleUrls: ['./filelist.component.css']
 })
 export class FilelistComponent implements OnInit {
+  private _fileSubscription: Subscription = undefined;
   private _project: Project = undefined;
   private _files: File[] = [];
   private _url = environment.backend.protocol + "://"
@@ -29,10 +31,19 @@ export class FilelistComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy() {
+    if(this._fileSubscription) {
+      this._fileSubscription.unsubscribe();
+    }
+  }
+
   @Input() set project(project: Project) {
     this._project = project;
+    if(this._fileSubscription) {
+      this._fileSubscription.unsubscribe();
+    }
     if (this._project) {
-      this._restService.fetchFilesByProject(this._project).subscribe((files: any[]) => this._files = files);
+      this._fileSubscription = this._restService.fetchFilesByProject(this._project).subscribe((files: any[]) => this._files = files);
     }
   }
 

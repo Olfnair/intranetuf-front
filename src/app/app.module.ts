@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { RestApiService } from "app/shared/rest-api.service";
 import { RouterModule } from "@angular/router";
 import { APP_ROUTES } from './app.routes';
-import { NavbuttonComponent } from './shared/navbutton/navbutton.component';
 import { FileUploadService } from "app/shared/file-upload.service";
 import { SessionService } from "app/shared/session.service";
 import { HomeComponent } from "app/pages/home/home.component";
@@ -24,20 +23,19 @@ import { NumberLenPipe } from './shared/number-len.pipe';
 import { ProgressComponent } from './shared/progress/progress.component';
 import { SortButtonComponent } from './shared/sort-button/sort-button.component';
 import { AdminPanelComponent } from './pages/admin/admin-panel/admin-panel.component';
+import { DatatableComponent } from './shared/datatable/datatable.component';
+import { DatatableHeader, DatatableTitle } from './shared/datatable/datatable.component';
 
 // Material Design
 import { MaterialModule } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'hammerjs';
-import { DatatableComponent } from './shared/datatable/datatable.component';
-import { DatableRowComponent } from './shared/datatable/datable-row/datable-row.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     ProjectlistComponent,
-    NavbuttonComponent,
     LoginComponent,
     UserFormComponent,
     HeaderComponent,
@@ -52,7 +50,8 @@ import { DatableRowComponent } from './shared/datatable/datable-row/datable-row.
     SortButtonComponent,
     AdminPanelComponent,
     DatatableComponent,
-    DatableRowComponent,
+    DatatableHeader,
+    DatatableTitle
   ],
   entryComponents: [
     AddProjectComponent,

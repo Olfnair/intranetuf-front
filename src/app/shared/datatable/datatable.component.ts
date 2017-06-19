@@ -1,13 +1,25 @@
-import { Component, OnInit, ContentChild, TemplateRef, Input } from '@angular/core';
+import { Component, OnInit, ContentChild, TemplateRef, Input, Directive } from '@angular/core';
+
+@Directive({
+  selector: 'datatable-title'
+})
+export class DatatableTitle {}
+
+@Directive({
+  selector: 'datatable-header'
+})
+export class DatatableHeader {}
 
 @Component({
-  selector: 'app-datatable',
+  selector: 'datatable',
   templateUrl: './datatable.component.html',
   styleUrls: ['./datatable.component.css']
 })
 export class DatatableComponent implements OnInit {
-  @ContentChild(TemplateRef) contentTpl: TemplateRef<Element>;
+  @ContentChild(TemplateRef)
+  public contentTpl: TemplateRef<any>;
 
+  private _columns: string[] = [];
   private _data: any[] = [];
 
   constructor() { }
@@ -23,6 +35,14 @@ export class DatatableComponent implements OnInit {
     if(data) {
       this._data = data;
     }
+  }
+
+  get columns(): string[] {
+    return this._columns;
+  }
+
+  @Input() set columns(columns: string[]) {
+    this._columns = columns;
   }
 
 }

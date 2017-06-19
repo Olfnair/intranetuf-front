@@ -1,64 +1,31 @@
-<!--<md-card *ngIf="! project">
+<md-card *ngIf="! project">
   <md-card-content>
     <p>Selectionnez un projet dans la liste...<p>
   </md-card-content>
 </md-card>
 
-<md-card *ngIf="project">
-  <md-card-content>
+<datatable *ngIf="project" [data]="files" [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '']">
+  <datatable-title>
     <h2>Projet : {{project.name}}</h2>
-
-    <table class="dataTable">
-      <thead>
-        <tr>
-          <td style="padding-left: 0.5em;">
-            <button md-mini-fab class="add" (click)="add()" mdTooltip="Ajouter un fichier" mdTooltipPosition="after"><md-icon>add</md-icon></button>
-          </td>
-        </tr>
-        <tr class="columnTitles">
-          <th><app-sort-button>Fichier</app-sort-button></th>
-          <th>Auteur</th>
-          <th>Version</th>
-          <th>Date d'upload</th>
-          <th>Statut</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let file of files; let i = index" [class.oddRow]="i % 2">
-          <td>
-            <span mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0">{{file.version?.filename | truncate:30}}</span>
-          </td>
-          <td>{{file.author?.firstname}} {{file.author?.name}}</td>
-          <td>{{file.version?.num}}</td>
-          <td>{{file.version?.date_upload?.day | numberLen:2}}/{{file.version?.date_upload?.month | numberLen:2}}/{{file.version?.date_upload?.year | numberLen:4}}</td>
-          <td>{{file.version?.status}}</td>
-          <td>
-            <span *ngIf="file.version && file.version.status == 0"><a md-raised-button color="primary" mdTooltip="Télécharger" mdTooltipPosition="above" target="_self" [href]="downloadLink(file.version.id)" download><md-icon>file_download</md-icon></a></span>
-            <span *ngIf="file.author && file.author.id == userId"><a md-raised-button color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above" [routerLink]="['/add_file', project.id, file.id]" download><md-icon>file_upload</md-icon></a></span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </md-card-content>
-</md-card>-->
-
-<app-datatable [data]="files">
-  <app-datable-row ng-template="let file" [file]="file"></app-datable-row>
-  <!--<section ng-template="let file">
-    <section *ngIf="file != undefined">
+  </datatable-title>
+  <datatable-header>
+    <tr class="add">
       <td>
-        <span mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0">{{file.version?.filename | truncate:30}}</span>
+        <button md-mini-fab (click)="add()" mdTooltip="Ajouter un fichier" mdTooltipPosition="after"><md-icon>add</md-icon></button>
       </td>
-      <td>{{file.author?.firstname}} {{file.author?.name}}</td>
-      <td>{{file.version?.num}}</td>
-      <td>{{file.version?.date_upload?.day | numberLen:2}}/{{file.version?.date_upload?.month | numberLen:2}}/{{file.version?.date_upload?.year
-        | numberLen:4}}</td>
-      <td>{{file.version?.status}}</td>
-      <td>
-        <span *ngIf="file.version && file.version.status == 0"><a md-raised-button color="primary" mdTooltip="Télécharger" mdTooltipPosition="above" target="_self" [href]="downloadLink(file.version.id)" download><md-icon>file_download</md-icon></a></span>
-        <span *ngIf="file.author && file.author.id == userId"><a md-raised-button color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above" [routerLink]="['/add_file', project.id, file.id]" download><md-icon>file_upload</md-icon></a></span>
-      </td>
-    </section>
-  </section>-->
-</app-datatable>
+    </tr>
+  </datatable-header>
+  <ng-template let-file="item">
+    <td>
+      <span mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0">{{file.version?.filename | truncate:30}}</span>
+    </td>
+    <td>{{file.author?.firstname}} {{file.author?.name}}</td>
+    <td>{{file.version?.num}}</td>
+    <td>{{file.version?.date_upload?.day | numberLen:2}}/{{file.version?.date_upload?.month | numberLen:2}}/{{file.version?.date_upload?.year | numberLen:4}}</td>
+    <td>{{file.version?.status}}</td>
+    <td>
+      <span *ngIf="file.version && file.version.status == 0"><a md-raised-button color="primary" mdTooltip="Télécharger" mdTooltipPosition="above" target="_self" [href]="downloadLink(file.version.id)" download><md-icon>file_download</md-icon></a></span>
+      <span *ngIf="file.author && file.author.id == userId"><a md-raised-button color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above" [routerLink]="['/add_file', project.id, file.id]" download><md-icon>file_upload</md-icon></a></span>
+    </td>
+  </ng-template>
+</datatable>

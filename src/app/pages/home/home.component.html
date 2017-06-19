@@ -4,7 +4,7 @@
 
 <app-login *ngIf="!logged"></app-login>
 
-<table *ngIf="logged" cellspacing="0" style="width:100%; border-collapse: collapse;">
+<!--<table *ngIf="logged" cellspacing="0" style="width:100%; border-collapse: collapse;">
   <tr>
     <td style="vertical-align: top;">
       <app-projectlist [selected]="selectedProject" (select)="selectProject($event)"></app-projectlist>
@@ -13,13 +13,13 @@
       <app-filelist [project]="selectedProject"></app-filelist>
     </td>
   </tr>
-</table>
+</table>-->
 
-<!--
-<section class="menu" style="margin-top: 200px;">
-  <label>Dev Menu</label>
-  <a [routerLink]="['/admin/create_user']">Créer compte</a>
-  <a [routerLink]="['/activate']">Activer compte</a>
-  <a [routerLink]="['/projectlist']">Home connecté</a>
+<section *ngIf="logged" class="homeContainer">
+  <section class="projectList">
+    <app-projectlist [selected]="selectedProject" (select)="selectProject($event)"></app-projectlist>
+  </section>
+  <section class="fileList">
+    <app-filelist [project]="selectedProject"></app-filelist>
+  </section>
 </section>
--->

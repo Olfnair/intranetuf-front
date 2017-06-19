@@ -1,3 +1,7 @@
-table.dataTable thead tr.add {
-    height: 2.5em;
+datatable-header tr.add {
+  height: 4em;
+}
+
+datatable-header tr.add td {
+  padding-left: 0.5em;
 }
