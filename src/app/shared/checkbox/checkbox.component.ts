@@ -31,7 +31,6 @@ export class CheckboxComponent implements OnInit {
       event.checked = checked;
       this.change(event);
     }
-    console.log(checked);
   }
 
 }

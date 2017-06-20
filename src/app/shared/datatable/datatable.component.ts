@@ -85,7 +85,6 @@ export class DatatableComponent implements OnInit {
     else if (event.checked && index === -1) {
       this._selectedData.push(item);
     }
-    console.log(JSON.stringify(this._selectedData));
   }
 
 }
