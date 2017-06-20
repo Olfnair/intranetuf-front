@@ -4,17 +4,14 @@
   </md-card-content>
 </md-card>
 
-<datatable *ngIf="project" [data]="files" [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '']">
+<datatable *ngIf="project"
+    [options] = "{addButton: true, addButtonTooltip: 'Ajouter un fichier'}"
+    [data]="files"
+    [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '']"
+    (addButtonClick)="add()">
   <datatable-title>
     <h2>Projet : {{project.name}}</h2>
   </datatable-title>
-  <datatable-header>
-    <tr class="add">
-      <td>
-        <button md-mini-fab (click)="add()" mdTooltip="Ajouter un fichier" mdTooltipPosition="after"><md-icon>add</md-icon></button>
-      </td>
-    </tr>
-  </datatable-header>
   <ng-template let-file="item">
     <td>
       <span mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0">{{file.version?.filename | truncate:30}}</span>

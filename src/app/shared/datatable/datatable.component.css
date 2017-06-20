@@ -27,3 +27,16 @@ table.dataTable tbody tr.oddRow {
 table.dataTable thead tr.columnTitles {
   background-color: #d1d1d1;
 }
+
+table.dataTable tr.add {
+  height: 4em;
+}
+
+table.dataTable tr.add td {
+  padding-left: 0.5em;
+}
+
+table.dataTable tr th.selectionCol,td.selectionCol {
+  width: 50px; 
+  text-align: center;
+}

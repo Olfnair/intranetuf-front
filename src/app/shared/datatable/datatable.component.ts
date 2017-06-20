@@ -1,64 +1,117 @@
-import { Component, OnInit, ContentChild, TemplateRef, Input, Directive } from '@angular/core';
+import { Component, OnInit, ContentChild, TemplateRef, Input, Directive, EventEmitter, Output } from '@angular/core';
 import { MdCheckboxChange } from "@angular/material";
+
+export class Column {
+  public label: string;
+  public sortable: boolean;
+
+  constructor(label: string = undefined, sortable: boolean = false) {
+    this.label = label;
+    this.sortable = sortable;
+  }
+}
+
+export class Options {
+  public selectionCol: boolean;
+  public addButton: boolean;
+  public addButtonTooltip: string;
+
+  constructor(selectionCol: boolean = false, addButton: boolean = false, addButtonTooltip: string = undefined) {
+    this.selectionCol = selectionCol;
+    this.addButton = addButton;
+    this.addButtonTooltip = addButtonTooltip;
+  }
+}
 
 @Directive({
   selector: 'datatable-title'
 })
-export class DatatableTitle {}
+export class DatatableTitle { }
 
 @Directive({
   selector: 'datatable-header'
 })
-export class DatatableHeader {}
+export class DatatableHeader { }
+
+@Directive({
+  selector: 'datatable-footer'
+})
+export class DatatableFooter { }
 
 @Component({
   selector: 'datatable',
   templateUrl: './datatable.component.html',
   styleUrls: ['./datatable.component.css']
 })
-export class DatatableComponent implements OnInit {
+export class DatatableComponent<T> implements OnInit {
   @ContentChild(TemplateRef)
-  public contentTpl: TemplateRef<any>;
+  private _contentTpl: TemplateRef<Element>;
 
-  private _columns: string[] = [];
-  private _data: any[] = [];
+  // events
+  private _addButtonClick$: EventEmitter<void> = new EventEmitter<void>();
+  private _selectedDataUpdate$: EventEmitter<T[]> = new EventEmitter<T[]>();
 
-  private _selectedData: any[] = [];
+  // titres colonnes et données
+  private _columns: Column[] = [];
+  private _data: T[] = [];
+
+  // sélection des rangées (checkbox)
+  private _selectedData: T[] = [];
   private _selectAllTrue: boolean = false;
   private _selectAllFalse: boolean = false;
 
-  // options
-  private _selectionCol: boolean = false;
+  /* options :
+   * selectionCol: boolean => Crée une colonne de sélection pour les rangées : émet (selectedDataUpdate) quand les données selectionnées changent
+   * addButton: boolean => Bouton pour ajouter des données : émet (addButtonClick) quand on click dessus
+   * addButtonTooltip: string => le texte du tooltip quand on survole le bouton addButton (optionnel)
+   */
+  private _options: Options = new Options();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  get data(): any[] {
+  @Output('addButtonClick') get addButtonClick(): EventEmitter<void> {
+    return this._addButtonClick$;
+  }
+
+  @Output('selectedDataUpdate') get selectedDataUpdate(): EventEmitter<T[]> {
+    return this._selectedDataUpdate$;
+  }
+
+  get data(): T[] {
     return this._data;
   }
 
-  @Input() set data(data: any[]) {
-    if(data) {
+  @Input() set data(data: T[]) {
+    if (data) {
       this._data = data;
     }
   }
 
-  get columns(): string[] {
+  get columns(): Column[] {
     return this._columns;
   }
 
-  @Input() set columns(columns: string[]) {
+  @Input() set columns(columns: Column[]) {
     this._columns = columns;
   }
 
-  @Input() set selectionCol(selectionCol: boolean) {
-    this._selectionCol = selectionCol;
+  @Input() set options(options: Options) {
+    if (options.selectionCol) {
+      this._options.selectionCol = options.selectionCol;
+    }
+    if (options.addButton) {
+      this._options.addButton = options.addButton;
+    }
+    if (options.addButtonTooltip) {
+      this._options.addButtonTooltip = options.addButtonTooltip;
+    }
   }
 
-  get selectionCol(): boolean {
-    return this._selectionCol;
+  get options(): Options {
+    return this._options;
   }
 
   get selectAllTrue(): boolean {
@@ -71,19 +124,25 @@ export class DatatableComponent implements OnInit {
     return undefined;
   }
 
+  add(): void {
+    this._addButtonClick$.emit();
+  }
+
   setSelectAllState(event: MdCheckboxChange): void {
     this._selectAllTrue = event.checked;
     this._selectAllFalse = !event.checked;
   }
 
-  checkSelect(event: MdCheckboxChange, item: any): void {
+  checkSelect(event: MdCheckboxChange, item: T): void {
     let index: number = this._selectedData.indexOf(item);
     if (!event.checked && index !== -1) {
       this._selectedData.splice(index, 1);
       this._selectAllTrue = false;
+      this._selectedDataUpdate$.emit(this._selectedData);
     }
     else if (event.checked && index === -1) {
       this._selectedData.push(item);
+      this._selectedDataUpdate$.emit(this._selectedData);
     }
   }
 
