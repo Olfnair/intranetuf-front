@@ -10,7 +10,6 @@
     </tr>
   </datatable-header>
   <ng-template let-user="item">
-    <!--<td style="width: 50px; text-align:center;"><app-checkbox [checked]="checkAllState" (change)="check($event, user)"></app-checkbox></td>-->
     <td>{{user.firstname}}</td>
     <td>{{user.name}}</td>
     <td>{{user.login}}</td>
@@ -18,7 +17,5 @@
     <td>{{user.active}}</td>
   </ng-template>
 </datatable>
-
-<!--<md-checkbox color="warn" [checked]="checkAllTrue" (change)="setCheckAllState($event)"></md-checkbox>-->
 
 <app-user-form *ngIf="isAddMode" (close)="activateListMode($event)"></app-user-form>

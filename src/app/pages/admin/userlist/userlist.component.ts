@@ -22,8 +22,6 @@ export class UserlistComponent implements OnInit {
   private _users: User[] = [];
   private _state: number = ComponentState.LIST;
   private _checkedUsers: User[] = [];
-  /*private _checkAllTrue: boolean = false;
-  private _checkAllFalse: boolean = false;*/
 
   constructor(private _restService: RestApiService, private _router: Router) { }
 
@@ -70,32 +68,5 @@ export class UserlistComponent implements OnInit {
     }
     this._state = ComponentState.LIST;
   }
-
-  /*get checkAllTrue(): boolean {
-    return this._checkAllTrue;
-  }
-
-  get checkAllState(): boolean {
-    if (this._checkAllTrue) { return true; }
-    if (this._checkAllFalse) { return false; }
-    return undefined;
-  }
-
-  setCheckAllState(event: MdCheckboxChange): void {
-    this._checkAllTrue = event.checked;
-    this._checkAllFalse = !event.checked;
-  }
-
-  check(event: MdCheckboxChange, user: User): void {
-    let index: number = this._checkedUsers.indexOf(user);
-    if (!event.checked && index !== -1) {
-      this._checkedUsers.splice(index, 1);
-      this._checkAllTrue = false;
-    }
-    else if (event.checked && index === -1) {
-      this._checkedUsers.push(user);
-    }
-    console.log(JSON.stringify(this._checkedUsers));
-  }*/
 
 }
