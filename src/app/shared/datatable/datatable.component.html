@@ -5,11 +5,13 @@
       <thead>
         <ng-content select="datatable-header"></ng-content>
         <tr class="columnTitles">
+          <th *ngIf="selectionCol" style="width: 50px; text-align:center;"><md-checkbox color="warn" [checked]="selectAllTrue" (change)="setSelectAllState($event)"></md-checkbox></th>
           <th *ngFor="let column of columns">{{column}}</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of data; let odd = odd" [class.oddRow]="odd" style="width: 100%">
+          <td *ngIf="selectionCol" style="width: 50px; text-align:center;"><app-checkbox [checked]="selectAllState" (change)="checkSelect($event, item)"></app-checkbox></td>
           <ng-template [ngTemplateOutlet]="contentTpl" [ngOutletContext]="{item: item}"></ng-template>
         </tr>
       </tbody>

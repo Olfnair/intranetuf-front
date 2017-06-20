@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MdTabChangeEvent } from "@angular/material";
+import { SessionService } from "app/shared/session.service";
 
 @Component({
   selector: 'app-admin-panel',
@@ -7,19 +8,21 @@ import { MdTabChangeEvent } from "@angular/material";
   styleUrls: ['./admin-panel.component.css']
 })
 export class AdminPanelComponent implements OnInit {
-  private _selectedTab: number = 0;
-
-  constructor() { }
+  constructor(private _session: SessionService) { }
 
   ngOnInit() {
   }
 
   get selectedTab(): number {
-    return this._selectedTab;
+    return this._session.selectedAdminTab;
+  }
+
+  set selectedTab(tab: number) {
+    this._session.selectedAdminTab = tab;
   }
 
   setSelectedTab(event: MdTabChangeEvent): void {
-    this._selectedTab = event.index;
+    this._session.selectedAdminTab = event.index;
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { CustomValidators } from "app/shared/custom-validator";
@@ -10,6 +10,7 @@ import { CustomValidators } from "app/shared/custom-validator";
 })
 export class UserFormComponent implements OnInit {
   private _form: FormGroup;
+  private _close$: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private _router: Router) {
     this._form = this._buildForm();
@@ -22,8 +23,16 @@ export class UserFormComponent implements OnInit {
     return this._form;
   }
 
+  submit(): void {
+    this._close$.emit(true);
+  }
+
   cancel(): void {
-    this._router.navigate(['/home']);
+    this._close$.emit(false);
+  }
+
+  @Output('close') get close$(): EventEmitter<boolean> {
+    return this._close$;
   }
 
   noPaste(event: Event): void {

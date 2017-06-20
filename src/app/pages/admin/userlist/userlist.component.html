@@ -1,0 +1,24 @@
+<datatable *ngIf="isListMode" [selectionCol]="true" [data]="users" [columns]="['Nom', 'Prénom', 'Identifiant', 'Email', 'Actif']">
+  <datatable-title>
+    <h2>Liste des utilisateurs</h2>
+  </datatable-title>
+  <datatable-header>
+    <tr class="add">
+      <td>
+        <button md-mini-fab (click)="add()" mdTooltip="Ajouter un utilisateur" mdTooltipPosition="after"><md-icon>add</md-icon></button>
+      </td>
+    </tr>
+  </datatable-header>
+  <ng-template let-user="item">
+    <!--<td style="width: 50px; text-align:center;"><app-checkbox [checked]="checkAllState" (change)="check($event, user)"></app-checkbox></td>-->
+    <td>{{user.firstname}}</td>
+    <td>{{user.name}}</td>
+    <td>{{user.login}}</td>
+    <td>{{user.email}}</td>
+    <td>{{user.active}}</td>
+  </ng-template>
+</datatable>
+
+<!--<md-checkbox color="warn" [checked]="checkAllTrue" (change)="setCheckAllState($event)"></md-checkbox>-->
+
+<app-user-form *ngIf="isAddMode" (close)="activateListMode($event)"></app-user-form>

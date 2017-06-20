@@ -19,6 +19,7 @@ export class SessionService {
 
   // mémorise le projet selectionné pour toute la session
   private _selectedProject: Project = undefined;
+  private _selectedAdminTab: number = 0;
 
   constructor(private _http: Http) {
   }
@@ -41,6 +42,14 @@ export class SessionService {
 
   set selectedProject(project : Project) {
     this._selectedProject = project;
+  }
+
+  get selectedAdminTab(): number {
+    return this._selectedAdminTab;
+  }
+
+  set selectedAdminTab(tab : number) {
+    this._selectedAdminTab = tab;
   }
 
   /**

@@ -16,7 +16,7 @@ const ROUTES: Routes = [
     {path: 'add_file/:projectId', component: AddFileComponent},
     {path: 'add_file/:projectId/:fileId', component: AddFileComponent},
     {path: 'admin', component: AdminPanelComponent},
-    {path: 'admin/create_user', component: UserFormComponent}
+    {path: 'admin/add_user', component: UserFormComponent}
 ];
 
 export const APP_ROUTES = RouterModule.forRoot(ROUTES,{useHash: true});

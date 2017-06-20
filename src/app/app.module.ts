@@ -1,6 +1,11 @@
+// Material Design
+import { MaterialModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import 'hammerjs';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { RestApiService } from "app/shared/rest-api.service";
@@ -25,11 +30,8 @@ import { SortButtonComponent } from './shared/sort-button/sort-button.component'
 import { AdminPanelComponent } from './pages/admin/admin-panel/admin-panel.component';
 import { DatatableComponent } from './shared/datatable/datatable.component';
 import { DatatableHeader, DatatableTitle } from './shared/datatable/datatable.component';
-
-// Material Design
-import { MaterialModule } from '@angular/material';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import 'hammerjs';
+import { UserlistComponent } from './pages/admin/userlist/userlist.component';
+import { CheckboxComponent } from './shared/checkbox/checkbox.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,9 @@ import 'hammerjs';
     AdminPanelComponent,
     DatatableComponent,
     DatatableHeader,
-    DatatableTitle
+    DatatableTitle,
+    UserlistComponent,
+    CheckboxComponent
   ],
   entryComponents: [
     AddProjectComponent,
@@ -60,6 +64,7 @@ import 'hammerjs';
   imports: [
     BrowserModule,
     ReactiveFormsModule,
+    FormsModule,
     HttpModule,
     RouterModule,
     MaterialModule,
