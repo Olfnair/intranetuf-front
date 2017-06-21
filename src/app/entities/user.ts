@@ -5,6 +5,8 @@ export class User {
   public email: string = undefined;
   public login: string = undefined;
   public password: string = undefined;
+  public active: boolean = undefined;
+  public pending: boolean = undefined;
 
   constructor() {
   }

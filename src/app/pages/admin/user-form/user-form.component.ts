@@ -2,6 +2,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { CustomValidators } from "app/shared/custom-validator";
+import { User } from "app/entities/user";
+import { RestApiService } from "app/shared/rest-api.service";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   selector: 'app-user-form',
@@ -12,7 +15,7 @@ export class UserFormComponent implements OnInit {
   private _form: FormGroup;
   private _close$: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private _router: Router) {
+  constructor(private _router: Router, private _restService: RestApiService) {
     this._form = this._buildForm();
   }
 
@@ -24,7 +27,17 @@ export class UserFormComponent implements OnInit {
   }
 
   submit(): void {
-    this._close$.emit(true);
+    let user: User = new User();
+    user.name = this._form.value.name;
+    user.firstname = this._form.value.firstname;
+    user.login = this._form.value.login;
+    user.email = this._form.value.email;
+    let addUserSub: Subscription = this._restService.addUser(user)
+      .finally(() => {
+        addUserSub.unsubscribe();
+        this._close$.emit(true);
+      })
+      .subscribe();
   }
 
   cancel(): void {

@@ -35,12 +35,16 @@ export class UserlistComponent implements OnInit {
   }
 
   @Input() set selected(selected: boolean) {
+    if (selected) {
+      this._subscribeToUserList();
+    }
+  }
+
+  private _subscribeToUserList(): void {
     if (this._userSubscription) {
       this._userSubscription.unsubscribe();
     }
-    if (selected) {
-      this._userSubscription = this._restService.fetchUsers().subscribe((users: User[]) => this._users = users);
-    }
+    this._userSubscription = this._restService.fetchUsers().subscribe((users: User[]) => this._users = users);
   }
 
   get users(): User[] {
@@ -65,6 +69,7 @@ export class UserlistComponent implements OnInit {
 
   activateListMode(submited: boolean) {
     if (submited) {
+      this._subscribeToUserList();
     }
     this._state = ComponentState.LIST;
   }

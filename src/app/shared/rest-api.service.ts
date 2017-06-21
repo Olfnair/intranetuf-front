@@ -98,6 +98,12 @@ export class RestApiService {
     });
   }
 
+  addUser(user: User): Observable<User> {
+    return this._http.post(this._backendURL.allUsers, {user: user}, this._options()).map((res: Response) => {
+      return res.json().user;
+    });
+  }
+
   /**
      * Function to return request options
      *
