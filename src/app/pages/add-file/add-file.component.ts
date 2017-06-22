@@ -56,7 +56,7 @@ export class AddFileComponent implements OnInit {
     return this._form;
   }
 
-  get filename() {
+  get filename(): string {
     return this._file && this._uploadFile.name || '';
   }
 
