@@ -32,6 +32,7 @@ import { DatatableComponent } from './shared/datatable/datatable.component';
 import { DatatableHeader, DatatableTitle } from './shared/datatable/datatable.component';
 import { UserlistComponent } from './pages/admin/userlist/userlist.component';
 import { CheckboxComponent } from './shared/checkbox/checkbox.component';
+import { InfoModalComponent } from './shared/info-modal/info-modal.component';
 
 @NgModule({
   declarations: [
@@ -55,11 +56,13 @@ import { CheckboxComponent } from './shared/checkbox/checkbox.component';
     DatatableHeader,
     DatatableTitle,
     UserlistComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    InfoModalComponent
   ],
   entryComponents: [
     AddProjectComponent,
-    ProgressComponent
+    ProgressComponent,
+    InfoModalComponent
   ],
   imports: [
     BrowserModule,

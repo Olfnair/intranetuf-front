@@ -46,35 +46,6 @@ body {
   }
 }
 
-/*table.dataTable {
-  width: 100%;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  border-collapse: collapse;
-}
-
-table.dataTable thead tr {
-  height: 4em;
-}
-
-table.dataTable th, td {
-  text-align: left;
-}
-
-table.dataTable tbody tr {
-  height: 3em;
-}
-
-table.dataTable tbody tr.oddRow {
-  background-color: #C1BFFF;
-  width: 100%;
-}
-
-table.dataTable thead tr.columnTitles {
-  background-color: #d1d1d1;
-}*/
-
 .blockContainer {
   width: 100%;
   margin-bottom: 0.45em;

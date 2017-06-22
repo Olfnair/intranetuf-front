@@ -1,6 +1,23 @@
-<section style="width: 50%; margin: auto;">
+<section *ngIf="! error && user == undefined" class="spinnerSection">
+    <md-spinner class="margin" mode="indeterminate"></md-spinner>
+</section>
+
+<section *ngIf="error" class="container margin">
   <md-card>
-    <md-card-title class="centerText">Activation de votre compte (TODO : quel compte ?)</md-card-title>
+    <md-card-content>
+      <p class="info errors">{{errorText}}</p>
+    </md-card-content>
+  </md-card>
+</section>
+
+<section *ngIf="user != undefined">
+  <h2>Bienvenue {{user.firstname}} {{user.name}}</h2>
+  <p class="info">Nous allons procéder à l'activation de votre compte après le choix de votre mot de passe...</p>
+</section>
+
+<section *ngIf="user != undefined" class="container">
+  <md-card>
+    <md-card-title class="centerText">Choix de votre mot de passe</md-card-title>
 
     <md-card-content>
       <form novalidate [formGroup]="form" (ngSubmit)="submit()">

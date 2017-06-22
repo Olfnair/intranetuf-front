@@ -12,6 +12,7 @@ export const environment = {
     endpoints: {
       allUsers: '/IUF/rest/entities.user',
       oneUser: '/IUF/rest/entities.user/:id',
+      activateUser: '/IUF/rest/entities.user/activate',
       allProjects: '/IUF/rest/entities.project',
       oneProject: '/IUF/rest/entities.project/:id',
       auth: '/IUF/rest/auth',

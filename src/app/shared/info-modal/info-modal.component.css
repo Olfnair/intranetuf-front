@@ -1,0 +1,11 @@
+h2 {
+  text-align: center;
+}
+
+.success {
+  background-color: #ddffdd;
+}
+
+.warning {
+  background-color: #ffdddd;
+}

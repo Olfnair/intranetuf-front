@@ -65,7 +65,7 @@ export class FileUploadService {
 
       //xhr.timeout = 10000; // time in milliseconds
       this._xhr.open('POST', url, true);
-      this._xhr.setRequestHeader("Authorization", "Bearer " + this._session.authToken);
+      this._xhr.setRequestHeader("Authorization", "Bearer " + JSON.stringify(this._session.authToken));
       this._xhr.setRequestHeader("Accept", "application/json");
       this._xhr.send(formData);
     });

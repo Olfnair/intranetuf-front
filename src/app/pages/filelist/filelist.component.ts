@@ -64,7 +64,7 @@ export class FilelistComponent implements OnInit {
   }
 
   downloadLink(versionId: number): string {
-    return this._url + versionId + '?token="' + encodeURIComponent(this._session.authToken) + '"';
+    return this._url + versionId + '?token="' + encodeURIComponent(JSON.stringify(this._session.authToken)) + '"';
   }
 
 }

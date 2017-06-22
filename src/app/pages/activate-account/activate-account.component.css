@@ -1,0 +1,15 @@
+h2 {
+  text-align: center;
+}
+
+p.info {
+  text-align: center;
+}
+
+.spinnerSection {
+  display: block;
+}
+
+.margin {
+  margin: 5em auto;
+}

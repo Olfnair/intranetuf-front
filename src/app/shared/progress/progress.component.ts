@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Inject, NgZone } from '@angular/core';
-import { AddFileComponent } from "app/pages/add-file/add-file.component";
 import { FileUploadService } from "app/shared/file-upload.service";
 import { Subscription } from "rxjs/Subscription";
 import { MD_DIALOG_DATA } from '@angular/material';

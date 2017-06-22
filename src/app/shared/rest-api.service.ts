@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from "@angular/http";
 import { environment } from "environments/environment";
-import { Observable } from "rxjs";
 import { SessionService } from "app/shared/session.service";
 import { Credentials } from "app/entities/credentials";
-import 'rxjs/add/operator/map';
 import { Project } from "app/entities/project";
 import { User } from "app/entities/user";
 import { File } from "app/entities/file";
+import { AuthToken } from "app/entities/auth-token";
+import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class RestApiService {
 
   private _backendURL: any;
 
-  constructor(private _http: Http, private session: SessionService) {   
+  constructor(private _http: Http, private _session: SessionService) {   
     this._backendURL = {};
 
     // build backend base url
@@ -104,13 +105,26 @@ export class RestApiService {
     });
   }
 
+  // le token de session doit être réglé pour récupérer le bon user (compte)
+  getUserToActivate(): Observable<User> {
+    return this._http.get(this._backendURL.activateUser, this._options()).map((res: Response) => {
+      return res.json().user;
+    });
+  }
+
+  activateUser(user: User): Observable<User> {
+    return this._http.put(this._backendURL.activateUser + '/' + user.id, {user: user}, this._options()).map((res: Response) => {
+      return res.json().user;
+    });
+  }
+
   /**
      * Function to return request options
      *
      * @returns {RequestOptions}
      */
   private _options(accept: string = 'application/json', headerList: Object = {}): RequestOptions {
-    const headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + this.session.authToken }, headerList));
+    const headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + JSON.stringify(this._session.authToken) }, headerList));
     return new RequestOptions({ headers: headers });
   }
 

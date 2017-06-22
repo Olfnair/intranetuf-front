@@ -28,8 +28,12 @@ export class SessionService {
     return this._authToken ? this._authToken.u : undefined;
   } 
 
-  get authToken(): string {
-    return JSON.stringify(this._authToken);
+  get authToken(): AuthToken {
+    return this._authToken;
+  }
+
+  set authToken(authToken: AuthToken) {
+    this._authToken = authToken;
   }
 
   get logged(): boolean {

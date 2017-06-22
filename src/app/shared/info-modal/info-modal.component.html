@@ -1,0 +1,12 @@
+<!--[class.success]="success" [class.warning]="! success"-->
+<section>
+  <h2 md-dialog-title>{{title}}</h2>
+  <md-dialog-content>
+    <p>
+      {{text}}
+    </p>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <button md-raised-button class="submitButton" [color]="buttonColor" type="button" [md-dialog-close]="success">OK</button>
+  </md-dialog-actions>
+</section>
