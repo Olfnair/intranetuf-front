@@ -69,8 +69,8 @@ export class AddFileComponent implements OnInit {
     this._form.controls.filename.setValue(this._uploadFile.name);
   }
 
-  // on vérifie le form à la main : le champ 'filename' est désactivé pour qu'on ne puisse pas l'éditer,
-  // malheureusement, un champ désactivé est considéré invalide par défaut... On doit donc vérifier les champs un par un
+  // On vérifie le form à la main : le champ 'filename' est désactivé pour qu'on ne puisse pas l'éditer.
+  // Malheureusement, un champ désactivé est considéré invalide par défaut... On doit donc vérifier les champs un par un
   // et faire un test particulier pour le cahmp 'filename'
   get isValidForm(): boolean {
     //TODO : ajouter un test pour chaque champ : this._form.controls.controlname.valid == true
