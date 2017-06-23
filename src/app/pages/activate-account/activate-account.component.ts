@@ -62,6 +62,9 @@ export class ActivateAccountComponent implements OnInit {
               else if(error.status == 403 && error.text() == 'user') {
                 this.setError("Erreur: ce compte a déjà été activé. Connectez-vous à partir de l'accueil.");
               }
+              else if(error.status == 401) {
+                this.setError("Erreur: lien invalide. Contactez l'administrateur pour qu'il vous en renvoie un.");
+              }
               else {
                 this.setError("Erreur: une erreur dont la provenance n'a pu être identifiée s'est produite.");
               }
