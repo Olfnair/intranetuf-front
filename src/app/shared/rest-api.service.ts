@@ -9,6 +9,7 @@ import { File } from "app/entities/file";
 import { AuthToken } from "app/entities/auth-token";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
+import { ProjectRight } from "app/entities/project-right";
 
 @Injectable()
 export class RestApiService {
@@ -112,9 +113,15 @@ export class RestApiService {
     });
   }
 
-  activateUser(user: User): Observable<User> {
-    return this._http.put(this._backendURL.activateUser + '/' + user.id, {user: user}, this._options()).map((res: Response) => {
-      return res.json().user;
+  activateUser(userId: number, credentials: Credentials): Observable<number> {
+    return this._http.put(this._backendURL.activateUser + '/' + userId, {credentials: credentials}, this._options()).map((res: Response) => {
+      return res.status;
+    });
+  }
+
+  getRights(user: User): Observable<ProjectRight[]> {
+    return this._http.get(this._backendURL.rights + '/user/' + user.id, this._options()).map((res: Response) => {
+      return res.json().projectright;
     });
   }
 

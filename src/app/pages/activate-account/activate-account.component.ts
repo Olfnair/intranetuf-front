@@ -9,6 +9,7 @@ import { RestApiService } from "app/shared/rest-api.service";
 import { Response } from "@angular/http";
 import { MdDialog, MdDialogRef } from "@angular/material";
 import { InfoModalComponent } from "app/shared/info-modal/info-modal.component";
+import { Credentials } from "app/entities/credentials";
 
 @Component({
   selector: 'app-activate-account',
@@ -104,13 +105,12 @@ export class ActivateAccountComponent implements OnInit {
   }
 
   submit(): void {
-    this._user.password = this._form.value.pwd;
-    let userActivateSub: Subscription = this._restService.activateUser(this._user)
+    let userActivateSub: Subscription = this._restService.activateUser(this._user.id, new Credentials(undefined, this._form.value.pwd))
       .finally(() => {
         userActivateSub.unsubscribe();
       })
       .subscribe(
-        (user: User) => {
+        (status: number) => {
           let text = "Votre compte a été activé avec succès ! Vous allez être redirigé vers l'acceuil où vous pourrez vous connecter.";
           this._session.logout(); // reset la session : on avait modifié le token pour l'activation, il faut mtn un token de session
           this.infoModal('Compte Activé', text, true);

@@ -1,7 +1,7 @@
 <datatable *ngIf="isListMode"
     [options]="{selectionCol: true, addButton: true, addButtonTooltip: 'Ajouter un utilisateur'}"
     [data]="users"
-    [columns]="['Nom', 'Prénom', 'Identifiant', 'Email', 'Actif', 'En Attente']"
+    [columns]="['Nom', 'Prénom', 'Identifiant', 'Email', 'Actif', 'En Attente', '']"
     (addButtonClick)="add()">
   <datatable-title>
     <h2>Liste des utilisateurs</h2>
@@ -13,7 +13,10 @@
     <td>{{user.email}}</td>
     <td>{{user.active}}</td>
     <td>{{user.pending}}</td>
+    <td><button md-raised-button color="primary" type=button (click)="rights(user)">Droits</button></td>
   </ng-template>
 </datatable>
 
 <app-user-form *ngIf="isAddMode" (close)="activateListMode($event)"></app-user-form>
+
+<app-rightslist *ngIf="isRightsMode" [user]="selectedUser"></app-rightslist>

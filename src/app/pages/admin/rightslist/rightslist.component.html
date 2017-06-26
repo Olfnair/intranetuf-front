@@ -1,0 +1,18 @@
+<datatable
+    [options]="{selectionCol: true}"
+    [data]="rights"
+    [columns]="['Projet', 'Voir', 'Editer', 'Supprimer', 'Ajout fichier', 'Supprimer fichier', 'Controleur', 'Validateur']">
+  <datatable-title>
+    <h2>Droits de {{user.firstname}} {{user.name}}</h2>
+  </datatable-title>
+  <ng-template let-right="item">
+    <td>{{right.project.name}}</td>
+    <td><app-checkbox [checked]="right.hasRight(1)" (change)="switchRight($event, right, 1)"></app-checkbox></td>
+    <td><app-checkbox [checked]="right.hasRight(2)" (change)="switchRight($event, right, 2)"></app-checkbox></td>
+    <td><app-checkbox [checked]="right.hasRight(4)" (change)="switchRight($event, right, 4)"></app-checkbox></td>
+    <td><app-checkbox [checked]="right.hasRight(8)" (change)="switchRight($event, right, 8)"></app-checkbox></td>
+    <td><app-checkbox [checked]="right.hasRight(16)" (change)="switchRight($event, right, 16)"></app-checkbox></td>
+    <td><app-checkbox [checked]="right.hasRight(32)" (change)="switchRight($event, right, 32)"></app-checkbox></td>
+    <td><app-checkbox [checked]="right.hasRight(64)" (change)="switchRight($event, right, 64)"></app-checkbox></td>
+  </ng-template>
+</datatable>

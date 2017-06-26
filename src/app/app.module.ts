@@ -33,6 +33,7 @@ import { DatatableHeader, DatatableTitle } from './shared/datatable/datatable.co
 import { UserlistComponent } from './pages/admin/userlist/userlist.component';
 import { CheckboxComponent } from './shared/checkbox/checkbox.component';
 import { InfoModalComponent } from './shared/info-modal/info-modal.component';
+import { RightslistComponent } from './pages/admin/rightslist/rightslist.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { InfoModalComponent } from './shared/info-modal/info-modal.component';
     DatatableTitle,
     UserlistComponent,
     CheckboxComponent,
-    InfoModalComponent
+    InfoModalComponent,
+    RightslistComponent
   ],
   entryComponents: [
     AddProjectComponent,
