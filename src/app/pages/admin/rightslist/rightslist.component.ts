@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { User } from "app/entities/user";
 import { ProjectRight, Right } from "app/entities/project-right";
 import { Subscription } from "rxjs/Subscription";
@@ -17,6 +17,11 @@ export class RightslistComponent implements OnInit {
   private _rights: ProjectRight[] = [];
   private _rightsSub: Subscription = undefined;
 
+  private _mapModifiedRights: Map<number, ProjectRight>;
+  private _mapOriginalRights: Map<number, ProjectRight>;
+
+  private _done$: EventEmitter<void> = new EventEmitter<void>();
+
   constructor(private _restService: RestApiService) { }
 
   ngOnInit() {
@@ -32,7 +37,13 @@ export class RightslistComponent implements OnInit {
     }
   }
 
+  @Output('done') get done(): EventEmitter<void> {
+    return this._done$;
+  }
+
   @Input() set user(user: User) {
+    this._mapModifiedRights = new Map();
+    this._mapOriginalRights = new Map();
     this._user = user;
     this._unsub();
     this._rightsSub = this._restService.getRights(this._user)
@@ -42,6 +53,10 @@ export class RightslistComponent implements OnInit {
       .subscribe(
         (rights: ProjectRight[]) => {
           this._rights = rights;
+          this._rights.forEach((originalRight: ProjectRight) => {
+            let copyRight: ProjectRight = new ProjectRight(originalRight.id, originalRight.rights, originalRight.project, originalRight.user);
+            this._mapOriginalRights.set(copyRight.project.id, copyRight);
+          });
         }
       )
   }
@@ -54,11 +69,48 @@ export class RightslistComponent implements OnInit {
     return this._rights;
   }
 
-  hasRight(projectRight: ProjectRight, value: Right): boolean {
-    return (projectRight.rights & value) > 0;
+  get modified(): boolean {
+    return this._mapModifiedRights.size > 0;
+  }
+
+  hasRight(projectRight: ProjectRight, right: Right): boolean {
+    return (projectRight.rights & right) > 0;
+  }
+
+  isSameAsOriginal(projectRight: ProjectRight): boolean {
+    return this._mapOriginalRights.has(projectRight.project.id) &&
+      this._mapOriginalRights.get(projectRight.project.id).rights === projectRight.rights;
   }
 
   switchRight(event: MdCheckboxChange, projectRight: ProjectRight, right: number): void {
+    if(event.checked) { // droit positif
+      projectRight.rights = projectRight.rights | right;
+    }
+    else { // droit negatif
+      projectRight.rights = projectRight.rights & (0xffffffff - right);
+    }
+    // un droit a été modifié et n'est pas contenu dans la liste des modifications
+    if(! this.isSameAsOriginal(projectRight) && ! this._mapModifiedRights.has(projectRight.project.id)) {
+      this._mapModifiedRights.set(projectRight.project.id, projectRight);
+    }
+    // une modification sur un droit a été annulée et il faut le supprimer de la liste des modifications
+    else if(this.isSameAsOriginal(projectRight) && this._mapModifiedRights.has(projectRight.project.id)) {
+      this._mapModifiedRights.delete(projectRight.project.id);
+    }
+  }
+
+  submit(): void {
+    let update: ProjectRight[] = [];
+    this._mapModifiedRights.forEach((right: ProjectRight) => {
+      update.push(right);
+    });
+    let updateSub: Subscription = this._restService.setRights(update)
+      .finally(() => updateSub.unsubscribe())
+      .subscribe((res: number) => this._done$.emit());
+  }
+
+  cancel(): void {
+    this._done$.emit()
   }
 
 }

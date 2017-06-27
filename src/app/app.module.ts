@@ -29,7 +29,7 @@ import { ProgressComponent } from './shared/progress/progress.component';
 import { SortButtonComponent } from './shared/sort-button/sort-button.component';
 import { AdminPanelComponent } from './pages/admin/admin-panel/admin-panel.component';
 import { DatatableComponent } from './shared/datatable/datatable.component';
-import { DatatableHeader, DatatableTitle } from './shared/datatable/datatable.component';
+import { DatatableHeader, DatatableTitle, DatatableFooter } from './shared/datatable/datatable.component';
 import { UserlistComponent } from './pages/admin/userlist/userlist.component';
 import { CheckboxComponent } from './shared/checkbox/checkbox.component';
 import { InfoModalComponent } from './shared/info-modal/info-modal.component';
@@ -56,6 +56,7 @@ import { RightslistComponent } from './pages/admin/rightslist/rightslist.compone
     DatatableComponent,
     DatatableHeader,
     DatatableTitle,
+    DatatableFooter,
     UserlistComponent,
     CheckboxComponent,
     InfoModalComponent,

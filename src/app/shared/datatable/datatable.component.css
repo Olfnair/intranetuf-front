@@ -7,6 +7,10 @@ table.dataTable {
   box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
 }
 
+table.dataTable tbody tr.footer td {
+  text-align: right;
+}
+
 table.dataTable thead tr {
   height: 4em;
 }
@@ -37,6 +41,11 @@ table.dataTable tr.add td {
 }
 
 table.dataTable tr th.selectionCol,td.selectionCol {
-  width: 50px; 
+  width: 50px;
   text-align: center;
+}
+
+table.dataTable tbody tr.footer {
+  height: 3.5em;
+  background-color: #d1d1d1;
 }

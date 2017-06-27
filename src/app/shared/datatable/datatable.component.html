@@ -23,6 +23,11 @@
           </td>
           <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item}"></ng-template>
         </tr>
+        <tr *ngIf="options.displayFooter" class="footer">
+          <td [colSpan]="footerLen">
+            <ng-content select="datatable-footer"></ng-content>
+          </td>
+        </tr>
       </tbody>
     </table>
   </md-card-content>

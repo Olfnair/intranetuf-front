@@ -22,7 +22,11 @@ export class ProjectRight {
   public project: Project = undefined;
   public user: User = undefined;
 
-  constructor() {
+  constructor(id: number = undefined, rights: number = undefined, project: Project = undefined, user: User = undefined) {
+    this.id = id;
+    this.rights = rights;
+    this.project = project;
+    this.user = user;
   }
 
   hasRight(right: Right): boolean {

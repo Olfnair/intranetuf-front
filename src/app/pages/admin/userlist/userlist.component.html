@@ -19,4 +19,4 @@
 
 <app-user-form *ngIf="isAddMode" (close)="activateListMode($event)"></app-user-form>
 
-<app-rightslist *ngIf="isRightsMode" [user]="selectedUser"></app-rightslist>
+<app-rightslist *ngIf="isRightsMode" [user]="selectedUser" (done)="activateListMode(false)"></app-rightslist>

@@ -15,8 +15,9 @@ export class Options {
   public selectionCol: boolean;
   public addButton: boolean;
   public addButtonTooltip: string;
+  public displayFooter: boolean;
 
-  constructor(selectionCol: boolean = false, addButton: boolean = false, addButtonTooltip: string = undefined) {
+  constructor(selectionCol: boolean = false, displayFooter: boolean = false, addButton: boolean = false, addButtonTooltip: string = undefined) {
     this.selectionCol = selectionCol;
     this.addButton = addButton;
     this.addButtonTooltip = addButtonTooltip;
@@ -102,6 +103,9 @@ export class DatatableComponent<T> implements OnInit {
     if (options.selectionCol) {
       this._options.selectionCol = options.selectionCol;
     }
+    if(options.displayFooter) {
+      this._options.displayFooter = options.displayFooter;
+    }
     if (options.addButton) {
       this._options.addButton = options.addButton;
     }
@@ -122,6 +126,10 @@ export class DatatableComponent<T> implements OnInit {
     if (this._selectAllTrue) { return true; }
     if (this._selectAllFalse) { return false; }
     return undefined;
+  }
+
+  get footerLen(): number {
+    return this._columns.length + (this._options.selectionCol ? 1 : 0);
   }
 
   add(): void {

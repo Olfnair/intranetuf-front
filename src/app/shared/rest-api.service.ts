@@ -125,6 +125,12 @@ export class RestApiService {
     });
   }
 
+  setRights(rights: ProjectRight[]): Observable<number> {
+    return this._http.post(this._backendURL.rights, {projectRight: rights}, this._options()).map((res: Response) => {
+      return res.status;
+    });
+  }
+
   /**
      * Function to return request options
      *
