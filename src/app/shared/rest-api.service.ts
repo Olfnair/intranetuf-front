@@ -121,7 +121,7 @@ export class RestApiService {
 
   getRights(user: User): Observable<ProjectRight[]> {
     return this._http.get(this._backendURL.rights + '/user/' + user.id, this._options()).map((res: Response) => {
-      return res.json().projectright;
+      return res.json().projectRight;
     });
   }
 

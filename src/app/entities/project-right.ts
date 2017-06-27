@@ -18,7 +18,7 @@ export enum Right {
 
 export class ProjectRight {
   public id: number = undefined;
-  public right: number = undefined;
+  public rights: number = undefined;
   public project: Project = undefined;
   public user: User = undefined;
 
@@ -26,6 +26,6 @@ export class ProjectRight {
   }
 
   hasRight(right: Right): boolean {
-    return (this.right & right) > 0;
+    return (this.rights & right) > 0;
   }
 }

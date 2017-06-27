@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { User } from "app/entities/user";
-import { ProjectRight } from "app/entities/project-right";
+import { ProjectRight, Right } from "app/entities/project-right";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/shared/rest-api.service";
 import { MdCheckboxChange } from "@angular/material";
@@ -17,8 +17,6 @@ export class RightslistComponent implements OnInit {
   private _rights: ProjectRight[] = [];
   private _rightsSub: Subscription = undefined;
 
-  private _projectsList: Project[];
-
   constructor(private _restService: RestApiService) { }
 
   ngOnInit() {
@@ -26,17 +24,6 @@ export class RightslistComponent implements OnInit {
 
   ngOnDestroy() {
     this._unsub();
-  }
-
-  private _initRights() {
-    this._rights = [];
-    this._projectsList.forEach((project: Project) => {
-      let right = new ProjectRight();
-      right.user = this._user;
-      right.project = project;
-      right.right = 0;
-      this._rights.push(right);
-    });
   }
 
   private _unsub(): void {
@@ -53,7 +40,9 @@ export class RightslistComponent implements OnInit {
         this._unsub();
       })
       .subscribe(
-        (rights: ProjectRight[]) => this._rights = rights
+        (rights: ProjectRight[]) => {
+          this._rights = rights;
+        }
       )
   }
 
@@ -63,6 +52,10 @@ export class RightslistComponent implements OnInit {
 
   get rights(): ProjectRight[] {
     return this._rights;
+  }
+
+  hasRight(projectRight: ProjectRight, value: Right): boolean {
+    return (projectRight.rights & value) > 0;
   }
 
   switchRight(event: MdCheckboxChange, projectRight: ProjectRight, right: number): void {
