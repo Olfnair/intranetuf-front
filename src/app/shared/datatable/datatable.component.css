@@ -49,3 +49,7 @@ table.dataTable tbody tr.footer {
   height: 3.5em;
   background-color: #d1d1d1;
 }
+
+table.dataTable h2 {
+  margin: 0 auto;
+}

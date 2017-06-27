@@ -11,6 +11,87 @@ import { FileUploadService } from "app/shared/file-upload.service";
 import { SessionService } from "app/shared/session.service";
 import { MdDialogRef, MdDialog } from "@angular/material";
 import { ProgressComponent } from "app/shared/progress/progress.component";
+import { Right } from "app/entities/project-right";
+import { RestApiService } from "app/shared/rest-api.service";
+
+export class UserContainer {
+  private _title: string;
+  private _availableUsers: User[] = []
+  private _users: User[] = [];
+  private _chained: boolean[] = [];
+  private _right: Right = 0;
+  private _project: Project = undefined;
+  private _restService: RestApiService;
+
+  constructor(title: string, project: Project, right: Right = 0, restService: RestApiService) {
+    this._restService = restService;
+    this._title = title;
+    this._project = project;
+    this.right = right;
+  }
+
+  set right(right: Right) {
+    this.reset();
+    this._right = right;
+    let sub: Subscription = this._restService.fetchUsersByRightOnProject(this._project, right)
+      .finally(() => {
+        sub.unsubscribe();
+      })
+      .subscribe((users: User[]) => this._availableUsers = users);
+  }
+
+  get title(): string {
+    return this._title;
+  }
+
+  get project(): Project {
+    return this._project;
+  }
+
+  get right(): Right {
+    return this._right;
+  }
+
+  get users(): User[] {
+    return this._users;
+  }
+
+  get availableUsers(): User[] {
+    return this._availableUsers;
+  }
+
+  reset(): void {
+    this._users = [];
+    this._chained = [];
+  }
+
+  addUser(i: number): void {
+    this._users.push(this._availableUsers.splice(i, 1)[0]);
+  }
+
+  deleteUser(i: number): void {
+    this._availableUsers.push(this._users.splice(i, 1)[0]);
+  }
+
+  addUsers(indexes: number[]): void {
+    indexes.forEach((i: number) => {
+      this.addUser(i);
+    })
+  }
+
+  chain(i : number, value: boolean): void {
+    this._chained[i] = value;
+  }
+
+  swap(i: number, j: number): void {
+    let tmpUser: User = this._users[i];
+    let tmpChained: boolean = this._chained[i];
+    this._users[i] = this._users[j];
+    this._chained[i] = this._chained[j];
+    this._users[j] = tmpUser;
+    this._chained[j] = tmpChained;
+  }
+}
 
 @Component({
   selector: 'app-add-file',
@@ -28,8 +109,11 @@ export class AddFileComponent implements OnInit {
   private _uploadProgress: number = 0;
   private _aborted: boolean = false;
 
+  private _userContainers: UserContainer[] = [];
+
   constructor(
     private _uploadService: FileUploadService,
+    private _restService: RestApiService,
     private _router: Router,
     private _route: ActivatedRoute,
     private _session: SessionService,
@@ -45,6 +129,8 @@ export class AddFileComponent implements OnInit {
       this._project.id = +params['projectId'] || undefined;
       this._file.id = +params['fileId'] || undefined;
       this._newVersionMode = (this._file.id != undefined);
+      this._userContainers.push(new UserContainer('Contrôleurs', this._project, Right.CONTROLFILE, this._restService));
+      this._userContainers.push(new UserContainer('Validateurs', this._project, Right.VALIDATEFILE, this._restService));
     });
   }
 
@@ -62,6 +148,10 @@ export class AddFileComponent implements OnInit {
 
   get newVersionMode(): boolean {
     return this._newVersionMode;
+  }
+
+  get userContainers(): UserContainer[] {
+    return this._userContainers;
   }
 
   fileSelect(file: File): void {
@@ -135,6 +225,9 @@ export class AddFileComponent implements OnInit {
     if (this._progressModal) {
       this._progressModal.close(this._uploadProgress);
     }
+  }
+
+  addTo(UserContainer): void {
   }
 
   /**

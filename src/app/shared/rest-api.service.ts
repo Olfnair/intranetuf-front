@@ -9,7 +9,7 @@ import { File } from "app/entities/file";
 import { AuthToken } from "app/entities/auth-token";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
-import { ProjectRight } from "app/entities/project-right";
+import { ProjectRight, Right } from "app/entities/project-right";
 
 @Injectable()
 export class RestApiService {
@@ -128,6 +128,12 @@ export class RestApiService {
   setRights(rights: ProjectRight[]): Observable<number> {
     return this._http.post(this._backendURL.rights, {projectRight: rights}, this._options()).map((res: Response) => {
       return res.status;
+    });
+  }
+
+  fetchUsersByRightOnProject(project: Project, right: Right): Observable<User[]> {
+    return this._http.get(this._backendURL.allUsers + '/rightOnProject/' + project.id + '/' + right, this._options()).map((res: Response) => {
+      return res.json().user;
     });
   }
 

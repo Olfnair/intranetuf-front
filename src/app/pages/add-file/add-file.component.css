@@ -1,3 +1,7 @@
 .margin {
   height: 0.5em;
 }
+
+.userContainerDataTable {
+  margin: 0.5em auto;
+}

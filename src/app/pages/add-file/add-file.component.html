@@ -14,22 +14,25 @@
           <md-error>Veuillez choisir un fichier à ajouter</md-error>
         </md-input-container>
 
-        <md-card>
-          <md-card-title>Controleurs</md-card-title>
-          <md-card-content>
-
-          </md-card-content>
-        </md-card>
-
-        <md-card>
-          <md-card-title>Validateurs</md-card-title>
-          <md-card-content>
-
-          </md-card-content>
-        </md-card>
-
         <input type="submit" [disabled]="!isValidForm" style="display: none" />
       </form>
+
+      <div *ngFor="let container of userContainers" class="userContainerDataTable"> 
+        <datatable
+            [options]="{addButton: true, addButtonTooltip: 'Ajouter'}"
+            [data]="container.users"
+            [columns]="['Nom', 'Prénom', '']"
+            (addButtonClick)="addTo(container)">
+          <datatable-title>
+            <h3>{{container.title}}</h3>
+          </datatable-title>
+          <ng-template let-user="item">
+            <td>{{user.name}}</td>
+            <td>{{user.firstname}}</td>
+          </ng-template>
+        </datatable>
+      </div>
+
     </md-card-content>
 
     <md-card-actions align="end">

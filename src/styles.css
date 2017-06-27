@@ -6,6 +6,10 @@
   padding: 0 2px !important;
 }
 
+datatable .mat-card {
+  padding: 10px !important;
+}
+
 .mat-tab-labels {
   background-color: #ccc;
 }
