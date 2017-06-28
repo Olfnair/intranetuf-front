@@ -18,32 +18,26 @@ import { Subscription } from "rxjs/Subscription";
   styleUrls: ['./filelist.component.css']
 })
 export class FilelistComponent implements OnInit {
-  private _fileSubscription: Subscription = undefined;
   private _project: Project = undefined;
-  private _files: File[] = [];
+  private _files: Observable<File[]> = undefined;
   private _url = environment.backend.protocol + "://"
-              + environment.backend.host + ":"
-              + environment.backend.port
-              + environment.backend.endpoints.download;
+               + environment.backend.host + ":"
+               + environment.backend.port
+               + environment.backend.endpoints.download;
 
   constructor(private _session: SessionService, private _restService: RestApiService, private _router: Router) { }
 
   ngOnInit() {
   }
 
-  ngOnDestroy() {
-    if(this._fileSubscription) {
-      this._fileSubscription.unsubscribe();
-    }
+  updateFiles(): void {
+    this._files = this._restService.fetchFilesByProject(this._project);
   }
 
   @Input() set project(project: Project) {
-    this._project = project;
-    if(this._fileSubscription) {
-      this._fileSubscription.unsubscribe();
-    }
-    if (this._project) {
-      this._fileSubscription = this._restService.fetchFilesByProject(this._project).subscribe((files: any[]) => this._files = files);
+    if(project) {
+      this._project = project;
+      this.updateFiles();
     }
   }
 
@@ -51,7 +45,7 @@ export class FilelistComponent implements OnInit {
     return this._project;
   }
 
-  get files(): File[] {
+  get files(): Observable<File[]> {
     return this._files;
   }
 

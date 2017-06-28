@@ -1,6 +1,6 @@
 <datatable
     [options]="{selectionCol: true, displayFooter: true}"
-    [data]="rights"
+    [dataObs]="rightsObs"
     [columns]="['Projet', 'Voir', 'Editer', 'Supprimer', 'Ajout fichier', 'Supprimer fichier', 'Controleur', 'Validateur']">
   <datatable-title>
     <h2>Droits de {{user.firstname}} {{user.name}}</h2>

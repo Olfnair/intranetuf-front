@@ -18,9 +18,7 @@ export enum ComponentState {
   styleUrls: ['./userlist.component.css']
 })
 export class UserlistComponent implements OnInit {
-
-  private _userSubscription: Subscription = undefined;
-  private _users: User[] = [];
+  private _users: Observable<User[]> = undefined;
   private _state: number = ComponentState.LIST;
   private _checkedUsers: User[] = [];
 
@@ -31,26 +29,17 @@ export class UserlistComponent implements OnInit {
   ngOnInit() {
   }
 
-  ngOnDestroy() {
-    if (this._userSubscription) {
-      this._userSubscription.unsubscribe();
-    }
+  updateUsers(): void {
+    this._users = this._restService.fetchUsers();
   }
 
   @Input() set selected(selected: boolean) {
     if (selected) {
-      this._subscribeToUserList();
+      this.updateUsers();
     }
   }
 
-  private _subscribeToUserList(): void {
-    if (this._userSubscription) {
-      this._userSubscription.unsubscribe();
-    }
-    this._userSubscription = this._restService.fetchUsers().subscribe((users: User[]) => this._users = users);
-  }
-
-  get users(): User[] {
+  get users(): Observable<User[]> {
     return this._users;
   }
 
@@ -90,7 +79,7 @@ export class UserlistComponent implements OnInit {
 
   activateListMode(submited: boolean) {
     if (submited) {
-      this._subscribeToUserList();
+      this.updateUsers();
     }
     this._state = ComponentState.LIST;
   }

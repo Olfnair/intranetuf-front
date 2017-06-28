@@ -5,6 +5,8 @@ import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/shared/rest-api.service";
 import { MdCheckboxChange } from "@angular/material";
 import { Project } from "app/entities/project";
+import { Observable } from "rxjs/Observable";
+import { Observer } from "rxjs/Observer";
 
 @Component({
   selector: 'app-rightslist',
@@ -15,6 +17,7 @@ export class RightslistComponent implements OnInit {
 
   private _user: User = undefined;
   private _rights: ProjectRight[] = [];
+  private _rightsObs: Observable<ProjectRight[]> = undefined;
   private _rightsSub: Subscription = undefined;
 
   private _mapModifiedRights: Map<number, ProjectRight>;
@@ -37,6 +40,14 @@ export class RightslistComponent implements OnInit {
     }
   }
 
+  updateRightsObs(): void {
+    //this._rightsObs = Observable.of(this._rights);
+    this._rightsObs = Observable.create((observer: Observer<ProjectRight[]>) => {
+      observer.next(this._rights);
+      observer.complete();
+    });
+  }
+
   @Output('done') get done(): EventEmitter<void> {
     return this._done$;
   }
@@ -49,6 +60,7 @@ export class RightslistComponent implements OnInit {
     this._rightsSub = this._restService.getRights(this._user)
       .finally(() => {
         this._unsub();
+        this.updateRightsObs();
       })
       .subscribe(
         (rights: ProjectRight[]) => {
@@ -65,8 +77,8 @@ export class RightslistComponent implements OnInit {
     return this._user;
   }
 
-  get rights(): ProjectRight[] {
-    return this._rights;
+  get rightsObs(): Observable<ProjectRight[]> {
+    return this._rightsObs;
   }
 
   get modified(): boolean {

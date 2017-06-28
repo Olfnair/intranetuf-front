@@ -9,7 +9,7 @@
             <button md-mini-fab (click)="add()" mdTooltip="{{options.addButtonTooltip}}" mdTooltipPosition="after"><md-icon>add</md-icon></button>
           </td>
         </tr>
-        <tr class="columnTitles">
+        <tr class="columnTitles" *ngIf="! emptyData || options.displayEmpty">
           <th *ngIf="options.selectionCol" class="selectionCol">
             <md-checkbox color="warn" [checked]="selectAllTrue" (change)="setSelectAllState($event)"></md-checkbox>
           </th>
@@ -17,6 +17,16 @@
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="loading">
+          <td [colSpan]="nbCols">
+            <md-spinner class="spinner" mode="indeterminate"></md-spinner>
+          </td>
+        </tr> 
+        <tr *ngIf="! loading && emptyData && options.emptyMessage">
+          <td [colSpan]="nbCols">
+            <p class="emptyMessage">{{options.emptyMessage}}</p>
+          </td>
+        </tr>
         <tr *ngFor="let item of data; let odd = odd; let last = last" [class.oddRow]="odd">
           <td *ngIf="options.selectionCol" class="selectionCol">
             <app-checkbox [checked]="selectAllState" (change)="checkSelect($event, item, last)"></app-checkbox>
@@ -24,7 +34,7 @@
           <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item}"></ng-template>
         </tr>
         <tr *ngIf="options.displayFooter" class="footer">
-          <td [colSpan]="footerLen">
+          <td [colSpan]="nbCols">
             <ng-content select="datatable-footer"></ng-content>
           </td>
         </tr>

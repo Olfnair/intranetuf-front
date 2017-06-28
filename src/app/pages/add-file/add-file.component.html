@@ -20,7 +20,7 @@
       <div *ngFor="let container of userContainers" class="userContainerDataTable"> 
         <datatable *ngIf="container.isListMode()"
             [options]="{addButton: true, addButtonTooltip: 'Ajouter'}"
-            [data]="container.users"
+            [dataObs]="container.users"
             [columns]="['Nom', 'Prénom', '']"
             (addButtonClick)="switchContainerMode(container)">
           <datatable-title>
@@ -39,7 +39,7 @@
 
         <datatable *ngIf="container.isAddMode()"
             [options]="{selectionCol: true, displayFooter: true}"
-            [data]="container.availableUsers"
+            [dataObs]="container.availableUsers"
             [columns]="['Nom', 'Prénom', '']"
             (selectedDataUpdate)="updateUsersToAdd(container, $event)">
           <datatable-title>
@@ -51,7 +51,7 @@
             <td></td>
           </ng-template>
           <datatable-footer>
-            <button md-raised-button color="primary" type="button" [disabled]="! container.hasUsersToAdd()" (click)="addContainerUsers(container)">Ajouter</button>
+            <button md-raised-button color="primary" type="button" [disabled]="! container.hasUsersToAdd" (click)="addContainerUsers(container)">Ajouter</button>
             <button md-raised-button color="warn" type="button" (click)="switchContainerMode(container)">Annuler</button>
           </datatable-footer>
         </datatable>

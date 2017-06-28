@@ -28,6 +28,14 @@ table.dataTable tbody tr.oddRow {
   width: 100%;
 }
 
+table.dataTable tbody tr td md-spinner.spinner {
+  margin: 0 auto;
+}
+
+table.dataTable tbody tr td p.emptyMessage {
+  text-align: center;
+}
+
 table.dataTable thead tr.columnTitles {
   background-color: #d1d1d1;
 }

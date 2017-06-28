@@ -8,8 +8,8 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class FileUploadService {
-  private _progressValue: number
-  private _progress$: Observable<number>;
+  //private _progressValue: number
+  private _progress: Observable<number>;
   private _progressObserver: Observer<number>;
   private _urlFile: string;
   private _urlVersion: string;
@@ -24,18 +24,13 @@ export class FileUploadService {
                      + environment.backend.host + ":"
                      + environment.backend.port
                      + environment.backend.endpoints.allVersions;
-    this._progress$ = Observable.create((observer: Observer<number>) => {
+    this._progress = Observable.create((observer: Observer<number>) => {
       this._progressObserver = observer;
     }).share();
-    this._progress$.subscribe((value: number) => this._progressValue = value);
   }
 
-  get progressValue(): number {
-    return this._progressValue;
-  }
-
-  get progress$(): Observable<number> {
-    return this._progress$;
+  get progress(): Observable<number> {
+    return this._progress;
   }
 
   upload(params: string[], file: File, entityType: string, entity: any): Observable<void> {
@@ -59,11 +54,13 @@ export class FileUploadService {
       };
 
       this._xhr.upload.onprogress = (event) => {
-        //this._progress$ = Math.round(event.loaded / event.total * 100);
-        this._progressObserver.next(Math.round(event.loaded / event.total * 100));
+        let progress = Math.round(event.loaded / event.total * 100) 
+        this._progressObserver.next(progress);
+        if(progress >= 100) {
+          this._progressObserver.complete();
+        }
       };
 
-      //xhr.timeout = 10000; // time in milliseconds
       this._xhr.open('POST', url, true);
       this._xhr.setRequestHeader("Authorization", "Bearer " + JSON.stringify(this._session.authToken));
       this._xhr.setRequestHeader("Accept", "application/json");

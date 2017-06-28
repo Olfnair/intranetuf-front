@@ -1,6 +1,6 @@
 <datatable *ngIf="isListMode"
     [options]="{selectionCol: true, addButton: true, addButtonTooltip: 'Ajouter un utilisateur'}"
-    [data]="users"
+    [dataObs]="users"
     [columns]="['Nom', 'Prénom', 'Identifiant', 'Email', 'Actif', 'En Attente', '']"
     (addButtonClick)="add()">
   <datatable-title>

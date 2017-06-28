@@ -13,6 +13,8 @@ import { MdDialogRef, MdDialog } from "@angular/material";
 import { ProgressComponent } from "app/shared/progress/progress.component";
 import { Right } from "app/entities/project-right";
 import { RestApiService } from "app/shared/rest-api.service";
+import { Observable } from "rxjs/Observable";
+import { Observer } from "rxjs/Observer";
 
 export class IndexedUser extends User {
   public index: number = 0;
@@ -32,15 +34,29 @@ export class IndexedUser extends User {
 }
 
 export class UserContainer {
+  // titre
   private _title: string;
+
+  // observables
+  private _usersObs: Observable<IndexedUser[]> = undefined;
+  private _availableUsersObs: Observable<IndexedUser[]> = undefined;
+
+  // infos users
   private _usersToAdd: IndexedUser[] = [];
   private _availableUsers: IndexedUser[] = [];
   private _users: IndexedUser[] = [];
   private _chained: boolean[] = [];
+
+  // config
   private _right: Right = 0;
   private _project: Project = undefined;
+
+  // service rest
   private _restService: RestApiService;
+
+  // divers
   private _addMode: boolean = false;
+  private _hasUsersToAdd: boolean = false;
 
   constructor(title: string, project: Project, right: Right = 0, restService: RestApiService) {
     this._restService = restService;
@@ -49,18 +65,41 @@ export class UserContainer {
     this.right = right;
   }
 
+  private static update(data: IndexedUser[]): Observable<IndexedUser[]> {
+    for(let i: number = 0; i < data.length; ++i) {
+      data[i].index = i;
+    }
+    return Observable.create((observer: Observer<IndexedUser[]>) => {
+      observer.next(data);
+      observer.complete();
+    });
+  }
+
+  updateUsers(): void {
+    this._usersObs = UserContainer.update(this._users);
+  }
+
+  updateAvailableUsers(): void {
+    this._availableUsersObs = UserContainer.update(this._availableUsers);
+  }
+
   set right(right: Right) {
     this.reset();
     this._right = right;
-    let sub: Subscription = this._restService.fetchUsersByRightOnProject(this._project, right)
-      .finally(() => {
-        sub.unsubscribe();
-      })
-      .subscribe((users: User[]) => {
+    let sub: Subscription = this._restService.fetchUsersByRightOnProject(this._project, right).subscribe(
+      (users: User[]) => {
         for(let i: number = 0; i < users.length; ++i) {
           this._availableUsers.push(new IndexedUser(i, users[i]));
         }
-      });
+      },
+      (error: Response) => {
+        // gérer erreur ?
+      },
+      () => {
+        sub.unsubscribe();
+        this.updateUsers();
+      }
+    );
   }
 
   get title(): string {
@@ -75,40 +114,44 @@ export class UserContainer {
     return this._right;
   }
 
-  get users(): IndexedUser[] {
-    for(let i: number = 0; i < this._users.length; ++i) {
-      this._users[i].index = i;
-    }
-    return this._users;
+  get users(): Observable<IndexedUser[]> {
+    return this._usersObs;
   }
 
-  get availableUsers(): IndexedUser[] {
-    for(let i: number = 0; i < this._availableUsers.length; ++i) {
-      this._availableUsers[i].index = i;
-    }
-    return this._availableUsers;
+  get availableUsers(): Observable<IndexedUser[]> {
+    return this._availableUsersObs;
   }
 
   set usersToAdd(users: IndexedUser[]) {
     this._usersToAdd = users;
+    this.hasUsersToAdd = (this._usersToAdd.length > 0);
+  }
+
+  set hasUsersToAdd(value: boolean) {
+    setTimeout(() => {
+      this._hasUsersToAdd = value;
+    }, 0);
   }
 
   resetUsersToAdd(): void {
     this._usersToAdd = [];
+    this.hasUsersToAdd = false;
   }
 
-  hasUsersToAdd(): boolean {
-    return (this._usersToAdd.length > 0);
+  get hasUsersToAdd(): boolean {
+    return this._hasUsersToAdd;
   }
 
   reset(): void {
     this._users = [];
     this._chained = [];
     this._usersToAdd = [];
+    this._hasUsersToAdd = false;
   }
 
   switchMode(): void {
     this._addMode = ! this._addMode;
+    this._addMode ? this.updateAvailableUsers() : this.updateUsers();
   }
 
   isAddMode(): boolean {
@@ -251,17 +294,20 @@ export class AddFileComponent implements OnInit {
     this._aborted = false;
     this._uploadProgress = 0;
     this.openProgressModal();
-    let uploadSub: Subscription = this._uploadService.upload([], this._uploadFile, entityType, entity)
-      .finally(() => {
+    let uploadSub: Subscription = this._uploadService.upload([], this._uploadFile, entityType, entity).subscribe(
+      (res: void) => {
+      },
+      (error: any) => {
+        // gérer erreur ?
+      },
+      () => {
         uploadSub.unsubscribe();
         if (!this._aborted) {
           this.closeProgressModal();
           this._router.navigate(['/home']);
         }
-      })
-      .subscribe(
-        error => this.closeProgressModal()
-      )
+      }
+    );
   }
 
   cancel(): void {
@@ -269,21 +315,33 @@ export class AddFileComponent implements OnInit {
   }
 
   openProgressModal(): void {
-    let uploadSub: Subscription = this._uploadService.progress$
-      .finally(() => uploadSub.unsubscribe())
-      .subscribe((uploadProgress: number) => this._uploadProgress = uploadProgress)
-    this._progressModal = this._dialog.open(ProgressComponent, { data: this._uploadService.progress$ });
-    let progressModalSub: Subscription = this._progressModal.afterClosed()
-      .finally(() => {
-        progressModalSub.unsubscribe();
-        this._progressModal = undefined;
-      })
-      .subscribe(totalProgress => {
+    let uploadSub: Subscription = this._uploadService.progress.subscribe(
+      (uploadProgress: number) => {
+        this._uploadProgress = uploadProgress;
+      },
+      (error: any) => {
+        // gérer erreur ?
+      },
+      () => {
+        uploadSub.unsubscribe();
+      }
+    );
+    this._progressModal = this._dialog.open(ProgressComponent, { data: this._uploadService.progress });
+    let progressModalSub: Subscription = this._progressModal.afterClosed().subscribe(
+      (totalProgress: number) => {
         if (totalProgress == undefined || totalProgress < 100) {
           this._aborted = true;
           this._uploadService.abort();
         }
-      });
+      },
+      (error: any) => {
+        // gérer erreur ?
+      },
+      () => {
+        progressModalSub.unsubscribe();
+        this._progressModal = undefined;
+      }
+    );
   }
 
   closeProgressModal(): void {
