@@ -17,9 +17,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of data; let odd = odd" [class.oddRow]="odd">
+        <tr *ngFor="let item of data; let odd = odd; let last = last" [class.oddRow]="odd">
           <td *ngIf="options.selectionCol" class="selectionCol">
-            <app-checkbox [checked]="selectAllState" (change)="checkSelect($event, item)"></app-checkbox>
+            <app-checkbox [checked]="selectAllState" (change)="checkSelect($event, item, last)"></app-checkbox>
           </td>
           <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item}"></ng-template>
         </tr>

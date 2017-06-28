@@ -5,3 +5,7 @@
 .userContainerDataTable {
   margin: 0.5em auto;
 }
+
+td.delButton {
+  text-align: right;
+}

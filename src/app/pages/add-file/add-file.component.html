@@ -18,18 +18,42 @@
       </form>
 
       <div *ngFor="let container of userContainers" class="userContainerDataTable"> 
-        <datatable
+        <datatable *ngIf="container.isListMode()"
             [options]="{addButton: true, addButtonTooltip: 'Ajouter'}"
             [data]="container.users"
             [columns]="['Nom', 'Prénom', '']"
-            (addButtonClick)="addTo(container)">
+            (addButtonClick)="switchContainerMode(container)">
           <datatable-title>
             <h3>{{container.title}}</h3>
           </datatable-title>
           <ng-template let-user="item">
             <td>{{user.name}}</td>
             <td>{{user.firstname}}</td>
+            <td class="delButton">
+              <button md-raised-button color="warn" type="button" (click)="container.delete(user.index)" mdTooltip="Supprimer" mdTooltipPosition="above">
+                <md-icon>clear</md-icon>
+              </button>
+            </td>
           </ng-template>
+        </datatable>
+
+        <datatable *ngIf="container.isAddMode()"
+            [options]="{selectionCol: true, displayFooter: true}"
+            [data]="container.availableUsers"
+            [columns]="['Nom', 'Prénom', '']"
+            (selectedDataUpdate)="updateUsersToAdd(container, $event)">
+          <datatable-title>
+            <h3>{{container.title}}</h3>
+          </datatable-title>
+          <ng-template let-user="item">
+            <td>{{user.name}}</td>
+            <td>{{user.firstname}}</td>
+            <td></td>
+          </ng-template>
+          <datatable-footer>
+            <button md-raised-button color="primary" type="button" [disabled]="! container.hasUsersToAdd()" (click)="addContainerUsers(container)">Ajouter</button>
+            <button md-raised-button color="warn" type="button" (click)="switchContainerMode(container)">Annuler</button>
+          </datatable-footer>
         </datatable>
       </div>
 

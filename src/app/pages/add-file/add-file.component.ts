@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
@@ -14,14 +14,33 @@ import { ProgressComponent } from "app/shared/progress/progress.component";
 import { Right } from "app/entities/project-right";
 import { RestApiService } from "app/shared/rest-api.service";
 
+export class IndexedUser extends User {
+  public index: number = 0;
+
+  constructor(index: number, user: User) {
+    super();
+    this.index = index;
+    this.active = user.active;
+    this.credentials = user.credentials;
+    this.email = user.email;
+    this.firstname = user.firstname;
+    this.id = user.id;
+    this.login = user.login;
+    this.name = user.name;
+    this.pending = user.pending;
+  }
+}
+
 export class UserContainer {
   private _title: string;
-  private _availableUsers: User[] = []
-  private _users: User[] = [];
+  private _usersToAdd: IndexedUser[] = [];
+  private _availableUsers: IndexedUser[] = [];
+  private _users: IndexedUser[] = [];
   private _chained: boolean[] = [];
   private _right: Right = 0;
   private _project: Project = undefined;
   private _restService: RestApiService;
+  private _addMode: boolean = false;
 
   constructor(title: string, project: Project, right: Right = 0, restService: RestApiService) {
     this._restService = restService;
@@ -37,7 +56,11 @@ export class UserContainer {
       .finally(() => {
         sub.unsubscribe();
       })
-      .subscribe((users: User[]) => this._availableUsers = users);
+      .subscribe((users: User[]) => {
+        for(let i: number = 0; i < users.length; ++i) {
+          this._availableUsers.push(new IndexedUser(i, users[i]));
+        }
+      });
   }
 
   get title(): string {
@@ -52,31 +75,72 @@ export class UserContainer {
     return this._right;
   }
 
-  get users(): User[] {
+  get users(): IndexedUser[] {
+    for(let i: number = 0; i < this._users.length; ++i) {
+      this._users[i].index = i;
+    }
     return this._users;
   }
 
-  get availableUsers(): User[] {
+  get availableUsers(): IndexedUser[] {
+    for(let i: number = 0; i < this._availableUsers.length; ++i) {
+      this._availableUsers[i].index = i;
+    }
     return this._availableUsers;
+  }
+
+  set usersToAdd(users: IndexedUser[]) {
+    this._usersToAdd = users;
+  }
+
+  resetUsersToAdd(): void {
+    this._usersToAdd = [];
+  }
+
+  hasUsersToAdd(): boolean {
+    return (this._usersToAdd.length > 0);
   }
 
   reset(): void {
     this._users = [];
     this._chained = [];
+    this._usersToAdd = [];
   }
 
-  addUser(i: number): void {
-    this._users.push(this._availableUsers.splice(i, 1)[0]);
+  switchMode(): void {
+    this._addMode = ! this._addMode;
   }
 
-  deleteUser(i: number): void {
+  isAddMode(): boolean {
+    return this._addMode;
+  }
+
+  isListMode(): boolean {
+    return ! this.isAddMode();
+  }
+
+  delete(i: number): void {
     this._availableUsers.push(this._users.splice(i, 1)[0]);
   }
 
   addUsers(indexes: number[]): void {
     indexes.forEach((i: number) => {
-      this.addUser(i);
+      this._users.push(this._availableUsers[i]);
     })
+    // on suppose que les index sont triés par ordre croissant (C'est censé être le cas, s'en assurer si nécessaire)
+    for(let i: number = indexes.length - 1; i >= 0; --i) { // supression en ordre inverse pour supprimer les bons indexes
+      // une autre façon de faire serait de récréer le tableau en ne prenant que les indexes qui ne se trouvent pas dans "indexes"
+      this._availableUsers.splice(indexes[i], 1);
+    }
+  }
+
+  processUsersToAdd(): void {
+    let indexes: number[] = [];
+    this._usersToAdd.forEach((indexedUser: IndexedUser) => {
+      indexes.push(indexedUser.index);
+    });
+    this.addUsers(indexes);
+    this.resetUsersToAdd();
   }
 
   chain(i : number, value: boolean): void {
@@ -84,7 +148,7 @@ export class UserContainer {
   }
 
   swap(i: number, j: number): void {
-    let tmpUser: User = this._users[i];
+    let tmpUser: IndexedUser = this._users[i];
     let tmpChained: boolean = this._chained[i];
     this._users[i] = this._users[j];
     this._chained[i] = this._chained[j];
@@ -117,7 +181,8 @@ export class AddFileComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _session: SessionService,
-    private _dialog: MdDialog) {
+    private _dialog: MdDialog,
+    private _cdr: ChangeDetectorRef) {
     this._form = this._buildForm();
   }
 
@@ -195,7 +260,7 @@ export class AddFileComponent implements OnInit {
         }
       })
       .subscribe(
-      error => this.closeProgressModal()
+        error => this.closeProgressModal()
       )
   }
 
@@ -227,7 +292,18 @@ export class AddFileComponent implements OnInit {
     }
   }
 
-  addTo(UserContainer): void {
+  updateUsersToAdd(container: UserContainer, users: IndexedUser[]) {
+    container.usersToAdd = users;
+  }
+
+  switchContainerMode(container: UserContainer): void {
+    container.switchMode();
+    container.resetUsersToAdd();
+  }
+
+  addContainerUsers(container: UserContainer): void {
+    container.processUsersToAdd();
+    this.switchContainerMode(container);
   }
 
   /**

@@ -103,7 +103,7 @@ export class DatatableComponent<T> implements OnInit {
     if (options.selectionCol) {
       this._options.selectionCol = options.selectionCol;
     }
-    if(options.displayFooter) {
+    if (options.displayFooter) {
       this._options.displayFooter = options.displayFooter;
     }
     if (options.addButton) {
@@ -141,15 +141,20 @@ export class DatatableComponent<T> implements OnInit {
     this._selectAllFalse = !event.checked;
   }
 
-  checkSelect(event: MdCheckboxChange, item: T): void {
+  checkSelect(event: MdCheckboxChange, item: T, last: boolean): void {
     let index: number = this._selectedData.indexOf(item);
+    let update: boolean = false;
     if (!event.checked && index !== -1) {
       this._selectedData.splice(index, 1);
       this._selectAllTrue = false;
-      this._selectedDataUpdate$.emit(this._selectedData);
+      update = true;
     }
     else if (event.checked && index === -1) {
       this._selectedData.push(item);
+      update = true;
+    }
+    // On emet un évènement si il y a eu mise à jour et qu'il n'y en as pas d'autres qui vont suivre (sinon, on va attendre la dernière pour envoyer l'event)
+    if(update && (this.selectAllState == undefined || (this.selectAllState != undefined && last))) {
       this._selectedDataUpdate$.emit(this._selectedData);
     }
   }
