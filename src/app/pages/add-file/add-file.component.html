@@ -19,18 +19,18 @@
 
       <div *ngFor="let container of userContainers" class="userContainerDataTable"> 
         <datatable *ngIf="container.isListMode()"
-            [options]="{addButton: true, addButtonTooltip: 'Ajouter'}"
+            [options]="{addButton: true, addButtonTooltip: 'Ajouter', emptyMessage: 'Veuillez ajouter au moins un ' + container.name + '.'}"
             [dataObs]="container.users"
             [columns]="['Nom', 'Prénom', '']"
             (addButtonClick)="switchContainerMode(container)">
           <datatable-title>
             <h3>{{container.title}}</h3>
           </datatable-title>
-          <ng-template let-user="item">
+          <ng-template let-user="item" let-index="index">
             <td>{{user.name}}</td>
             <td>{{user.firstname}}</td>
             <td class="delButton">
-              <button md-raised-button color="warn" type="button" (click)="container.delete(user.index)" mdTooltip="Supprimer" mdTooltipPosition="above">
+              <button md-raised-button color="warn" type="button" (click)="container.delete(index)" mdTooltip="Supprimer" mdTooltipPosition="above">
                 <md-icon>clear</md-icon>
               </button>
             </td>
@@ -38,7 +38,7 @@
         </datatable>
 
         <datatable *ngIf="container.isAddMode()"
-            [options]="{selectionCol: true, displayFooter: true}"
+            [options]="{selectionCol: true, displayFooter: true, emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'}"
             [dataObs]="container.availableUsers"
             [columns]="['Nom', 'Prénom', '']"
             (selectedDataUpdate)="updateUsersToAdd(container, $event)">

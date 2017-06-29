@@ -2,6 +2,7 @@ import { Component, OnInit, ContentChild, TemplateRef, Input, Directive, EventEm
 import { MdCheckboxChange } from "@angular/material";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+import { DatatableSelection } from "app/shared/datatable/datatable-selection";
 
 export class Column {
   public label: string;
@@ -59,7 +60,7 @@ export class DatatableComponent<T> implements OnInit {
 
   // events
   private _addButtonClick$: EventEmitter<void> = new EventEmitter<void>();
-  private _selectedDataUpdate$: EventEmitter<T[]> = new EventEmitter<T[]>();
+  private _selectedDataUpdate$: EventEmitter<DatatableSelection<T>[]> = new EventEmitter<DatatableSelection<T>[]>();
 
   // titres colonnes et données
   private _columns: Column[] = [];
@@ -72,7 +73,7 @@ export class DatatableComponent<T> implements OnInit {
   private _loadingError: boolean = false;
 
   // sélection des rangées (checkbox)
-  private _selectedData: T[] = [];
+  private _selectedData: DatatableSelection<T>[] = [];
   private _selectAllTrue: boolean = false;
   private _selectAllFalse: boolean = false;
 
@@ -95,7 +96,7 @@ export class DatatableComponent<T> implements OnInit {
     return this._addButtonClick$;
   }
 
-  @Output('selectedDataUpdate') get selectedDataUpdate(): EventEmitter<T[]> {
+  @Output('selectedDataUpdate') get selectedDataUpdate(): EventEmitter<DatatableSelection<T>[]> {
     return this._selectedDataUpdate$;
   }
 
@@ -116,26 +117,28 @@ export class DatatableComponent<T> implements OnInit {
     this.loadingError = false
   }
 
-  private endLoading(sub: Subscription): void{
+  private endLoading(sub?: Subscription): void{
     if(sub) {
       sub.unsubscribe();
     }
+    this.emptyData = (this._data.length <= 0);
     this.loading = false;
   }
 
   @Input() set dataObs(dataObservable: Observable<T[]>) {
+    this.startLoading();
     if(dataObservable == undefined || dataObservable == null) {
+      this._data = [];
+      this.endLoading();
       return;
     }
-    this.startLoading();
     let sub: Subscription = dataObservable.subscribe(
       (data: T[]) => { // ok
         if (data) {
           this._data = data;
-          this.emptyData = (this._data.length <= 0);
         }
         else {
-          this.emptyData = true;
+          this._data = [];
         }
       },
       (error: any) => { // erreur
@@ -172,17 +175,7 @@ export class DatatableComponent<T> implements OnInit {
   }
 
   set emptyData(value: boolean) {
-    // On utilise un timeout parce que cette propriété est normalement déterminée lors d'un changement des données (@Input data) passées à la table,
-    // ce qui entraine une détection de changement au niveau du modèle (code des fichiers .ts) pour modifier la vue (le html est modifié).
-    // C'est cette détection qui change la valeur de la propriété en appelant set emptyData() via @Input() set data()
-    // Or, la propriété get emptyData() est aussi utilisée dans la vue. Donc, la modifier entraine une détéction de changement du modèle.
-    // Angular affiche une erreur (qui est en fait un warning) si une détection de changement entraine un autre changement immédiat.
-    // L'idée est d'éviter qu'un changement en entraine un autre parce que celà peut créer une boucle infinie, une vue pas à jour ou un modèle instable
-    // en fonction de la manière dont angular gère ce cas.
-    // On met donc un timer de 0 pour que le changement de la propriété ne soit détecté qu'au prochain tick de mise à jour de la vue et on évite l'erreur.
-    setTimeout(() => {
-      this._emptyData = value;
-    }, 0);
+    this._emptyData = value;
   }
 
   @Input() set options(options: Options) {
@@ -216,23 +209,44 @@ export class DatatableComponent<T> implements OnInit {
     this._selectAllFalse = !event.checked;
   }
 
-  checkSelect(event: MdCheckboxChange, item: T, last: boolean): void {
-    let index: number = this._selectedData.indexOf(item);
+  checkSelect(event: MdCheckboxChange, id: number, last: boolean): void {
+    let index: number = -1;
+    for(let i = 0; i < this._selectedData.length; ++i) {
+      if(this._selectedData[i] && this._selectedData[i].id == id) {
+        index = i;
+        break;
+      }
+    }
     let update: boolean = false;
-    if (!event.checked && index !== -1) {
-      this._selectedData.splice(index, 1);
-      this._selectAllTrue = false;
+    if (!event.checked && index >= 0) { // supression
+      this._selectAllTrue = false; // si on supprime, on ne selectionne plus tout
+      this._selectedData[index] = undefined; // on marque l'élément à supprimer
       update = true;
     }
-    else if (event.checked && index === -1) {
-      this._selectedData.push(item);
+    else if (event.checked && index < 0) { // ajout
+      this._selectAllFalse = false;// si on ajoute, on ne déselectionne pas tout
+      this._selectedData.push(new DatatableSelection<T>(id, this._data[id]));
       update = true;
     }
     // On emet un évènement si il y a eu mise à jour et qu'il n'y en a pas d'autres qui vont suivre
-    // (sinon, on va attendre la dernière pour envoyer l'event, pas de flood inutile...)
-    if(update && (this.selectAllState == undefined || (this.selectAllState != undefined && last))) {
+    // (Sinon, on va attendre la dernière pour envoyer l'event. Pas de flood inutile...)
+    // on s'assure que l'event soit émit à tous les coups si c'est la dernière mise à jour, même en cas d'erreur
+    // this.selectAllState != undefined indique une sélection ou désélection globale et donc, d'autres mises à jour à attendre
+    if(update && this.selectAllState == undefined || last) {    
+      this._delUndefinedSelect();
       this._selectedDataUpdate$.emit(this._selectedData);
     }
+  }
+
+  private _delUndefinedSelect() {
+    // effectue les suppressions avant d'emettre les données
+    let newSelectedData: DatatableSelection<T>[] = [];
+    for(let selection of this._selectedData) {
+      if(selection != undefined) {
+        newSelectedData.push(selection);
+      }
+    }
+    this._selectedData = newSelectedData;
   }
 
 }

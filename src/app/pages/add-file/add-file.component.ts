@@ -15,36 +15,20 @@ import { Right } from "app/entities/project-right";
 import { RestApiService } from "app/shared/rest-api.service";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
-
-export class IndexedUser extends User {
-  public index: number = 0;
-
-  constructor(index: number, user: User) {
-    super();
-    this.index = index;
-    this.active = user.active;
-    this.credentials = user.credentials;
-    this.email = user.email;
-    this.firstname = user.firstname;
-    this.id = user.id;
-    this.login = user.login;
-    this.name = user.name;
-    this.pending = user.pending;
-  }
-}
+import { DatatableSelection } from "app/shared/datatable/datatable-selection";
 
 export class UserContainer {
   // titre
   private _title: string;
 
   // observables
-  private _usersObs: Observable<IndexedUser[]> = undefined;
-  private _availableUsersObs: Observable<IndexedUser[]> = undefined;
+  private _usersObs: Observable<User[]> = undefined;
+  private _availableUsersObs: Observable<User[]> = undefined;
 
   // infos users
-  private _usersToAdd: IndexedUser[] = [];
-  private _availableUsers: IndexedUser[] = [];
-  private _users: IndexedUser[] = [];
+  private _usersToAdd: number[] = []; // index des users à ajouter
+  private _availableUsers: User[] = [];
+  private _users: User[] = [];
   private _chained: boolean[] = [];
 
   // config
@@ -65,11 +49,8 @@ export class UserContainer {
     this.right = right;
   }
 
-  private static update(data: IndexedUser[]): Observable<IndexedUser[]> {
-    for(let i: number = 0; i < data.length; ++i) {
-      data[i].index = i;
-    }
-    return Observable.create((observer: Observer<IndexedUser[]>) => {
+  private static update(data: User[]): Observable<User[]> {
+    return Observable.create((observer: Observer<User[]>) => {
       observer.next(data);
       observer.complete();
     });
@@ -83,27 +64,37 @@ export class UserContainer {
     this._availableUsersObs = UserContainer.update(this._availableUsers);
   }
 
+  update(): void {
+    this._addMode ? this.updateAvailableUsers() : this.updateUsers();
+  }
+
   set right(right: Right) {
     this.reset();
     this._right = right;
     let sub: Subscription = this._restService.fetchUsersByRightOnProject(this._project, right).subscribe(
       (users: User[]) => {
-        for(let i: number = 0; i < users.length; ++i) {
-          this._availableUsers.push(new IndexedUser(i, users[i]));
-        }
+        this._availableUsers = users;
       },
       (error: Response) => {
         // gérer erreur ?
       },
       () => {
         sub.unsubscribe();
-        this.updateUsers();
+        this.update();
       }
     );
   }
 
   get title(): string {
     return this._title;
+  }
+
+  get name(): string {
+    let name: string = this._title.toLocaleLowerCase();
+    if(name.charAt(name.length - 1) == 's') {
+      name = name.substring(0, name.length - 1);
+    }
+    return name;
   }
 
   get project(): Project {
@@ -114,16 +105,16 @@ export class UserContainer {
     return this._right;
   }
 
-  get users(): Observable<IndexedUser[]> {
+  get users(): Observable<User[]> {
     return this._usersObs;
   }
 
-  get availableUsers(): Observable<IndexedUser[]> {
+  get availableUsers(): Observable<User[]> {
     return this._availableUsersObs;
   }
 
-  set usersToAdd(users: IndexedUser[]) {
-    this._usersToAdd = users;
+  set usersToAdd(indexes: number[]) {
+    this._usersToAdd = indexes;
     this.hasUsersToAdd = (this._usersToAdd.length > 0);
   }
 
@@ -142,6 +133,10 @@ export class UserContainer {
     return this._hasUsersToAdd;
   }
 
+  get size(): number {
+    return this._users.length;
+  }
+
   reset(): void {
     this._users = [];
     this._chained = [];
@@ -151,7 +146,7 @@ export class UserContainer {
 
   switchMode(): void {
     this._addMode = ! this._addMode;
-    this._addMode ? this.updateAvailableUsers() : this.updateUsers();
+    this.update();
   }
 
   isAddMode(): boolean {
@@ -164,25 +159,29 @@ export class UserContainer {
 
   delete(i: number): void {
     this._availableUsers.push(this._users.splice(i, 1)[0]);
+    this.update();
   }
 
   addUsers(indexes: number[]): void {
     indexes.forEach((i: number) => {
       this._users.push(this._availableUsers[i]);
+      this._availableUsers[i] = undefined; // on marque les utilisateurs qu'on a ajouté
     })
-    // on suppose que les index sont triés par ordre croissant (C'est censé être le cas, s'en assurer si nécessaire)
-    for(let i: number = indexes.length - 1; i >= 0; --i) { // supression en ordre inverse pour supprimer les bons indexes
-      // une autre façon de faire serait de récréer le tableau en ne prenant que les indexes qui ne se trouvent pas dans "indexes"
-      this._availableUsers.splice(indexes[i], 1);
-    }
+
+    // on recrée le tableau des utilisateurs disponibles (Complexité temporelle: O(n), mémorielle: O(2n))
+    // Je ne vois pas de façon plus rapide pour supprimer des éléments d'un tableau dont on a les indexes, mais pas forcément triés.
+    // Le tri en lui même est de minimum O(n log(n)), ce qui est déjà plus long. Et il faut encore faire la suppression...
+    let newAvailableUsers: User[] = [];
+    this._availableUsers.forEach((user: User) => {
+      if(user != undefined) {
+        newAvailableUsers.push(user);
+      }
+    });
+    this._availableUsers = newAvailableUsers;
   }
 
   processUsersToAdd(): void {
-    let indexes: number[] = [];
-    this._usersToAdd.forEach((indexedUser: IndexedUser) => {
-      indexes.push(indexedUser.index);
-    });
-    this.addUsers(indexes);
+    this.addUsers(this._usersToAdd);
     this.resetUsersToAdd();
   }
 
@@ -191,7 +190,7 @@ export class UserContainer {
   }
 
   swap(i: number, j: number): void {
-    let tmpUser: IndexedUser = this._users[i];
+    let tmpUser: User = this._users[i];
     let tmpChained: boolean = this._chained[i];
     this._users[i] = this._users[j];
     this._chained[i] = this._chained[j];
@@ -238,7 +237,7 @@ export class AddFileComponent implements OnInit {
       this._file.id = +params['fileId'] || undefined;
       this._newVersionMode = (this._file.id != undefined);
       this._userContainers.push(new UserContainer('Contrôleurs', this._project, Right.CONTROLFILE, this._restService));
-      this._userContainers.push(new UserContainer('Validateurs', this._project, Right.VALIDATEFILE, this._restService));
+      this._userContainers.push(new UserContainer('Valideurs', this._project, Right.VALIDATEFILE, this._restService));
     });
   }
 
@@ -272,7 +271,11 @@ export class AddFileComponent implements OnInit {
   // et faire un test particulier pour le cahmp 'filename'
   get isValidForm(): boolean {
     //TODO : ajouter un test pour chaque champ : this._form.controls.controlname.valid == true
-    return this._form.controls.filename.value != '';
+    if(this._form.controls.filename.value == '') { return false; }
+    for(let container of this._userContainers) {
+      if(container.size <= 0) { return false; }
+    }
+    return true;
   }
 
   submit(): void {
@@ -350,8 +353,12 @@ export class AddFileComponent implements OnInit {
     }
   }
 
-  updateUsersToAdd(container: UserContainer, users: IndexedUser[]) {
-    container.usersToAdd = users;
+  updateUsersToAdd(container: UserContainer, selections: DatatableSelection<User>[]) {
+    let indexes: number[] = [];
+    selections.forEach((selection: DatatableSelection<User>) => {
+      indexes.push(selection.id);
+    });
+    container.usersToAdd = indexes;
   }
 
   switchContainerMode(container: UserContainer): void {
