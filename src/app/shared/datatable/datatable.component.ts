@@ -155,6 +155,10 @@ export class DatatableComponent<T> implements OnInit {
     return this._loading;
   }
 
+  get loaded(): boolean {
+    return ! this._loading && ! this._loadingError;
+  }
+
   set loadingError(loadingError: boolean) {
     this._loadingError = loadingError; 
   }

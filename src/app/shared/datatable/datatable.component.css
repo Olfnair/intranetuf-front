@@ -36,6 +36,11 @@ table.dataTable tbody tr td p.emptyMessage {
   text-align: center;
 }
 
+table.dataTable tbody tr td p.errorMessage {
+  text-align: center;
+  color: #ff0000;
+}
+
 table.dataTable thead tr.columnTitles {
   background-color: #d1d1d1;
 }
