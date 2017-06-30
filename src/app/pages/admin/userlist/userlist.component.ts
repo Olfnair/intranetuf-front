@@ -4,6 +4,7 @@ import { User } from "app/entities/user";
 import { RestApiService } from "app/shared/rest-api.service";
 import { Subscription } from "rxjs/Subscription";
 import { Router } from "@angular/router";
+import { SessionService } from "app/shared/session.service";
 
 export enum ComponentState {
   LIST = 0,
@@ -24,7 +25,7 @@ export class UserlistComponent implements OnInit {
 
   private _selectedUser: User = undefined;
 
-  constructor(private _restService: RestApiService, private _router: Router) { }
+  constructor(private _session: SessionService, private _restService: RestApiService, private _router: Router) { }
 
   ngOnInit() {
   }
@@ -82,6 +83,16 @@ export class UserlistComponent implements OnInit {
       this.updateUsers();
     }
     this._state = ComponentState.LIST;
+  }
+
+  adminLoginAs(login: string): void {
+    let sub: Subscription = this._session.adminLoginAs(login).finally(() => {
+      sub.unsubscribe();
+    }).subscribe((success: boolean) => {
+      if(success) {
+        this._router.navigate(['/home']);
+      }
+    });
   }
 
 }

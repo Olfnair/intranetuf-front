@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers, Response } from "@angular/http";
+import { Http, Response } from "@angular/http";
 import { environment } from "environments/environment";
 import { SessionService } from "app/shared/session.service";
 import { Credentials } from "app/entities/credentials";
@@ -39,7 +39,7 @@ export class RestApiService {
    * @returns {Observable<R>}
    */
   fetchProjects(): Observable<Project[]> {
-    return this._http.get(this._backendURL.allProjects, this._options()).map((res: Response) => {
+    return this._http.get(this._backendURL.allProjects, this._session.options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().project;
       }
@@ -50,7 +50,7 @@ export class RestApiService {
   }
 
   fetchFilesByProject(project: Project): Observable<File[]> {
-    return this._http.get(this._backendURL.filesByProject + project.id.toString(), this._options()).map((res: Response) => {
+    return this._http.get(this._backendURL.filesByProject + project.id.toString(), this._session.options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().file;
       }
@@ -61,7 +61,7 @@ export class RestApiService {
   }
 
   createFile(file: File) {
-    return this._http.post(this._backendURL.allFiles, {file: file}, this._options()).map((res: Response) => {
+    return this._http.post(this._backendURL.allFiles, {file: file}, this._session.options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().file;
       }
@@ -79,7 +79,7 @@ export class RestApiService {
   createProject(name: string): Observable<Project> {
     let project = new Project();
     project.name = name;
-    return this._http.post(this._backendURL.allProjects, {project: project}, this._options()).map((res: Response) => {
+    return this._http.post(this._backendURL.allProjects, {project: project}, this._session.options()).map((res: Response) => {
       return res.json().project;
     });
   }
@@ -90,7 +90,7 @@ export class RestApiService {
    * @returns {Observable<R>}
    */
   fetchUsers(): Observable<User[]> {
-    return this._http.get(this._backendURL.allUsers, this._options()).map((res: Response) => {
+    return this._http.get(this._backendURL.allUsers, this._session.options()).map((res: Response) => {
       if (res.status === 200) {
         return res.json().user;
       }
@@ -101,50 +101,40 @@ export class RestApiService {
   }
 
   addUser(user: User): Observable<User> {
-    return this._http.post(this._backendURL.allUsers, {user: user}, this._options()).map((res: Response) => {
+    return this._http.post(this._backendURL.allUsers, {user: user}, this._session.options()).map((res: Response) => {
       return res.json().user;
     });
   }
 
   // le token de session doit être réglé pour récupérer le bon user (compte)
   getUserToActivate(): Observable<User> {
-    return this._http.get(this._backendURL.activateUser, this._options()).map((res: Response) => {
+    return this._http.get(this._backendURL.activateUser, this._session.options()).map((res: Response) => {
       return res.json().user;
     });
   }
 
   activateUser(userId: number, credentials: Credentials): Observable<number> {
-    return this._http.put(this._backendURL.activateUser + '/' + userId, {credentials: credentials}, this._options()).map((res: Response) => {
+    return this._http.put(this._backendURL.activateUser + '/' + userId, {credentials: credentials}, this._session.options()).map((res: Response) => {
       return res.status;
     });
   }
 
   getRights(user: User): Observable<ProjectRight[]> {
-    return this._http.get(this._backendURL.rights + '/user/' + user.id, this._options()).map((res: Response) => {
+    return this._http.get(this._backendURL.rights + '/user/' + user.id, this._session.options()).map((res: Response) => {
       return res.json().projectRight;
     });
   }
 
   setRights(rights: ProjectRight[]): Observable<number> {
-    return this._http.post(this._backendURL.rights, {projectRight: rights}, this._options()).map((res: Response) => {
+    return this._http.post(this._backendURL.rights, {projectRight: rights}, this._session.options()).map((res: Response) => {
       return res.status;
     });
   }
 
   fetchUsersByRightOnProject(project: Project, right: Right): Observable<User[]> {
-    return this._http.get(this._backendURL.allUsers + '/rightOnProject/' + project.id + '/' + right, this._options()).map((res: Response) => {
+    return this._http.get(this._backendURL.allUsers + '/rightOnProject/' + project.id + '/' + right, this._session.options()).map((res: Response) => {
       return res.json().user;
     });
-  }
-
-  /**
-     * Function to return request options
-     *
-     * @returns {RequestOptions}
-     */
-  private _options(accept: string = 'application/json', headerList: Object = {}): RequestOptions {
-    const headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + JSON.stringify(this._session.authToken) }, headerList));
-    return new RequestOptions({ headers: headers });
   }
 
 }

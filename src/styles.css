@@ -82,3 +82,18 @@ body {
   width: 37%;
   height: 4em;
 }
+
+.smallButton {
+  display: block;
+  min-width: 30px !important;
+  width: 50px;
+  height: 36px;
+  padding: 0 !important;
+}
+
+.smallButton md-icon {
+  margin: 0 auto;
+  vertical-align: middle;
+  width: inherit;
+  height: inherit;
+}

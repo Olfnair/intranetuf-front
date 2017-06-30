@@ -13,7 +13,10 @@
     <td>{{user.email}}</td>
     <td>{{user.active}}</td>
     <td>{{user.pending}}</td>
-    <td><button md-raised-button color="primary" type=button (click)="rights(user)">Droits</button></td>
+    <td>
+      <button md-raised-button color="primary" type=button (click)="rights(user)">Droits</button>
+      <button md-raised-button color="primary" type=button (click)="adminLoginAs(user.login)">Utiliser Compte</button>
+    </td>
   </ng-template>
 </datatable>
 

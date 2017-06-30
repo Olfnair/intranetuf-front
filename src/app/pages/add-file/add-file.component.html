@@ -17,45 +17,56 @@
         <input type="submit" [disabled]="!isValidForm" style="display: none" />
       </form>
 
-      <div *ngFor="let container of userContainers" class="userContainerDataTable"> 
-        <datatable *ngIf="container.isListMode()"
-            [options]="{addButton: true, addButtonTooltip: 'Ajouter', emptyMessage: 'Veuillez ajouter au moins un ' + container.name + '.'}"
-            [dataObs]="container.users"
-            [columns]="['Nom', 'Prénom', '']"
-            (addButtonClick)="switchContainerMode(container)">
-          <datatable-title>
-            <h3>{{container.title}}</h3>
-          </datatable-title>
-          <ng-template let-user="item" let-index="index">
-            <td>{{user.name}}</td>
-            <td>{{user.firstname}}</td>
-            <td class="delButton">
-              <button md-raised-button color="warn" type="button" (click)="container.delete(index)" mdTooltip="Supprimer" mdTooltipPosition="above">
+      <section *ngIf="! newVersionMode">
+        <div *ngFor="let container of userContainers" class="userContainerDataTable">
+          <datatable *ngIf="container.isListMode()"
+              [options]="{addButton: true, addButtonTooltip: 'Ajouter', emptyMessage: 'Veuillez ajouter au moins un ' + container.name + '.'}"
+              [dataObs]="container.users"
+              [columns]="container.size > 1 ? ['', 'Ordre', 'Nom', 'Prénom', ''] : ['Nom', 'Prénom', '']"
+              (addButtonClick)="switchContainerMode(container)">
+            <datatable-title>
+              <h3>{{container.title}}</h3>
+            </datatable-title>
+            <ng-template let-user="item" let-index="index" let-last="last">
+              <td *ngIf="container.size > 1" class="updownCol">
+                <app-up-down [first]="index == 0" [last]="last" (up)="container.swap(index, index - 1)" (down)="container.swap(index, index + 1)"></app-up-down>
+              </td>
+              <td *ngIf="container.size > 1" class="thinCol">
+                <button class="smallButton" md-raised-button type="button" (click)="container.chainToggle(index)">
+                <md-icon *ngIf="container.isChained(index)">subdirectory_arrow_right</md-icon>
+                <md-icon *ngIf="! container.isChained(index)">more_horiz</md-icon> 
+              </button>
+              </td>
+              <td>{{user.name}}</td>
+              <td>{{user.firstname}}</td>
+              <td class="alignRight">
+                <button md-raised-button color="warn" type="button" (click)="container.delete(index)" mdTooltip="Supprimer" mdTooltipPosition="above">
                 <md-icon>clear</md-icon>
               </button>
-            </td>
-          </ng-template>
-        </datatable>
+              </td>
+            </ng-template>
+          </datatable>
 
-        <datatable *ngIf="container.isAddMode()"
-            [options]="{selectionCol: true, displayFooter: true, emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'}"
-            [dataObs]="container.availableUsers"
-            [columns]="['Nom', 'Prénom', '']"
-            (selectedDataUpdate)="updateUsersToAdd(container, $event)">
-          <datatable-title>
-            <h3>{{container.title}}</h3>
-          </datatable-title>
-          <ng-template let-user="item">
-            <td>{{user.name}}</td>
-            <td>{{user.firstname}}</td>
-            <td></td>
-          </ng-template>
-          <datatable-footer>
-            <button md-raised-button color="primary" type="button" [disabled]="! container.hasUsersToAdd" (click)="addContainerUsers(container)">Ajouter</button>
-            <button md-raised-button color="warn" type="button" (click)="switchContainerMode(container)">Annuler</button>
-          </datatable-footer>
-        </datatable>
-      </div>
+          <datatable *ngIf="container.isAddMode()"
+              [options]="{selectionCol: true, displayFooter: true, emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'}"
+              [dataObs]="container.availableUsers"
+              [columns]="['Nom', 'Prénom', '']"
+              (selectedDataUpdate)="updateUsersToAdd(container, $event)">
+            <datatable-title>
+              <h3>{{container.title}}</h3>
+            </datatable-title>
+            <ng-template let-user="item">
+              <td>{{user.name}}</td>
+              <td>{{user.firstname}}</td>
+              <td></td>
+            </ng-template>
+            <datatable-footer>
+              <button md-raised-button color="primary" type="button" [disabled]="! container.hasUsersToAdd" (click)="addContainerUsers(container)">Ajouter</button>
+              <button md-raised-button color="warn" type="button" (click)="switchContainerMode(container)">Annuler</button>
+            </datatable-footer>
+          </datatable>
+        </div>
+      </section>
 
     </md-card-content>
 
@@ -64,4 +75,4 @@
       <button md-raised-button class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
     </md-card-actions>
   </md-card>
-</section>
+  </section>

@@ -21,6 +21,10 @@ export class HeaderComponent implements OnInit {
     return true;
   }
 
+  get userLogin(): string {
+    return this._session.userLogin;
+  }
+
   disconnect(): void {
     this._session.logout();
   }

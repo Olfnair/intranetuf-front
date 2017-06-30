@@ -166,7 +166,7 @@ export class UserContainer {
     indexes.forEach((i: number) => {
       this._users.push(this._availableUsers[i]);
       this._availableUsers[i] = undefined; // on marque les utilisateurs qu'on a ajouté
-    })
+    });
 
     // on recrée le tableau des utilisateurs disponibles (Complexité temporelle: O(n), mémorielle: O(2n))
     // Je ne vois pas de façon plus rapide pour supprimer des éléments d'un tableau dont on a les indexes, mais pas forcément triés.
@@ -185,8 +185,16 @@ export class UserContainer {
     this.resetUsersToAdd();
   }
 
-  chain(i : number, value: boolean): void {
+  chain(i: number, value: boolean): void {
     this._chained[i] = value;
+  }
+
+  isChained(i: number): boolean {
+    return this._chained[i];
+  }
+
+  chainToggle(i: number): void {
+    this._chained[i] = ! this._chained[i];
   }
 
   swap(i: number, j: number): void {
@@ -196,6 +204,7 @@ export class UserContainer {
     this._chained[i] = this._chained[j];
     this._users[j] = tmpUser;
     this._chained[j] = tmpChained;
+    this.update();
   }
 }
 
@@ -272,8 +281,10 @@ export class AddFileComponent implements OnInit {
   get isValidForm(): boolean {
     //TODO : ajouter un test pour chaque champ : this._form.controls.controlname.valid == true
     if(this._form.controls.filename.value == '') { return false; }
-    for(let container of this._userContainers) {
-      if(container.size <= 0) { return false; }
+    if(! this._newVersionMode) {
+      for(let container of this._userContainers) {
+        if(container.size <= 0) { return false; }
+      }
     }
     return true;
   }
@@ -385,5 +396,4 @@ export class AddFileComponent implements OnInit {
       ]))
     });
   }
-
 }

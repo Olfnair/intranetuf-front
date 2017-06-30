@@ -6,6 +6,15 @@
   margin: 0.5em auto;
 }
 
-td.delButton {
+td.updownCol {
+  width: 50px;
+}
+
+td.thinCol {
+  width: 75px;
+}
+
+td.alignRight {
   text-align: right;
+  vertical-align: middle;
 }

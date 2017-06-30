@@ -132,7 +132,9 @@ export class DatatableComponent<T> implements OnInit {
       this.endLoading();
       return;
     }
-    let sub: Subscription = dataObservable.subscribe(
+    let sub: Subscription = dataObservable.finally(() => {
+      this.endLoading(sub); // finalement
+    }).subscribe(
       (data: T[]) => { // ok
         if (data) {
           this._data = data;
@@ -144,7 +146,7 @@ export class DatatableComponent<T> implements OnInit {
       (error: any) => { // erreur
         this.loadingError = true;
       },
-      () => { // finalement
+      () => { // complete (pas d'erreur)
         this.endLoading(sub);
       }
     );
@@ -248,5 +250,4 @@ export class DatatableComponent<T> implements OnInit {
     }
     this._selectedData = newSelectedData;
   }
-
 }

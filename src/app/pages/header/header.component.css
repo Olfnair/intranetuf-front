@@ -49,3 +49,8 @@ md-toolbar .right {
     display: none;
   }
 }
+
+
+md-toolbar span.userLogin {
+  color: #ffd740;
+}

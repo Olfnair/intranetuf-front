@@ -21,8 +21,8 @@
     <td>{{file.version?.date_upload?.day | numberLen:2}}/{{file.version?.date_upload?.month | numberLen:2}}/{{file.version?.date_upload?.year | numberLen:4}}</td>
     <td>{{file.version?.status}}</td>
     <td>
-      <span *ngIf="file.version && file.version.status == 0"><a md-raised-button color="primary" mdTooltip="Télécharger" mdTooltipPosition="above" target="_self" [href]="downloadLink(file.version.id)" download><md-icon>file_download</md-icon></a></span>
-      <span *ngIf="file.author && file.author.id == userId"><a md-raised-button color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above" [routerLink]="['/add_file', project.id, file.id]" download><md-icon>file_upload</md-icon></a></span>
+      <span *ngIf="file.version && file.version.status == 0"><a md-raised-button class="smallButton" color="primary" mdTooltip="Télécharger" mdTooltipPosition="above" target="_self" [href]="downloadLink(file.version.id)" download><md-icon>file_download</md-icon></a></span>
+      <span *ngIf="file.author && file.author.id == userId"><a md-raised-button class="smallButton" color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above" [routerLink]="['/add_file', project.id, file.id]" download><md-icon>file_upload</md-icon></a></span>
     </td>
   </ng-template>
 </datatable>

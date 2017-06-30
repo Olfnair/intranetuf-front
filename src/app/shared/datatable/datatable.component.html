@@ -17,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="! loaded">
+        <tr *ngIf="loading">
           <td [colSpan]="nbCols">
             <md-spinner class="spinner" mode="indeterminate"></md-spinner>
           </td>
@@ -32,12 +32,12 @@
             <p class="emptyMessage">{{options.emptyMessage}}</p>
           </td>
         </tr>
-        <ng-template ngFor let-item [ngForOf]="data" let-index="index", let-odd="odd" let-last="last">
+        <ng-template ngFor let-item [ngForOf]="data" let-index="index" let-odd="odd" let-last="last">
           <tr *ngIf="loaded" [class.oddRow]="odd">
             <td *ngIf="options.selectionCol" class="selectionCol">
               <app-checkbox [checked]="selectAllState" (change)="checkSelect($event, index, last)"></app-checkbox>
             </td>
-            <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item}"></ng-template>
+            <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item, index: index, last: last, odd: odd}"></ng-template>
           </tr>
         </ng-template>
         <tr *ngIf="options.displayFooter" class="footer">
