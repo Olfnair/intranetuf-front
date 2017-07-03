@@ -16,7 +16,7 @@ import { RestApiService } from "app/shared/rest-api.service";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { DatatableSelection } from "app/shared/datatable/datatable-selection";
-import { WorkflowCheck } from "app/entities/workflow-check";
+import { WorkflowCheck, CheckType } from "app/entities/workflow-check";
 
 export class UserContainer {
   // titre
@@ -35,6 +35,7 @@ export class UserContainer {
   // config
   private _right: Right = 0;
   private _project: Project = undefined;
+  private _type: CheckType = undefined;
 
   // service rest
   private _restService: RestApiService;
@@ -46,9 +47,10 @@ export class UserContainer {
   // compteur d'ordre pour l'affichage
   private _order: number = 1;
 
-  constructor(title: string, project: Project, right: Right = 0, restService: RestApiService) {
+  constructor(title: string, type: CheckType = CheckType.CONTROL, project: Project, right: Right = 0, restService: RestApiService) {
     this._restService = restService;
     this._title = title;
+    this._type = type;
     this._project = project;
     this.right = right;
   }
@@ -231,10 +233,10 @@ export class UserContainer {
     let checks: WorkflowCheck[] = [];
     for(let i: number = 0; i < this._users.length; ++i) {
       let check: WorkflowCheck = new WorkflowCheck();
+      check.type = this._type;
       check.order_num = this.countOrderValue(i) - 1;
       check.user = this._users[i];
-      //check.version = version;
-      version.workflowCheck.push(check);
+      version.workflowChecks.push(check);
     }
   }
 }
@@ -276,8 +278,8 @@ export class AddFileComponent implements OnInit {
       this._project.id = +params['projectId'] || undefined;
       this._file.id = +params['fileId'] || undefined;
       this._newVersionMode = (this._file.id != undefined);
-      this._userContainers.push(new UserContainer('Contrôleurs', this._project, Right.CONTROLFILE, this._restService));
-      this._userContainers.push(new UserContainer('Valideurs', this._project, Right.VALIDATEFILE, this._restService));
+      this._userContainers.push(new UserContainer('Contrôleurs', CheckType.CONTROL, this._project, Right.CONTROLFILE, this._restService));
+      this._userContainers.push(new UserContainer('Valideurs', CheckType.VALIDATION, this._project, Right.VALIDATEFILE, this._restService));
     });
   }
 
@@ -325,7 +327,7 @@ export class AddFileComponent implements OnInit {
     let entity: any;
     let version: Version = new Version();
     version.filename = this.filename;
-    version.workflowCheck = [];
+    version.workflowChecks = [];
     this._userContainers.forEach((container: UserContainer) => {
       container.addAsChecksToVersion(version);
     });

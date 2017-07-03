@@ -9,7 +9,7 @@ export class Version {
   public status: number = undefined;
   public file: File = undefined;
   public date_upload: Date = undefined;
-  public workflowCheck: WorkflowCheck[] = undefined;
+  public workflowChecks: WorkflowCheck[] = undefined;
 
   constructor() { }
 }
