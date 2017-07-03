@@ -5,17 +5,3 @@
   text-align: center;
   margin: 10px auto;
 }
-
-.homeContainer {
-  display: flex;
-  align-items: stretch;
-}
-
-.projecList {
-  flex: 0 0 auto;
-}
-
-.fileList {
-  margin-left: 0.5em;
-  flex: 1 1 auto;
-}

@@ -35,6 +35,7 @@ import { CheckboxComponent } from './shared/checkbox/checkbox.component';
 import { InfoModalComponent } from './shared/info-modal/info-modal.component';
 import { RightslistComponent } from './pages/admin/rightslist/rightslist.component';
 import { UpDownComponent } from './shared/up-down/up-down.component';
+import { NavListComponent } from './shared/nav-list/nav-list.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { UpDownComponent } from './shared/up-down/up-down.component';
     CheckboxComponent,
     InfoModalComponent,
     RightslistComponent,
-    UpDownComponent
+    UpDownComponent,
+    NavListComponent
   ],
   entryComponents: [
     AddProjectComponent,

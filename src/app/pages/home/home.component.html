@@ -1,25 +1,8 @@
-<p *ngIf="!logged" class="welcomeMessage">
-  Bienvenue sur Intranet UF
-</p>
-
-<app-login *ngIf="!logged"></app-login>
-
-<!--<table *ngIf="logged" cellspacing="0" style="width:100%; border-collapse: collapse;">
-  <tr>
-    <td style="vertical-align: top;">
-      <app-projectlist [selected]="selectedProject" (select)="selectProject($event)"></app-projectlist>
-    </td>
-    <td style="width:100%; vertical-align: top;">
-      <app-filelist [project]="selectedProject"></app-filelist>
-    </td>
-  </tr>
-</table>-->
-
-<section *ngIf="logged" class="homeContainer">
-  <section class="projectList">
-    <app-projectlist [selected]="selectedProject" (select)="selectProject($event)"></app-projectlist>
-  </section>
-  <section class="fileList">
-    <app-filelist [project]="selectedProject"></app-filelist>
-  </section>
+<section *ngIf="!logged">
+  <p class="welcomeMessage">
+    Bienvenue sur Intranet UF
+  </p>
+  <app-login></app-login>
 </section>
+
+<app-filelist *ngIf="logged" [project]="selectedProject"></app-filelist>

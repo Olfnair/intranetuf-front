@@ -42,6 +42,9 @@ export class UserContainer {
   private _addMode: boolean = false;
   private _hasUsersToAdd: boolean = false;
 
+  // compteur d'ordre pour l'affichage
+  private _order: number = 1;
+
   constructor(title: string, project: Project, right: Right = 0, restService: RestApiService) {
     this._restService = restService;
     this._title = title;
@@ -137,6 +140,10 @@ export class UserContainer {
     return this._users.length;
   }
 
+  get availableSize(): number {
+    return this._availableUsers.length;
+  }
+
   reset(): void {
     this._users = [];
     this._chained = [];
@@ -159,12 +166,14 @@ export class UserContainer {
 
   delete(i: number): void {
     this._availableUsers.push(this._users.splice(i, 1)[0]);
+    this._chained.splice(i, 1);
     this.update();
   }
 
   addUsers(indexes: number[]): void {
     indexes.forEach((i: number) => {
       this._users.push(this._availableUsers[i]);
+      this._chained.push(false);
       this._availableUsers[i] = undefined; // on marque les utilisateurs qu'on a ajouté
     });
 
@@ -205,6 +214,16 @@ export class UserContainer {
     this._users[j] = tmpUser;
     this._chained[j] = tmpChained;
     this.update();
+  }
+
+  countOrderValue(index: number): number {
+    if(index == 0) {
+      this._order = 1;
+    }
+    else if(this) {
+      this._order = this._chained[index] ? this._order + 1 : this._order; 
+    }
+    return this._order;
   }
 }
 

@@ -32,12 +32,12 @@
             <p class="emptyMessage">{{options.emptyMessage}}</p>
           </td>
         </tr>
-        <ng-template ngFor let-item [ngForOf]="data" let-index="index" let-odd="odd" let-last="last">
-          <tr *ngIf="loaded" [class.oddRow]="odd">
+        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="data" let-index="index" let-event="even" let-odd="odd" let-last="last">
+          <tr [class.oddRow]="odd">
             <td *ngIf="options.selectionCol" class="selectionCol">
               <app-checkbox [checked]="selectAllState" (change)="checkSelect($event, index, last)"></app-checkbox>
             </td>
-            <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item, index: index, last: last, odd: odd}"></ng-template>
+            <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item, index: index, even: even, odd: odd, last: last}"></ng-template>
           </tr>
         </ng-template>
         <tr *ngIf="options.displayFooter" class="footer">

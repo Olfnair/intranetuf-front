@@ -75,6 +75,7 @@ export class SessionService {
     if(res.status !== 200) {
         return false;
     }
+    this.logout();
     this._userLogin = login;
     this._authToken = res.json();
     this._logged = true;
@@ -87,7 +88,6 @@ export class SessionService {
    * @returns {Observable<boolean>}
    */
   login(login: string, pwd: string): Observable<boolean> {
-    this.logout();
     return this._http.post(this._authUrl, {credentials: new Credentials(login, pwd)}).map((res: Response) => {
       return this._login(login, res);
     });

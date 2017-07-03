@@ -1,4 +1,24 @@
-.appSection {
-  width: 100%;
-  height: 100%;
+.appContent {
+  padding: 5px;
+}
+
+md-sidenav-container {
+  height: calc(100vh - 64px);
+  background-color: #f3f3f3;
+}
+
+md-sidenav {
+  display: none;
+}
+
+@media screen and (min-width: 993px) {
+  .showOnLarge {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .showOnSmall {
+    display: block;
+  }
 }

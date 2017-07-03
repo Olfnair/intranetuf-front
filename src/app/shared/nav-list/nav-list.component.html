@@ -1,0 +1,16 @@
+<md-card class="navList">
+  <md-card-title class="title">{{title}}</md-card-title>
+  <md-card-content>
+    <ng-content></ng-content>
+    <md-nav-list dense>
+      <div *ngFor="let selectable of selectables">
+        <md-list-item *ngIf="isSelected(selectable)" class="selected no-padding">
+          <span md-line>{{selectable.text}}</span>
+        </md-list-item>
+        <md-list-item *ngIf="! isSelected(selectable)" (click)="select(selectable)" class="no-padding">
+          <span md-line>{{selectable.text}}</span>
+        </md-list-item>
+      </div>
+    </md-nav-list>
+  </md-card-content>
+</md-card>

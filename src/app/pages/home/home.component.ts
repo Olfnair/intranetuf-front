@@ -20,8 +20,4 @@ export class HomeComponent implements OnInit {
   get selectedProject(): Project {
     return this._session.selectedProject;
   }
-
-  selectProject(project: Project): void {
-    this._session.selectedProject = project;
-  }
 }

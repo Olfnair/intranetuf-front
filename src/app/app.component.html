@@ -1,4 +1,10 @@
-<section class="appSection">
-    <app-header></app-header>
+<app-header></app-header>
+<md-sidenav-container>
+  <md-sidenav #sidenav *ngIf="route=='/home' && logged" mode="side" opened="showSidenav"
+      [class.showOnLarge]="sidenavShowOnLarge" [class.showOnSmall]="sidenavShowOnSmall">
+    <app-projectlist></app-projectlist>
+  </md-sidenav>
+  <section class="appContent">
     <router-outlet></router-outlet>
-</section>
+  </section>
+</md-sidenav-container>
