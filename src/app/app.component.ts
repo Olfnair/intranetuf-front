@@ -33,8 +33,4 @@ export class AppComponent {
   get logged(): boolean {
     return this._session.logged;
   }
-
-  selectProject(project: Project): void {
-    this._session.selectedProject = project;
-  }
 }
