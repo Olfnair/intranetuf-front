@@ -10,6 +10,7 @@ export const environment = {
     host: 'localhost',
     port: '8443',
     endpoints: {
+      workflowCheck: '/IUF/rest/entities.workflowcheck',
       rights: '/IUF/rest/entities.projectright',
       allUsers: '/IUF/rest/entities.user',
       oneUser: '/IUF/rest/entities.user/:id',

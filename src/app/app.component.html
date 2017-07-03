@@ -1,10 +1,9 @@
-<app-header></app-header>
-<md-sidenav-container>
-  <md-sidenav #sidenav *ngIf="route=='/home' && logged" mode="side" opened="showSidenav"
-      [class.showOnLarge]="sidenavShowOnLarge" [class.showOnSmall]="sidenavShowOnSmall">
-    <app-projectlist></app-projectlist>
-  </md-sidenav>
-  <section class="appContent">
-    <router-outlet></router-outlet>
-  </section>
-</md-sidenav-container>
+<app-header
+    [displayListButton]="route=='/home' && logged"
+    (toggleOnSmall)="toggleSidenavOnSmall()"
+    (toggleOnLarge)="toggleSidenavOnLarge()">
+</app-header>
+<sidenav-layout [openSidenavOnSmall]="sidenavShowOnSmall" [openSidenavOnLarge]="sidenavShowOnLarge">
+  <app-projectlist *ngIf="route=='/home' && logged" [selectedProject]="selectedProject" sidenav></app-projectlist>
+  <router-outlet content></router-outlet>
+</sidenav-layout>

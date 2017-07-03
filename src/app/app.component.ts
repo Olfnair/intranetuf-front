@@ -33,4 +33,16 @@ export class AppComponent {
   get logged(): boolean {
     return this._session.logged;
   }
+
+  get selectedProject(): Project {
+    return this._session.selectedProject;
+  }
+
+  toggleSidenavOnSmall(): void {
+    this._sidenavShowOnSmall = ! this._sidenavShowOnSmall;
+  }
+
+  toggleSidenavOnLarge(): void {
+    this._sidenavShowOnLarge = ! this._sidenavShowOnLarge;
+  }
 }

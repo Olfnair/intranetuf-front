@@ -33,6 +33,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
   private _loadProjects(): void {
     let sub: Subscription = this._projectSubsciption = this._restService.fetchProjects().subscribe(
       (projects: Project[]) => {
+        this.selectables = [];
         this._projects = projects;
         for(let i = 0; i < this._projects.length; ++i) {
           this.selectables.push(new NavListSelection(i, this._projects[i].name));
@@ -63,7 +64,8 @@ export class ProjectlistComponent extends NavList implements OnInit {
     for(i = 0; project && i < this._projects.length && ! found; ++i) {
       found = (this._projects[i].id === project.id);
     }
-    this.selected = found ? this.selectables[i] : undefined;
+    this.selected = found ? this.selectables[i - 1] : undefined;
+    this._session.selectedProject = this._selectedProject;
   }
 
   get selectedProject(): Project {
@@ -102,8 +104,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   select(selection: NavListSelection) {
-    this._selectedProject = this._projects[selection.id];
-    this._session.selectedProject = this._selectedProject;
+    this.selectedProject = this._projects[selection.id];
   }
   
 }

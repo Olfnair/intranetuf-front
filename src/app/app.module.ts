@@ -36,6 +36,7 @@ import { InfoModalComponent } from './shared/info-modal/info-modal.component';
 import { RightslistComponent } from './pages/admin/rightslist/rightslist.component';
 import { UpDownComponent } from './shared/up-down/up-down.component';
 import { NavListComponent } from './shared/nav-list/nav-list.component';
+import { SidenavLayoutComponent } from './shared/sidenav-layout/sidenav-layout.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { NavListComponent } from './shared/nav-list/nav-list.component';
     InfoModalComponent,
     RightslistComponent,
     UpDownComponent,
-    NavListComponent
+    NavListComponent,
+    SidenavLayoutComponent
   ],
   entryComponents: [
     AddProjectComponent,

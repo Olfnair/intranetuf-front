@@ -1,4 +1,6 @@
 <md-toolbar color="primary">
+  <md-icon *ngIf="displayListButton" class="list showOnLarge" (click)="toggleOnLarge()">list</md-icon>
+  <md-icon *ngIf="displayListButton" class="list showOnSmall" (click)="toggleOnSmall()">list</md-icon>
   <a [routerLink]="['/']" mdTooltip="Accueil" mdTooltipPosition="below">
     <md-icon>home</md-icon>
     <span class="label">Accueil</span>

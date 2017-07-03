@@ -16,6 +16,7 @@ import { RestApiService } from "app/shared/rest-api.service";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { DatatableSelection } from "app/shared/datatable/datatable-selection";
+import { WorkflowCheck } from "app/entities/workflow-check";
 
 export class UserContainer {
   // titre
@@ -225,6 +226,17 @@ export class UserContainer {
     }
     return this._order;
   }
+
+  addAsChecksToVersion(version: Version): void {
+    let checks: WorkflowCheck[] = [];
+    for(let i: number = 0; i < this._users.length; ++i) {
+      let check: WorkflowCheck = new WorkflowCheck();
+      check.order_num = this.countOrderValue(i) - 1;
+      check.user = this._users[i];
+      //check.version = version;
+      version.workflowCheck.push(check);
+    }
+  }
 }
 
 @Component({
@@ -313,6 +325,10 @@ export class AddFileComponent implements OnInit {
     let entity: any;
     let version: Version = new Version();
     version.filename = this.filename;
+    version.workflowCheck = [];
+    this._userContainers.forEach((container: UserContainer) => {
+      container.addAsChecksToVersion(version);
+    });
     if (this._newVersionMode) {
       version.file = this._file;
       entityType = 'version';

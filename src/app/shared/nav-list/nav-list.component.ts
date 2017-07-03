@@ -23,9 +23,6 @@ export class NavList {
 
   private _selectables: NavListSelection[] = [];
   private _select$: EventEmitter<NavListSelection> = new EventEmitter<NavListSelection>();
-  
-  private _showOnSmall: boolean = false; // afficher en dessous de 993 px;
-  private _showOnLarge: boolean = true; // afficher au dessus de 993 px;
 
   // ref sur la selection courante
   private _selected: NavListSelection = undefined;
@@ -54,22 +51,6 @@ export class NavList {
 
   get selected(): NavListSelection {
     return this._selected;
-  }
-
-  @Input() set showOnSmall(showOnSmall: boolean) {
-    this._showOnSmall = showOnSmall;
-  }
-
-  get showOnSmall(): boolean {
-    return this._showOnSmall;
-  }
-
-  @Input() set showOnLarge(showOnLarge: boolean) {
-    this._showOnLarge = showOnLarge;
-  }
-
-  get showOnLarge(): boolean {
-    return this._showOnLarge;
   }
 
   isSelected(selectable: NavListSelection): boolean {

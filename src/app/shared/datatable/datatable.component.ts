@@ -1,4 +1,4 @@
-import { Component, OnInit, ContentChild, TemplateRef, Input, Directive, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ContentChild, TemplateRef, Input, Directive, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MdCheckboxChange } from "@angular/material";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";

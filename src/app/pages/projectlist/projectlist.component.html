@@ -1,3 +1,8 @@
-<nav-list title="Projets" [selectables]="selectables" [selected]="selected" (select)="select($event)">
-  <button md-mini-fab class="add" (click)="add()" mdTooltip="Nouveau projet" mdTooltipPosition="after"><md-icon>create_new_folder</md-icon></button>
+<nav-list title="Projets"
+    [selectables]="selectables"
+    [selected]="selected"
+    (select)="select($event)">
+  <button md-mini-fab class="add" (click)="add()" mdTooltip="Nouveau projet" mdTooltipPosition="after">
+    <md-icon>create_new_folder</md-icon>
+  </button>
 </nav-list>

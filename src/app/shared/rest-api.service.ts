@@ -137,4 +137,10 @@ export class RestApiService {
     });
   }
 
+  adWorkflowCheck(rights: ProjectRight[]): Observable<number> {
+    return this._http.post(this._backendURL.workflowCheck, {workflowCheck: rights}, this._session.options()).map((res: Response) => {
+      return res.status;
+    });
+  }
+
 }

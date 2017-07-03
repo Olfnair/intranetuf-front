@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { SessionService } from "app/shared/session.service";
 
 @Component({
@@ -8,9 +8,30 @@ import { SessionService } from "app/shared/session.service";
 })
 export class HeaderComponent implements OnInit {
 
+  private _displayListButton: boolean = false;
+
+  private _toggleOnLarge$: EventEmitter<void> = new EventEmitter<void>();
+  private _toggleOnSmall$: EventEmitter<void> = new EventEmitter<void>();
+
   constructor(private _session: SessionService) { }
 
   ngOnInit() {
+  }
+
+  @Output('toggleOnLarge') get toggleOnLarge$(): EventEmitter<void> {
+    return this._toggleOnLarge$;
+  }
+
+  @Output('toggleOnSmall') get toggleOnSmall$(): EventEmitter<void> {
+    return this._toggleOnSmall$;
+  }
+
+  @Input() set displayListButton(value: boolean) {
+    this._displayListButton = value;
+  }
+
+  get displayListButton(): boolean {
+    return this._displayListButton;
   }
 
   get logged(): boolean {
@@ -27,6 +48,14 @@ export class HeaderComponent implements OnInit {
 
   disconnect(): void {
     this._session.logout();
+  }
+
+  toggleOnLarge(): void {
+    this._toggleOnLarge$.emit();
+  }
+
+  toggleOnSmall(): void {
+    this._toggleOnSmall$.emit();
   }
 
 }

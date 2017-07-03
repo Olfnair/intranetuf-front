@@ -1,0 +1,22 @@
+.sidenavLayout {
+  display: flex;
+  width: 100%;
+  height: inherit;
+  background-color: inherit;
+}
+
+.sidenav {
+  display: none;
+  height: inherit;
+  background-color: inherit;
+}
+
+.content {
+  display: block;
+  overflow: auto;
+  flex: 1 1 auto;
+  height: inherit;
+  padding: 0 5px;
+  box-sizing: border-box;
+  background-color: inherit;
+}
