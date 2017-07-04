@@ -4,6 +4,10 @@
     (toggleOnLarge)="toggleSidenavOnLarge()">
 </app-header>
 <sidenav-layout [openSidenavOnSmall]="sidenavShowOnSmall" [openSidenavOnLarge]="sidenavShowOnLarge">
-  <app-projectlist *ngIf="showProjectList()" [selectedProject]="selectedProject" (loaded)="loaded()" sidenav></app-projectlist>
-  <router-outlet content></router-outlet>
+  <sl-sidenav *ngIf="showProjectList()">
+    <app-projectlist [selectedProject]="selectedProject" (loaded)="loaded()" sidenav></app-projectlist>
+  </sl-sidenav>
+  <sl-content>
+    <router-outlet></router-outlet>
+  </sl-content>
 </sidenav-layout>

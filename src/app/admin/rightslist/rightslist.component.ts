@@ -1,10 +1,9 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { User } from "app/entities/user";
-import { ProjectRight, Right } from "app/entities/project-right";
-import { Subscription } from "rxjs/Subscription";
-import { RestApiService } from "app/shared/_services/rest-api.service";
 import { MdCheckboxChange } from "@angular/material";
-import { Project } from "app/entities/project";
+import { User } from "entities/user";
+import { ProjectRight, Right } from "entities/project-right";
+import { RestApiService } from "services/rest-api.service";
+import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 

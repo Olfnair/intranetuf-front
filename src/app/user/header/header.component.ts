@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { SessionService } from "app/shared/_services/session.service";
+import { SessionService } from "services/session.service";
 
 @Component({
   selector: 'app-header',

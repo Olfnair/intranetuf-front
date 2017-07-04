@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MdTabChangeEvent } from "@angular/material";
-import { SessionService } from "app/shared/_services/session.service";
+import { SessionService } from "services/session.service";
 
 @Component({
   selector: 'app-admin-panel',

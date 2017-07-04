@@ -3,18 +3,18 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MdDialogRef, MdDialog } from "@angular/material";
 import { Subscription } from "rxjs/Subscription";
-import { DatatableSelection } from "app/shared/datatable/datatable-selection";
-import { ProgressComponent } from "app/shared/progress/progress.component";
-import { FileUploadService } from "app/shared/_services/file-upload.service";
-import { RestApiService } from "app/shared/_services/rest-api.service";
-import { SessionService } from "app/shared/_services/session.service";
+import { FileUploadService } from "services/file-upload.service";
+import { RestApiService } from "services/rest-api.service";
+import { SessionService } from "services/session.service";
+import { ProgressComponent } from "gui/progress";
+import { DatatableSelection } from "gui/datatable";
 import { UserContainer } from "app/user/add-file/user-container";
-import { CheckType } from "app/entities/workflow-check";
-import { File as FileEntity } from "app/entities/file";
-import { Project } from "app/entities/project";
-import { Right } from "app/entities/project-right";
-import { User } from "app/entities/user";
-import { Version } from "app/entities/version";
+import { CheckType } from "entities/workflow-check";
+import { File as FileEntity } from "entities/file";
+import { Project } from "entities/project";
+import { Right } from "entities/project-right";
+import { User } from "entities/user";
+import { Version } from "entities/version";
 
 @Component({
   selector: 'app-add-file',

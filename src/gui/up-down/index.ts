@@ -1,0 +1,1 @@
+export { UpDownComponent } from "./up-down.component";

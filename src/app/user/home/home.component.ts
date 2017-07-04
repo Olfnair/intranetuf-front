@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from "app/shared/_services/session.service";
-import { Project } from "app/entities/project";
+import { SessionService } from "services/session.service";
+import { Project } from "entities/project";
 
 @Component({
   selector: 'app-home',

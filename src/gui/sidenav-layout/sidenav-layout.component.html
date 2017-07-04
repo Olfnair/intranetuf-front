@@ -1,0 +1,10 @@
+<section class="sidenavLayout">
+  <div *ngIf="openSidenav" class="sidenav"
+      [class.showOnLarge]="openSidenavOnLarge"
+      [class.showOnSmall]="openSidenavOnSmall">
+    <ng-content select="sl-sidenav"></ng-content>
+  </div>
+  <div class="content">
+    <ng-content select="sl-content"></ng-content>
+  </div>
+</section>

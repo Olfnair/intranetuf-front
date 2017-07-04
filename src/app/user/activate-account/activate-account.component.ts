@@ -4,12 +4,12 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { Response } from "@angular/http";
-import { SessionService } from "app/shared/_services/session.service";
-import { RestApiService } from "app/shared/_services/rest-api.service";
-import { InfoModalComponent } from "app/shared/info-modal/info-modal.component";
-import { AuthToken } from "app/entities/auth-token";
-import { Credentials } from "app/entities/credentials";
-import { User } from "app/entities/user";
+import { RestApiService } from "services/rest-api.service";
+import { SessionService } from "services/session.service";
+import { InfoModalComponent } from "gui/info-modal";
+import { AuthToken } from "entities/auth-token";
+import { Credentials } from "entities/credentials";
+import { User } from "entities/user";
 
 @Component({
   selector: 'app-activate-account',

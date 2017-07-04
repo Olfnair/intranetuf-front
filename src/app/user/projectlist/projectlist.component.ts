@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MdDialog, MdDialogRef } from "@angular/material";
 import { Subscription } from "rxjs/Subscription";
-import { SessionService } from "app/shared/_services/session.service";
-import { RestApiService } from "app/shared/_services/rest-api.service";
+import { RestApiService } from "services/rest-api.service";
+import { SessionService } from "services/session.service";
 import { AddProjectComponent } from "app/user/projectlist/add-project/add-project.component";
-import { NavListSelection, NavList } from "app/shared/nav-list/nav-list.component";
-import { Project } from "app/entities/project";
+import { NavList, NavListSelection } from "gui/nav-list";
+import { Project } from "entities/project";
 
 @Component({
   selector: 'app-projectlist',

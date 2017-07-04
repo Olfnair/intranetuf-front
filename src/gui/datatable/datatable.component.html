@@ -1,0 +1,51 @@
+<md-card>
+  <ng-content select="datatable-title"></ng-content>
+  <md-card-content>
+    <table class="dataTable" cellspacing="0">
+      <thead>
+        <ng-content select="datatable-header"></ng-content>
+        <tr *ngIf="options.addButton" class="add">
+          <td>
+            <button md-mini-fab (click)="add()" mdTooltip="{{options.addButtonTooltip}}" mdTooltipPosition="after"><md-icon>add</md-icon></button>
+          </td>
+        </tr>
+        <tr class="columnTitles" *ngIf="! emptyData && loaded || options.displayEmpty">
+          <th *ngIf="options.selectionCol" class="selectionCol">
+            <md-checkbox color="warn" [checked]="selectAllTrue" (change)="setSelectAllState($event)"></md-checkbox>
+          </th>
+          <th *ngFor="let column of columns">{{column}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="loading">
+          <td [colSpan]="nbCols">
+            <md-spinner class="spinner" mode="indeterminate"></md-spinner>
+          </td>
+        </tr>
+        <tr *ngIf="loadingError">
+          <td [colSpan]="nbCols">
+            <p class="errorMessage">Une erreur est survenue pendant le chargement des données de la table !</p>
+          </td>
+        </tr> 
+        <tr *ngIf="loaded && emptyData && options.emptyMessage">
+          <td [colSpan]="nbCols">
+            <p class="emptyMessage">{{options.emptyMessage}}</p>
+          </td>
+        </tr>
+        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="data" let-index="index" let-event="even" let-odd="odd" let-last="last">
+          <tr [class.oddRow]="odd">
+            <td *ngIf="options.selectionCol" class="selectionCol">
+              <gui-checkbox [checked]="selectAllState" (change)="checkSelect($event, index, last)"></gui-checkbox>
+            </td>
+            <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item, index: index, even: even, odd: odd, last: last}"></ng-template>
+          </tr>
+        </ng-template>
+        <tr *ngIf="options.displayFooter" class="footer">
+          <td [colSpan]="nbCols">
+            <ng-content select="datatable-footer"></ng-content>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-card-content>
+</md-card>

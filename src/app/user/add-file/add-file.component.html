@@ -31,7 +31,7 @@
             </datatable-title>
             <ng-template let-user="item" let-index="index" let-last="last">
               <td *ngIf="container.size > 1" class="updownCol">
-                <app-up-down [first]="index == 0" [last]="last" (up)="container.swap(index, index - 1)" (down)="container.swap(index, index + 1)"></app-up-down>
+                <up-down [first]="index == 0" [last]="last" (up)="container.swap(index, index - 1)" (down)="container.swap(index, index + 1)"></up-down>
               </td>
               <td *ngIf="container.size > 1" class="thinCol">
                 <button *ngIf="index > 0" class="smallButton" md-raised-button type="button" (click)="container.chainToggle(index)" mdTooltip="Priorité : comme le précédent / après le précédent" mdTooltipPosition="above">

@@ -6,10 +6,10 @@ import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import 'rxjs/Rx';
 import { environment } from "environments/environment";
-import { RestApiService } from "app/shared/_services/rest-api.service";
-import { SessionService } from "app/shared/_services/session.service";
-import { File } from "app/entities/file";
-import { Project } from "app/entities/project";
+import { RestApiService } from "services/rest-api.service";
+import { SessionService } from "services/session.service";
+import { File } from "entities/file";
+import { Project } from "entities/project";
 
 @Component({
   selector: 'app-filelist',
