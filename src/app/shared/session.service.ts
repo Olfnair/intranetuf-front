@@ -10,29 +10,46 @@ import { AuthToken } from "app/entities/auth-token";
 @Injectable()
 export class SessionService {
 
+  // apps
+  private _readyForContent: boolean = true;
+  private _selectedProject: Project = undefined;
+  private _selectedAdminTab: number = 0;
+
+  // utilisateur
   private _userLogin: string = undefined;
   private _authToken: AuthToken = undefined;
   private _logged: boolean = false;
+
+  // backend url
   private _authUrl: string = environment.backend.protocol + "://"
                            + environment.backend.host + ":"
                            + environment.backend.port
                            + environment.backend.endpoints.auth;
 
-  // mémorise le projet selectionné pour toute la session
-  private _selectedProject: Project = undefined;
-  private _selectedAdminTab: number = 0;
+  constructor(private _http: Http) { }
 
-  constructor(private _http: Http) {
+  get readyForContent(): boolean {
+    return this._readyForContent;
   }
 
-  /**
-     * Function to return request options
-     *
-     * @returns {RequestOptions}
-     */
-  public options(accept: string = 'application/json', headerList: Object = {}): RequestOptions {
-    const headers: Headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + JSON.stringify(this._authToken) }, headerList));
-    return new RequestOptions({ headers: headers });
+  set readyForContent(value: boolean) {
+    this._readyForContent = value;
+  }
+
+  get selectedProject(): Project {
+    return this._selectedProject;
+  }
+
+  set selectedProject(project : Project) {
+    this._selectedProject = project;
+  }
+
+  get selectedAdminTab(): number {
+    return this._selectedAdminTab;
+  }
+
+  set selectedAdminTab(tab : number) {
+    this._selectedAdminTab = tab;
   }
 
   get userId(): number {
@@ -53,22 +70,6 @@ export class SessionService {
 
   get logged(): boolean {
     return this._logged;
-  }
-
-  get selectedProject(): Project {
-    return this._selectedProject;
-  }
-
-  set selectedProject(project : Project) {
-    this._selectedProject = project;
-  }
-
-  get selectedAdminTab(): number {
-    return this._selectedAdminTab;
-  }
-
-  set selectedAdminTab(tab : number) {
-    this._selectedAdminTab = tab;
   }
 
   private _login(login: string, res: Response): boolean {
@@ -104,6 +105,16 @@ export class SessionService {
     this._authToken = undefined;
     this._logged = false;
     this._selectedProject = undefined;
+  }
+
+  /**
+     * Function to return request options
+     *
+     * @returns {RequestOptions}
+     */
+  public options(accept: string = 'application/json', headerList: Object = {}): RequestOptions {
+    const headers: Headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + JSON.stringify(this._authToken) }, headerList));
+    return new RequestOptions({ headers: headers });
   }
 
 }

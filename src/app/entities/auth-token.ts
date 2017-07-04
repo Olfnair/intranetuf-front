@@ -5,6 +5,5 @@ export class AuthToken {
   public e: number = undefined; // expDate
   public s: string = undefined; // signature
 
-  constructor() {
-  }
+  constructor() { }
 }

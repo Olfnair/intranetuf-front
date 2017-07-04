@@ -67,8 +67,7 @@ export class DatatableComponent<T> implements OnInit {
   private _data: T[] = [];
   private _emptyData: boolean = true;
 
-  // Observable qui sert à charger les données
-  private _dataObservable: Observable<T[]>;
+  // chargement
   private _loading: boolean = true;
   private _loadingError: boolean = false;
 
@@ -128,8 +127,8 @@ export class DatatableComponent<T> implements OnInit {
   @Input() set dataObs(dataObservable: Observable<T[]>) {
     this.startLoading();
     if(dataObservable == undefined || dataObservable == null) {
-      this._data = [];
-      this.endLoading();
+      // Ici, je suppose que le chargement est en cours et que l'Observable sera mis à jour plus tard.
+      // J'arrête donc ici et laisse la table dans l'état 'en cours de chargement'.
       return;
     }
     let sub: Subscription = dataObservable.finally(() => {

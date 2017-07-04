@@ -10,6 +10,5 @@ export class User {
   public active: boolean = undefined;
   public pending: boolean = undefined;
 
-  constructor() {
-  }
+  constructor() { }
 }

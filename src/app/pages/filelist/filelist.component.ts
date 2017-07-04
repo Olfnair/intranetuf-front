@@ -9,8 +9,9 @@ import { Response } from "@angular/http";
 import { SessionService } from "app/shared/session.service";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs/Observable";
-import 'rxjs/Rx';
 import { Subscription } from "rxjs/Subscription";
+import { Observer } from "rxjs/Observer";
+import 'rxjs/Rx';
 
 @Component({
   selector: 'app-filelist',
@@ -18,26 +19,65 @@ import { Subscription } from "rxjs/Subscription";
   styleUrls: ['./filelist.component.css']
 })
 export class FilelistComponent implements OnInit {
+  private _startLoading: boolean = true;
+
   private _project: Project = undefined;
-  private _files: Observable<File[]> = undefined;
+  private _files : File[] = undefined;
+  private _filesObs: Observable<File[]> = undefined;
   private _url = environment.backend.protocol + "://"
                + environment.backend.host + ":"
                + environment.backend.port
                + environment.backend.endpoints.download;
 
-  constructor(private _session: SessionService, private _restService: RestApiService, private _router: Router) { }
+  constructor(
+    private _session: SessionService,
+    private _restService: RestApiService,
+    private _router: Router
+  ) { }
 
   ngOnInit() {
   }
 
-  updateFiles(): void {
-    this._files = this._restService.fetchFilesByProject(this._project);
+  private setFiles(files: File[], fileObs: Observable<File[]>): void {
+    this._files = files;
+    this._filesObs = fileObs;
+  }
+
+  private reloadFiles(): void {
+    
+    // teste s'il faut vraiment charger quelque chose
+    if(! this._project || ! this._startLoading) { return; }
+
+    this.setFiles(undefined, undefined);
+    let sub = this._restService.fetchFilesByProject(this._project).finally(() => {
+      sub.unsubscribe(); // finally
+    }).subscribe(
+      (files: File[]) => { // data
+        this.setFiles(files, Observable.create((observer: Observer<File[]>) => {
+          observer.next(this._files);
+          observer.complete();
+        }));
+      },
+      (error: Response) => { // erreur
+        this.setFiles(this._files, Observable.create((observer: Observer<File[]>) => {
+          observer.error(error);
+        }));
+      },
+    );
+  }
+
+  @Input() set startLoading(startLoading: boolean) {
+    let old: boolean = this._startLoading;
+    this._startLoading = startLoading;
+    if(! old && this._startLoading) {
+      this.reloadFiles();
+    }
   }
 
   @Input() set project(project: Project) {
     if(project) {
       this._project = project;
-      this.updateFiles();
+      this.reloadFiles();
     }
   }
 
@@ -45,8 +85,8 @@ export class FilelistComponent implements OnInit {
     return this._project;
   }
 
-  get files(): Observable<File[]> {
-    return this._files;
+  get filesObs(): Observable<File[]> {
+    return this._filesObs;
   }
 
   get userId(): number {

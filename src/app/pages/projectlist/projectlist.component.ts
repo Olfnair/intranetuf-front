@@ -22,9 +22,11 @@ export class ProjectlistComponent extends NavList implements OnInit {
   // ref sur le projet sélectionné
   private _selectedProject: Project = undefined;
 
-  constructor(private _restService: RestApiService, private _session: SessionService, private _dialog: MdDialog) {
-    super();
-  }
+  constructor(
+    private _restService: RestApiService,
+    private _session: SessionService,
+    private _dialog: MdDialog
+  ) { super(); }
 
   ngOnInit() {
     this._loadProjects();
@@ -81,9 +83,9 @@ export class ProjectlistComponent extends NavList implements OnInit {
       })
       .subscribe(projectName => {
         if (projectName) {
-          let createProjectSub: Subscription = this._restService.createProject(projectName)
-            .finally(() => createProjectSub.unsubscribe())
-            .subscribe(
+          let createProjectSub: Subscription = this._restService.createProject(projectName).finally(() => {
+            createProjectSub.unsubscribe();
+          }).subscribe(
             (project: Project) => {
               if(this._projectSubsciption) {
                 this._projectSubsciption.unsubscribe();
@@ -91,8 +93,10 @@ export class ProjectlistComponent extends NavList implements OnInit {
               this._selectedProject = project;
               this._loadProjects();
             },
-            err => console.log(err)
-            );
+            (error: Response) => {
+              console.log(error);
+            }
+          );
         }
       });
   }

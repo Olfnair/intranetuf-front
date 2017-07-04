@@ -1,21 +1,23 @@
 <md-toolbar color="primary">
-  <md-icon *ngIf="displayListButton" class="list showOnLarge" (click)="toggleOnLarge()">list</md-icon>
-  <md-icon *ngIf="displayListButton" class="list showOnSmall" (click)="toggleOnSmall()">list</md-icon>
+  <md-icon *ngIf="displayListButton" class="list showOnLarge" (click)="toggleOnLarge()">menu</md-icon>
+  <md-icon *ngIf="displayListButton" class="list showOnSmall" (click)="toggleOnSmall()">menu</md-icon>
   <a [routerLink]="['/']" mdTooltip="Accueil" mdTooltipPosition="below">
     <md-icon>home</md-icon>
-    <span class="label">Accueil</span>
+    <label>Accueil</label>
   </a>
 
+  
   <span class="flex"></span>
-
-  <span *ngIf="logged" class="userLogin">{{userLogin}}</span>
-
+  <a *ngIf="logged" class="right userLogin" [routerLink]="['/']" mdTooltip="Compte" mdTooltipPosition="below">
+    <md-icon>account_box</md-icon>
+    <label>{{userLogin}}</label>
+  </a>
   <a *ngIf="logged && admin" class="right" [routerLink]="['/admin']" mdTooltip="Administration" mdTooltipPosition="below">
     <md-icon>build</md-icon>
-    <span class="label">Administration</span>
+    <label>Administration</label>
   </a>
   <a *ngIf="logged" class="right" [routerLink]="['/']" (click)="disconnect()" mdTooltip="Déconnexion" mdTooltipPosition="below">
     <md-icon>input</md-icon>
-    <span class="label">Déconnexion</span>
+    <label>Déconnexion</label>
   </a>
 </md-toolbar>

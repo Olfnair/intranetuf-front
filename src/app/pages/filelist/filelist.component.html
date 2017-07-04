@@ -6,7 +6,7 @@
 
 <datatable *ngIf="project"
     [options] = "{addButton: true, addButtonTooltip: 'Ajouter un fichier', emptyMessage: 'Ce projet ne contient pas encore de fichier.'}"
-    [dataObs]="files"
+    [dataObs]="filesObs"
     [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '']"
     (addButtonClick)="add()">
   <datatable-title>

@@ -1,25 +1,41 @@
-md-tooltip {
-  display: none;
+md-toolbar {
+  height: 64px;
 }
 
 md-toolbar .flex {
   flex: 1 1 auto;
 }
 
+md-toolbar md-icon {
+  color: #ffffff;
+}
+
 md-toolbar md-icon.list {
   display: none;
-  font-size:48px;
-  height:48px;
+  font-size: 48px;
+  height: 48px;
   width: 48px;
   margin-right: 10px;
-  color: #d0d0df;
+  user-select: none;
+  cursor: pointer;
+}
+
+md-toolbar a {
+  display: table-row;
+}
+
+md-toolbar a md-icon,
+md-toolbar a label {
+  display: table-cell;
+  vertical-align: middle;
+  cursor: pointer;
 }
 
 md-toolbar a,
 md-toolbar a:visited,
 md-toolbar md-icon.list {
   text-align: center;
-  text-decoration : none;
+  text-decoration: none;
   opacity: 0.8;
 }
 
@@ -28,14 +44,15 @@ md-toolbar md-icon.list:hover {
   text-align: center;
   text-decoration : none;
   opacity: 1.0;
-  cursor: pointer;
 }
 
-md-toolbar md-icon {
-  color: #cccccc;
+md-toolbar a md-icon {
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
 }
 
-md-toolbar a .label {
+md-toolbar a label {
   color: #ffffff;
   font-size: 0.7em;
   padding-left: 0.3em;
@@ -46,11 +63,12 @@ md-toolbar .right {
 }
 
 @media screen and (max-width: 600px) {
-  md-toolbar a .label {
+  md-toolbar a label {
     display: none;
   }
 }
 
-md-toolbar span.userLogin {
+md-toolbar a.userLogin md-icon,
+md-toolbar a.userLogin label {
   color: #ffd740;
 }

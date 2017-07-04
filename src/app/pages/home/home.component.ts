@@ -20,4 +20,8 @@ export class HomeComponent implements OnInit {
   get selectedProject(): Project {
     return this._session.selectedProject;
   }
+
+  get readyForContent(): boolean {
+    return this._session.readyForContent;
+  }
 }

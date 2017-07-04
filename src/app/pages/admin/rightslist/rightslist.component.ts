@@ -41,7 +41,6 @@ export class RightslistComponent implements OnInit {
   }
 
   updateRightsObs(): void {
-    //this._rightsObs = Observable.of(this._rights);
     this._rightsObs = Observable.create((observer: Observer<ProjectRight[]>) => {
       observer.next(this._rights);
       observer.complete();

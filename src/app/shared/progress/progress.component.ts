@@ -13,7 +13,11 @@ export class ProgressComponent implements OnInit {
   private _progress: number = 0;
   private _sub: Subscription;
 
-  constructor(@Inject(MD_DIALOG_DATA) private _obs: Observable<number>, private _uploadService: FileUploadService, private _zone: NgZone) { }
+  constructor(
+    @Inject(MD_DIALOG_DATA) private _obs: Observable<number>,
+    private _uploadService: FileUploadService,
+    private _zone: NgZone
+  ) { }
   
  ngOnInit() {
     this._sub = this._obs.subscribe((value: number) => {

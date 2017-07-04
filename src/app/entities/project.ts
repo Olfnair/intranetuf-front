@@ -3,6 +3,5 @@ export class Project {
   public name: string = undefined;
   public active: boolean = undefined;
 
-  constructor() {
-  }
+  constructor() { }
 }

@@ -54,3 +54,7 @@
   text-align: center;
   font-size: 25px;
 }
+
+.navList .spinner {
+  margin: 0 auto;
+}

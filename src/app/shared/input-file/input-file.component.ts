@@ -14,7 +14,7 @@ export class InputFileComponent {
 
   private _files: File[];
 
-  constructor() {}
+  constructor() { }
 
   get fileCount(): number {
     return this._files && this._files.length || 0;

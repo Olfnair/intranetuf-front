@@ -21,8 +21,9 @@ export class NavListSelection {
 export class NavList {
   private _title: string = undefined;
 
-  private _selectables: NavListSelection[] = [];
+  private _selectables: NavListSelection[] = undefined;
   private _select$: EventEmitter<NavListSelection> = new EventEmitter<NavListSelection>();
+  private _loaded$: EventEmitter<void> = new EventEmitter<void>();
 
   // ref sur la selection courante
   private _selected: NavListSelection = undefined;
@@ -39,6 +40,7 @@ export class NavList {
 
   @Input() set selectables(selectables: NavListSelection[]) {
     this._selectables = selectables;
+    this._loaded$.emit();
   }
 
   get selectables(): NavListSelection[] {
@@ -64,6 +66,10 @@ export class NavList {
   select(selection: NavListSelection): void {
     this._selected = selection;
     this._select$.emit(this._selected);
+  }
+
+  @Output('loaded') get loaded$(): EventEmitter<void> {
+    return this._loaded$;
   }
 }
 

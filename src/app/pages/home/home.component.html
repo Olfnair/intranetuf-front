@@ -1,8 +1,8 @@
-<section *ngIf="!logged">
+<section *ngIf="readyForContent && ! logged">
   <p class="welcomeMessage">
     Bienvenue sur Intranet UF
   </p>
   <app-login></app-login>
 </section>
 
-<app-filelist *ngIf="logged" [project]="selectedProject"></app-filelist>
+<app-filelist *ngIf="logged" [project]="selectedProject" [startLoading]="readyForContent"></app-filelist>

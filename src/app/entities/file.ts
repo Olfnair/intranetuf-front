@@ -9,6 +9,5 @@ export class File {
   public version: Version = undefined;
   public project: Project = undefined;
 
-  constructor() {
-  }
+  constructor() { }
 }

@@ -1,9 +1,9 @@
 <app-header
-    [displayListButton]="route=='/home' && logged"
+    [displayListButton]="showProjectList()"
     (toggleOnSmall)="toggleSidenavOnSmall()"
     (toggleOnLarge)="toggleSidenavOnLarge()">
 </app-header>
 <sidenav-layout [openSidenavOnSmall]="sidenavShowOnSmall" [openSidenavOnLarge]="sidenavShowOnLarge">
-  <app-projectlist *ngIf="route=='/home' && logged" [selectedProject]="selectedProject" sidenav></app-projectlist>
+  <app-projectlist *ngIf="showProjectList()" [selectedProject]="selectedProject" (loaded)="loaded()" sidenav></app-projectlist>
   <router-outlet content></router-outlet>
 </sidenav-layout>

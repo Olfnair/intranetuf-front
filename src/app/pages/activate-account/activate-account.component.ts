@@ -32,11 +32,12 @@ export class ActivateAccountComponent implements OnInit {
   private _errorText: string = '';
 
   constructor(
-      private _router: Router,
-      private _route: ActivatedRoute,
-      private _session: SessionService,
-      private _restService: RestApiService,
-      private _dialog: MdDialog) {
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _session: SessionService,
+    private _restService: RestApiService,
+    private _dialog: MdDialog
+  ) {
     this._form = this._buildForm();
   }
 

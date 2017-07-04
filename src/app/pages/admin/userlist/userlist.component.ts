@@ -25,7 +25,11 @@ export class UserlistComponent implements OnInit {
 
   private _selectedUser: User = undefined;
 
-  constructor(private _session: SessionService, private _restService: RestApiService, private _router: Router) { }
+  constructor(
+    private _session: SessionService,
+    private _restService: RestApiService,
+    private _router: Router
+  ) { }
 
   ngOnInit() {
   }

@@ -7,8 +7,7 @@ export class Date {
   public min: number = undefined;
   public sec: number = undefined;
 
-  constructor() {
-  }
+  constructor() { }
 
   isValid(): boolean {
     return this.isValidDate() && this.isValidHour();

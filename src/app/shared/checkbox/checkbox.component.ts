@@ -10,8 +10,7 @@ export class CheckboxComponent implements OnInit {
   @ViewChild(MdCheckbox) private _mdCheckbox: MdCheckbox;
   private _change$: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
 
-  constructor() {
-  }
+  constructor() { }
 
   ngOnInit() {
   }
