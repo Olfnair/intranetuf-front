@@ -10,18 +10,15 @@ export const environment = {
     host: 'localhost',
     port: '8443',
     endpoints: {
-      workflowCheck: '/IUF/rest/entities.workflowcheck',
-      rights: '/IUF/rest/entities.projectright',
-      allUsers: '/IUF/rest/entities.user',
-      oneUser: '/IUF/rest/entities.user/:id',
-      activateUser: '/IUF/rest/entities.user/activate',
-      allProjects: '/IUF/rest/entities.project',
-      oneProject: '/IUF/rest/entities.project/:id',
       auth: '/IUF/rest/auth',
-      allFiles: '/IUF/rest/entities.file',
-      filesByProject: '/IUF/rest/entities.file/project/',
-      allVersions: '/IUF/rest/entities.version',
-      download: '/IUF/rest/download/'
+      activate: '/IUF/rest/entities.user/activate',
+      download: '/IUF/rest/download/',
+      file: '/IUF/rest/entities.file',
+      project: '/IUF/rest/entities.project',
+      projectRight: '/IUF/rest/entities.projectright',
+      user: '/IUF/rest/entities.user',
+      version: '/IUF/rest/entities.version',
+      workflowCheck: '/IUF/rest/entities.workflowcheck'
     }
   }
 };

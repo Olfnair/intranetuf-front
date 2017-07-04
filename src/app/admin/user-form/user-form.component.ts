@@ -1,10 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { CustomValidators } from "app/shared/custom-validator";
-import { User } from "app/entities/user";
-import { RestApiService } from "app/shared/rest-api.service";
 import { Subscription } from "rxjs/Subscription";
+import { RestApiService } from "app/shared/_services/rest-api.service";
+import { CustomValidators } from "app/shared/custom-validators";
+import { User } from "app/entities/user";
 
 @Component({
   selector: 'app-user-form',

@@ -1,12 +1,12 @@
 import { RouterModule, Routes } from '@angular/router';
 
 // APP COMPONENTS
-import { HomeComponent } from "app/pages/home/home.component";
-import { ProjectlistComponent } from "app/pages/projectlist/projectlist.component";
-import { UserFormComponent } from "app/pages/admin/user-form/user-form.component";
-import { ActivateAccountComponent } from "app/pages/activate-account/activate-account.component";
-import { AddFileComponent } from "app/pages/add-file/add-file.component";
-import { AdminPanelComponent } from "app/pages/admin/admin-panel/admin-panel.component";
+import { HomeComponent } from "./user/home/home.component";
+import { ProjectlistComponent } from "./user/projectlist/projectlist.component";
+import { UserFormComponent } from "./admin/user-form/user-form.component";
+import { ActivateAccountComponent } from "./user/activate-account/activate-account.component";
+import { AddFileComponent } from "./user/add-file/add-file.component";
+import { AdminPanelComponent } from "./admin/admin-panel/admin-panel.component";
 
 const ROUTES: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

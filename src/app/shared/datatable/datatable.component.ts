@@ -1,7 +1,7 @@
 import { Component, OnInit, ContentChild, TemplateRef, Input, Directive, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MdCheckboxChange } from "@angular/material";
-import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+import { Observable } from "rxjs/Observable";
 import { DatatableSelection } from "app/shared/datatable/datatable-selection";
 
 export class Column {

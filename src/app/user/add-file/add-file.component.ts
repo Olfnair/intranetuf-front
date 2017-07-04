@@ -5,16 +5,16 @@ import { MdDialogRef, MdDialog } from "@angular/material";
 import { Subscription } from "rxjs/Subscription";
 import { DatatableSelection } from "app/shared/datatable/datatable-selection";
 import { ProgressComponent } from "app/shared/progress/progress.component";
-import { FileUploadService } from "app/shared/file-upload.service";
-import { RestApiService } from "app/shared/rest-api.service";
-import { SessionService } from "app/shared/session.service";
-import { UserContainer } from "app/pages/add-file/user-container";
+import { FileUploadService } from "app/shared/_services/file-upload.service";
+import { RestApiService } from "app/shared/_services/rest-api.service";
+import { SessionService } from "app/shared/_services/session.service";
+import { UserContainer } from "app/user/add-file/user-container";
+import { CheckType } from "app/entities/workflow-check";
 import { File as FileEntity } from "app/entities/file";
 import { Project } from "app/entities/project";
-import { CheckType } from "app/entities/workflow-check";
 import { Right } from "app/entities/project-right";
-import { Version } from "app/entities/version";
 import { User } from "app/entities/user";
+import { Version } from "app/entities/version";
 
 @Component({
   selector: 'app-add-file',

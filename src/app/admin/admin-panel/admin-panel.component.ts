@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MdTabChangeEvent } from "@angular/material";
-import { SessionService } from "app/shared/session.service";
+import { SessionService } from "app/shared/_services/session.service";
 
 @Component({
   selector: 'app-admin-panel',
@@ -8,6 +8,7 @@ import { SessionService } from "app/shared/session.service";
   styleUrls: ['./admin-panel.component.css']
 })
 export class AdminPanelComponent implements OnInit {
+  
   constructor(private _session: SessionService) { }
 
   ngOnInit() {

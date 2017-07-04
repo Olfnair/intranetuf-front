@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from "app/shared/session.service";
+import { SessionService } from "app/shared/_services/session.service";
 import { Project } from "app/entities/project";
 
 @Component({

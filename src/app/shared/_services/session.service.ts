@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from "@angular/http";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs";
-import { Credentials } from "app/entities/credentials";
 import 'rxjs/add/operator/map';
-import { Project } from "app/entities/project";
 import { AuthToken } from "app/entities/auth-token";
+import { Credentials } from "app/entities/credentials";
+import { Project } from "app/entities/project";
 
 @Injectable()
 export class SessionService {

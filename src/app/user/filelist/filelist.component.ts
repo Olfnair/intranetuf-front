@@ -1,17 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { RestApiService } from "app/shared/rest-api.service";
-import { Project } from "app/entities/project";
-import { File } from "app/entities/file";
 import { Router } from "@angular/router";
-import { TruncatePipe } from "app/shared/truncate.pipe";
-import { NumberLenPipe } from "app/shared/number-len.pipe";
 import { Response } from "@angular/http";
-import { SessionService } from "app/shared/session.service";
-import { environment } from "environments/environment";
-import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import 'rxjs/Rx';
+import { environment } from "environments/environment";
+import { RestApiService } from "app/shared/_services/rest-api.service";
+import { SessionService } from "app/shared/_services/session.service";
+import { File } from "app/entities/file";
+import { Project } from "app/entities/project";
 
 @Component({
   selector: 'app-filelist',

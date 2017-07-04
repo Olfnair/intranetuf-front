@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { MD_DIALOG_DATA } from '@angular/material';
-import { ProjectlistComponent } from "app/pages/projectlist/projectlist.component";
+import { ProjectlistComponent } from "app/user/projectlist/projectlist.component";
 
 @Component({
   selector: 'app-add-project',

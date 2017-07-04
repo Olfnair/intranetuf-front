@@ -1,12 +1,12 @@
-import { RestApiService } from "app/shared/rest-api.service";
-import { User } from "app/entities/user";
-import { Right } from "app/entities/project-right";
-import { Project } from "app/entities/project";
-import { CheckType, WorkflowCheck } from "app/entities/workflow-check";
-import { Version } from "app/entities/version";
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+import { RestApiService } from "app/shared/_services/rest-api.service";
+import { CheckType, WorkflowCheck } from "app/entities/workflow-check";
+import { Project } from "app/entities/project";
+import { Right } from "app/entities/project-right";
+import { User } from "app/entities/user";
+import { Version } from "app/entities/version";
 
 export class UserContainer {
   // titre

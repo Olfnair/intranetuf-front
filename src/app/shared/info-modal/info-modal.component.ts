@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Subscription } from "rxjs/Subscription";
 import { MD_DIALOG_DATA } from '@angular/material';
+import { Subscription } from "rxjs/Subscription";
 
 export class inputData {
   public title: string = '';

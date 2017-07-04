@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from "rxjs/Observable";
-import { User } from "app/entities/user";
-import { RestApiService } from "app/shared/rest-api.service";
-import { Subscription } from "rxjs/Subscription";
 import { Router } from "@angular/router";
-import { SessionService } from "app/shared/session.service";
+import { Subscription } from "rxjs/Subscription";
+import { Observable } from "rxjs/Observable";
+import { RestApiService } from "app/shared/_services/rest-api.service";
+import { SessionService } from "app/shared/_services/session.service";
+import { User } from "app/entities/user";
 
 export enum ComponentState {
   LIST = 0,
@@ -19,6 +19,7 @@ export enum ComponentState {
   styleUrls: ['./userlist.component.css']
 })
 export class UserlistComponent implements OnInit {
+  
   private _users: Observable<User[]> = undefined;
   private _state: number = ComponentState.LIST;
   private _checkedUsers: User[] = [];

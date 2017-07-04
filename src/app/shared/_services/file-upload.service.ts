@@ -3,7 +3,7 @@ import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { environment } from "environments/environment";
 import { File as FileEntity } from "app/entities/file";
-import { SessionService } from "app/shared/session.service";
+import { SessionService } from "app/shared/_services/session.service";
 import 'rxjs/Rx';
 
 @Injectable()
@@ -19,11 +19,11 @@ export class FileUploadService {
     this._urlFile = environment.backend.protocol + "://"
                   + environment.backend.host + ":"
                   + environment.backend.port
-                  + environment.backend.endpoints.allFiles;
+                  + environment.backend.endpoints.file;
     this._urlVersion = environment.backend.protocol + "://"
                      + environment.backend.host + ":"
                      + environment.backend.port
-                     + environment.backend.endpoints.allVersions;
+                     + environment.backend.endpoints.version;
     this._progress = Observable.create((observer: Observer<number>) => {
       this._progressObserver = observer;
     }).share();

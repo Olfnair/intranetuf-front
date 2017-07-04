@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { MdDialog, MdDialogRef } from "@angular/material";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
-import { AuthToken } from "app/entities/auth-token";
 import { Subscription } from "rxjs/Subscription";
-import { User } from "app/entities/user";
-import { SessionService } from "app/shared/session.service";
-import { RestApiService } from "app/shared/rest-api.service";
 import { Response } from "@angular/http";
-import { MdDialog, MdDialogRef } from "@angular/material";
+import { SessionService } from "app/shared/_services/session.service";
+import { RestApiService } from "app/shared/_services/rest-api.service";
 import { InfoModalComponent } from "app/shared/info-modal/info-modal.component";
+import { AuthToken } from "app/entities/auth-token";
 import { Credentials } from "app/entities/credentials";
+import { User } from "app/entities/user";
 
 @Component({
   selector: 'app-activate-account',

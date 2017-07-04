@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, Inject, NgZone } from '@angular/core';
-import { FileUploadService } from "app/shared/file-upload.service";
-import { Subscription } from "rxjs/Subscription";
 import { MD_DIALOG_DATA } from '@angular/material';
+import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
+import { FileUploadService } from "app/shared/_services/file-upload.service";
 
 @Component({
   selector: 'app-progress',
