@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
-import { RestApiService } from "services/rest-api.service";
-import { SessionService } from "services/session.service";
+import { RestApiService } from "app/services/rest-api.service";
+import { SessionService } from "app/services/session.service";
 import { User } from "entities/user";
 
 export enum ComponentState {

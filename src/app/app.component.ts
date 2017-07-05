@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
-import { SessionService } from "services/session.service";
+import { SessionService } from "app/services/session.service";
 import { Project } from "entities/project";
 
 @Component({

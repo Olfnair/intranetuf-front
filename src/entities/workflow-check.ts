@@ -7,6 +7,13 @@ export enum CheckType {
   VALIDATION = 1
 }
 
+export enum Status {
+  WAITING = 0,
+  TO_CHECK = 1,
+  CHECK_OK = 2,
+  CHECK_KO = 3
+}
+
 export class WorkflowCheck {
   id: number = undefined;
   status: number = undefined;

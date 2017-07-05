@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
@@ -6,22 +6,25 @@ import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import 'rxjs/Rx';
 import { environment } from "environments/environment";
-import { RestApiService } from "services/rest-api.service";
-import { SessionService } from "services/session.service";
+import { RestApiService } from "app/services/rest-api.service";
+import { SessionService } from "app/services/session.service";
 import { File } from "entities/file";
 import { Project } from "entities/project";
+import { WorkflowCheck, Status, CheckType } from "entities/workflow-check";
 
 @Component({
   selector: 'app-filelist',
   templateUrl: './filelist.component.html',
   styleUrls: ['./filelist.component.css']
 })
-export class FilelistComponent implements OnInit {
+export class FilelistComponent {
   private _startLoading: boolean = true;
 
   private _project: Project = undefined;
   private _files : File[] = undefined;
   private _filesObs: Observable<File[]> = undefined;
+  private _controls: Map<number, WorkflowCheck> = undefined;
+  private _validations: Map<number, WorkflowCheck> = undefined;
   private _url = environment.backend.protocol + "://"
                + environment.backend.host + ":"
                + environment.backend.port
@@ -33,31 +36,66 @@ export class FilelistComponent implements OnInit {
     private _router: Router
   ) { }
 
-  ngOnInit() {
+  private _resetChecksMap(): void {
+    this._controls = new Map<number, WorkflowCheck>();
+    this._validations = new Map<number, WorkflowCheck>();
   }
 
-  private setFiles(files: File[], fileObs: Observable<File[]>): void {
+  private _getChecksMapFromType(type: CheckType): Map<number, WorkflowCheck> {
+    if(type == CheckType.CONTROL) {
+      return this._controls;
+    }
+    else if(type == CheckType.VALIDATION) {
+      return this._validations;
+    }
+    return null;
+  }
+
+  private _loadChecks(): void {
+    if(! this._files) { return; }
+
+    let sub: Subscription = this._restService.fetchWorkflowCheckByStatusUserVersions(
+      Status.TO_CHECK, this._session.userId, this._files
+    ).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (checks: WorkflowCheck[]) => {
+        this._resetChecksMap();
+        checks.forEach((check: WorkflowCheck) => { 
+          let map: Map<number, WorkflowCheck> = this._getChecksMapFromType(check.type);
+          if(map) {
+            map.set(check.version.id, check);
+          }
+        });
+      },
+      (error: Response) => {
+        // gestion d'erreur
+      }
+    );
+  }
+
+  private _setFiles(files: File[], fileObs: Observable<File[]>): void {
     this._files = files;
     this._filesObs = fileObs;
   }
 
-  private reloadFiles(): void {
-    
+  private _loadFiles(): void {
     // teste s'il faut vraiment charger quelque chose
     if(! this._project || ! this._startLoading) { return; }
 
-    this.setFiles(undefined, undefined);
-    let sub = this._restService.fetchFilesByProject(this._project).finally(() => {
+    this._setFiles(undefined, undefined);
+    let sub: Subscription = this._restService.fetchFilesByProject(this._project).finally(() => {
       sub.unsubscribe(); // finally
     }).subscribe(
       (files: File[]) => { // data
-        this.setFiles(files, Observable.create((observer: Observer<File[]>) => {
+        this._setFiles(files, Observable.create((observer: Observer<File[]>) => {
           observer.next(this._files);
           observer.complete();
         }));
+        this._loadChecks();
       },
       (error: Response) => { // erreur
-        this.setFiles(this._files, Observable.create((observer: Observer<File[]>) => {
+        this._setFiles(this._files, Observable.create((observer: Observer<File[]>) => {
           observer.error(error);
         }));
       },
@@ -68,14 +106,14 @@ export class FilelistComponent implements OnInit {
     let old: boolean = this._startLoading;
     this._startLoading = startLoading;
     if(! old && this._startLoading) {
-      this.reloadFiles();
+      this._loadFiles();
     }
   }
 
   @Input() set project(project: Project) {
     if(project) {
       this._project = project;
-      this.reloadFiles();
+      this._loadFiles();
     }
   }
 
@@ -97,6 +135,20 @@ export class FilelistComponent implements OnInit {
 
   downloadLink(versionId: number): string {
     return this._url + versionId + '?token="' + encodeURIComponent(JSON.stringify(this._session.authToken)) + '"';
+  }
+
+  private _hasCheck(type: CheckType, versionId): boolean {
+    let map: Map<number, WorkflowCheck> = this._getChecksMapFromType(type);
+    if(! map) { return false; }
+    return map.has(versionId);
+  }
+
+  hasControl(versionId: number): boolean {
+    return this._hasCheck(CheckType.CONTROL, versionId);
+  }
+
+  hasValidation(versionId: number): boolean {
+    return ! this.hasControl(versionId) && this._hasCheck(CheckType.VALIDATION, versionId);
   }
 
 }

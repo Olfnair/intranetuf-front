@@ -1,7 +1,7 @@
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
-import { RestApiService } from "services/rest-api.service";
+import { RestApiService } from "app/services/rest-api.service";
 import { CheckType, WorkflowCheck } from "entities/workflow-check";
 import { Project } from "entities/project";
 import { Right } from "entities/project-right";

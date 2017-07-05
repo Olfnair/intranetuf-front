@@ -4,10 +4,12 @@ import { environment } from "environments/environment";
 import { SessionService } from "./session.service";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
+import { RestLong } from "objects/rest-long";
 import { Credentials } from "entities/credentials";
 import { File } from "entities/file";
 import { Project } from "entities/project";
 import { ProjectRight, Right } from "entities/project-right";
+import { Status, WorkflowCheck } from "entities/workflow-check";
 import { User } from "entities/user";
 
 @Injectable()
@@ -39,34 +41,19 @@ export class RestApiService {
    */
   fetchProjects(): Observable<Project[]> {
     return this._http.get(this._backendURL.project, this._session.options()).map((res: Response) => {
-      if (res.status === 200) {
-        return res.json().project;
-      }
-      else {
-        return [];
-      }
+      return res.json().project;
     });
   }
 
   fetchFilesByProject(project: Project): Observable<File[]> {
     return this._http.get(this._backendURL.file + '/project/' + project.id.toString(), this._session.options()).map((res: Response) => {
-      if (res.status === 200) {
-        return res.json().file;
-      }
-      else {
-        return [];
-      }
+      return res.json().file;
     });
   }
 
   createFile(file: File) {
     return this._http.post(this._backendURL.file, {file: file}, this._session.options()).map((res: Response) => {
-      if (res.status === 200) {
-        return res.json().file;
-      }
-      else {
-        return [];
-      }
+      return res.json().file;
     });
   }
 
@@ -131,9 +118,14 @@ export class RestApiService {
     });
   }
 
-  adWorkflowCheck(rights: ProjectRight[]): Observable<number> {
-    return this._http.post(this._backendURL.workflowCheck, {workflowCheck: rights}, this._session.options()).map((res: Response) => {
-      return res.status;
+  // trié croissant sur type puis version
+  fetchWorkflowCheckByStatusUserVersions(status: Status, userId: number, files: File[]): Observable<WorkflowCheck[]> {
+    let versionIds: RestLong[] = [];
+    files.forEach((file: File) => {
+      versionIds.push(new RestLong(file.version.id));
+    });
+    return this._http.post(this._backendURL.workflowCheck + '/' + userId + '/' + status, {restLong: versionIds}, this._session.options()).map((res: Response) => {
+      return res.json().workflowCheck;
     });
   }
 

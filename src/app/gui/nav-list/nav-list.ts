@@ -1,5 +1,5 @@
 import { Input, EventEmitter, Output } from '@angular/core';
-import { NavListSelection } from "gui/nav-list";
+import { NavListSelection } from "app/gui/nav-list";
 
 export class NavList {
   private _title: string = undefined;

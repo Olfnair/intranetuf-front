@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MD_DIALOG_DATA } from '@angular/material';
-import { InfoModalData } from "gui/info-modal";
+import { InfoModalData } from "app/gui/info-modal";
 
 @Component({
   selector: 'info-modal',

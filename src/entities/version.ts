@@ -2,6 +2,12 @@ import { Date } from "entities/date";
 import { File } from "entities/file";
 import { WorkflowCheck } from "entities/workflow-check";
 
+export enum Status { 
+  CREATED = 0,
+  CONTROLLED = 1,
+  VALIDATED = 2
+}
+
 export class Version {
   public id: number = undefined;
   public filename: string = undefined;

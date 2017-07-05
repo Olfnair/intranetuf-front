@@ -16,7 +16,6 @@ import { SidenavLayoutComponent, SlSidenav, SlContent } from "./sidenav-layout";
 import { SortButtonComponent } from "./sort-button";
 import { UpDownComponent } from "./up-down";
 
-
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
     CheckboxComponent,
@@ -27,7 +26,7 @@ import { UpDownComponent } from "./up-down";
     ProgressComponent,
     SidenavLayoutComponent, SlSidenav, SlContent,
     SortButtonComponent,
-    UpDownComponent
+    UpDownComponent,
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     InfoModalComponent,

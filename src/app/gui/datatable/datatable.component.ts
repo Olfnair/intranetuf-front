@@ -2,7 +2,7 @@ import { Component, ContentChild, TemplateRef, Input, Directive, EventEmitter, O
 import { MdCheckboxChange } from "@angular/material";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
-import { DatatableColumn, DatatableOptions, DatatableSelection } from "gui/datatable";
+import { DatatableColumn, DatatableOptions, DatatableSelection } from "app/gui/datatable";
 
 @Directive({
   selector: 'datatable-title'
