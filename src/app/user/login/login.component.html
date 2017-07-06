@@ -1,5 +1,5 @@
 <section class="container">
-  <gui-form [formGroup]="form" title="Connexion" submitOnEnter="true" (submit)="submit()">
+  <gui-form [formGroup]="form" title="Connexion" submitOnEnter="true" (formSubmit)="submit()">
     
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Identifiant" formControlName="login" required>

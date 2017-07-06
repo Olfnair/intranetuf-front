@@ -1,8 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
+import { GuiForm } from "app/gui/gui-form";
 import { CustomValidators } from "app/shared/custom-validators";
 import { User } from "entities/user";
 
@@ -11,33 +12,23 @@ import { User } from "entities/user";
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css']
 })
-export class UserFormComponent implements OnInit {
-  private _form: FormGroup;
+export class UserFormComponent extends GuiForm {
   private _close$: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private _router: Router, private _restService: RestApiService) {
-    this._form = this._buildForm();
-  }
-
-  ngOnInit() {
-  }
-
-  get form(): FormGroup {
-    return this._form;
+    super();
   }
 
   submit(): void {
     let user: User = new User();
-    user.name = this._form.value.name;
-    user.firstname = this._form.value.firstname;
-    user.login = this._form.value.login;
-    user.email = this._form.value.email;
-    let addUserSub: Subscription = this._restService.addUser(user)
-      .finally(() => {
+    user.name = this.form.value.name;
+    user.firstname = this.form.value.firstname;
+    user.login = this.form.value.login;
+    user.email = this.form.value.email;
+    let addUserSub: Subscription = this._restService.addUser(user).finally(() => {
         addUserSub.unsubscribe();
         this._close$.emit(true);
-      })
-      .subscribe();
+    }).subscribe();
   }
 
   cancel(): void {
@@ -53,13 +44,9 @@ export class UserFormComponent implements OnInit {
   }
 
   /**
-     * Function to build our form
-     *
-     * @returns {FormGroup}
-     *
-     * @private
+     * @override
      */
-  private _buildForm(): FormGroup {
+  protected _buildForm(): FormGroup {
     return new FormGroup({
       name: new FormControl('', Validators.compose([
         Validators.required, Validators.minLength(2)

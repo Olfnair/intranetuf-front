@@ -1,40 +1,30 @@
 <section class="container margin">
-  <md-card>
-    <md-card-title class="centerText">Créer un compte</md-card-title>
+  <gui-form [formGroup]="form" title="Créer un compte" submitOnEnter="true" (formSubmit)="submit()">
+    <md-input-container gui-form-input>
+      <input mdInput type="text" placeholder="Nom" formControlName="name" required/>
+      <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer votre nom</md-error>
+      <md-error *ngIf="form.controls.name.errors?.minlength">Au moins 2 caractères</md-error>
+    </md-input-container>
 
-    <md-card-content>
-      <form novalidate [formGroup]="form" (ngSubmit)="submit()">
-        <md-input-container class="blockContainer">
-          <input mdInput type="text" placeholder="Nom" formControlName="name" required/>
-          <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer votre nom</md-error>
-          <md-error *ngIf="form.controls.name.errors?.minlength">Au moins 2 caractères</md-error>
-        </md-input-container>
+    <md-input-container gui-form-input>
+      <input mdInput type="text" placeholder="Prénom" formControlName="firstname" required/>
+      <md-error *ngIf="form.controls.firstname.errors?.required">Veuillez indiquer votre prénom</md-error>
+      <md-error *ngIf="form.controls.firstname.errors?.minlength">Au moins 2 caractères</md-error>
+    </md-input-container>
 
-        <md-input-container class="blockContainer">
-          <input mdInput type="text" placeholder="Prénom" formControlName="firstname" required/>
-          <md-error *ngIf="form.controls.firstname.errors?.required">Veuillez indiquer votre prénom</md-error>
-          <md-error *ngIf="form.controls.firstname.errors?.minlength">Au moins 2 caractères</md-error>
-        </md-input-container>
+    <md-input-container gui-form-input>
+      <input mdInput type="text" placeholder="Identifiant (Login)" formControlName="login" required/>
+      <md-error *ngIf="form.controls.login.errors?.required">Veuillez choisir un identifiant</md-error>
+      <md-error *ngIf="form.controls.login.errors?.minlength">Au moins 2 caractères</md-error>
+    </md-input-container>
 
-        <md-input-container class="blockContainer">
-          <input mdInput type="text" placeholder="Identifiant (Login)" formControlName="login" required/>
-          <md-error *ngIf="form.controls.login.errors?.required">Veuillez choisir un identifiant</md-error>
-          <md-error *ngIf="form.controls.login.errors?.minlength">Au moins 2 caractères</md-error>
-        </md-input-container>
+    <md-input-container gui-form-input>
+      <input mdInput type="email" placeholder="E-mail" formControlName="email" required/>
+      <md-error *ngIf="form.controls.email.errors?.required">Veuillez indiquer votre adresse e-mail</md-error>
+      <md-error *ngIf="form.controls.email.errors?.email">Veuillez entrer une adresse e-mail valide</md-error>
+    </md-input-container>
 
-        <md-input-container class="blockContainer">
-          <input mdInput type="email" placeholder="E-mail" formControlName="email" required/>
-          <md-error *ngIf="form.controls.email.errors?.required">Veuillez indiquer votre adresse e-mail</md-error>
-          <md-error *ngIf="form.controls.email.errors?.email">Veuillez entrer une adresse e-mail valide</md-error>
-        </md-input-container>
-
-        <input type="submit" [disabled]="!form.valid" style="display: none"/>
-      </form>
-    </md-card-content>
-
-    <md-card-actions align="end">
-      <button md-raised-button class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!form.valid">Créer le compte</button>
-      <button md-raised-button class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
-    </md-card-actions>
-  </md-card>
+    <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!form.valid">Créer le compte</button>
+    <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
+  </gui-form>
 </section>

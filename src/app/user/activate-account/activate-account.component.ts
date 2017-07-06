@@ -6,6 +6,7 @@ import { Subscription } from "rxjs/Subscription";
 import { Response } from "@angular/http";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { GuiForm } from "app/gui/gui-form";
 import { InfoModalComponent } from "app/gui/info-modal";
 import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
@@ -16,15 +17,12 @@ import { User } from "entities/user";
   templateUrl: './activate-account.component.html',
   styleUrls: ['./activate-account.component.css']
 })
-export class ActivateAccountComponent implements OnInit, OnDestroy {
+export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestroy {
   public static readonly minlength: number = 8;
 
   private _dialogRef: MdDialogRef<InfoModalComponent> = undefined;
   
   private _paramsSub: Subscription;
-  
-  // private property to store form value
-  private _form: FormGroup;
 
   private _authToken: AuthToken;
   private _user: User = undefined;
@@ -37,9 +35,7 @@ export class ActivateAccountComponent implements OnInit, OnDestroy {
     private _session: SessionService,
     private _restService: RestApiService,
     private _dialog: MdDialog
-  ) {
-    this._form = this._buildForm();
-  }
+  ) { super(); }
 
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
@@ -97,16 +93,16 @@ export class ActivateAccountComponent implements OnInit, OnDestroy {
     return this._user;
   }
 
-  get form(): FormGroup {
-    return this._form;
-  }
-
   get minlength(): number {
     return ActivateAccountComponent.minlength;
   }
 
+  get valid(): boolean {
+    return (this.form.valid && this.form.controls.pwd.value == this.form.controls.pwd_confirm.value);
+  }
+
   submit(): void {
-    let userActivateSub: Subscription = this._restService.activateUser(this._user.id, new Credentials(undefined, this._form.value.pwd))
+    let userActivateSub: Subscription = this._restService.activateUser(this._user.id, new Credentials(undefined, this.form.value.pwd))
       .finally(() => {
         userActivateSub.unsubscribe();
       })
@@ -154,13 +150,9 @@ export class ActivateAccountComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Function to build our form
-     *
-     * @returns {FormGroup}
-     *
-     * @private
+     * @override
      */
-  private _buildForm(): FormGroup {
+  protected _buildForm(): FormGroup {
     return new FormGroup({
       pwd: new FormControl('', Validators.compose([
         Validators.required, Validators.minLength(ActivateAccountComponent.minlength)

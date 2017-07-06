@@ -10,6 +10,7 @@ export class GuiFormComponent {
   private _title: string = undefined;
   private _form: FormGroup = undefined;
   private _submitOnEnter: boolean = false;
+  private _submitCondition: boolean = undefined;
 
   private _submit$: EventEmitter<void> = new EventEmitter<void>();
 
@@ -35,11 +36,23 @@ export class GuiFormComponent {
     this._submitOnEnter = submitOnEnter;
   }
 
+  @Input() set submitCondition(submitCondition: boolean) {
+    this._submitCondition = submitCondition;
+  }
+
   get submitOnEnter(): boolean {
     return this._submitOnEnter;
   }
 
-  @Output('submit') get submit$(): EventEmitter<void> {
+  get valid(): boolean {
+    if(this._submitCondition != undefined) {
+      return this._submitCondition;
+    }
+    return this._form.valid;
+  }
+
+  // !! ne pas nommer l'event 'submit', ca génère l'event en double parce que submit est un event qui existe déjà sur les form !!
+  @Output('formSubmit') get submit$(): EventEmitter<void> {
     return this._submit$;
   }
 

@@ -30,7 +30,7 @@ export class LoginComponent extends GuiForm {
     this._router.navigate(['/home']);
   }
 
-  submit(): void {  
+  submit(): void {
     let login: string = this.form.value.login;
     let password: string = this.form.value.pwd;
     this._session.login(this.form.value.login, this.form.value.pwd).subscribe(

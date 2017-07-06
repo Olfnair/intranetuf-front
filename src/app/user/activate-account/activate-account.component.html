@@ -1,5 +1,5 @@
 <section *ngIf="! error && user == undefined" class="spinnerSection">
-    <md-spinner class="margin" mode="indeterminate"></md-spinner>
+  <md-spinner class="margin" mode="indeterminate"></md-spinner>
 </section>
 
 <section *ngIf="error" class="container margin">
@@ -16,7 +16,34 @@
 </section>
 
 <section *ngIf="user != undefined" class="container">
-  <md-card>
+  <gui-form
+      [formGroup]="form"
+      title="Choix de votre mot de passe"
+      submitOnEnter="true"
+      [submitCondition]="valid"
+      (formSubmit)="submit()">
+    <md-input-container gui-form-input>
+      <input mdInput type="password" placeholder="Mot de passe" formControlName="pwd" required/>
+      <md-error *ngIf="form.controls.pwd.errors?.required">Veuillez choisir un mot de passe</md-error>
+      <md-error *ngIf="form.controls.pwd.errors?.minlength">Au moins {{minlength}} caractères</md-error>
+    </md-input-container>
+
+    <md-input-container gui-form-input>
+      <input mdInput type="password" placeholder="Confirmation du mot de passe" formControlName="pwd_confirm" required/>
+      <md-error>Veuillez retaper le mot de passe choisi</md-error>
+    </md-input-container>
+
+    <p class="errors" *ngIf="form.controls.pwd.touched && form.controls.pwd_confirm.touched && form.controls.pwd.value != form.controls.pwd_confirm.value">
+      Les 2 mots de passe sont différents !
+    </p>
+
+    <button md-raised-button gui-form-action class="submitButton" color="primary" type="submit"
+        (click)="submit()" [disabled]="! valid">
+      Activer mon compte
+    </button>
+
+  </gui-form>
+  <!--<md-card>
     <md-card-title class="centerText">Choix de votre mot de passe</md-card-title>
 
     <md-card-content>
@@ -43,5 +70,5 @@
     <md-card-actions>
       <button md-raised-button class="submitButton" color="primary" type="submit" (click)="submit()" [disabled]="! (form.valid && form.controls.pwd.value == form.controls.pwd_confirm.value)">Activer mon compte</button>
     </md-card-actions>
-  </md-card>
+  </md-card>-->
 </section>

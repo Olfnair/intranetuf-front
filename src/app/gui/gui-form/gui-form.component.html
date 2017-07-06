@@ -2,11 +2,11 @@
   <md-card-title *ngIf="title" class="centerText">{{title}}</md-card-title>
 
   <md-card-content>
-    <form novalidate (ngSubmit)="submit()">
+    <form [formGroup]="form" novalidate (ngSubmit)="submit()">
       
       <ng-content select="[gui-form-input]"></ng-content>
       
-      <input *ngIf="submitOnEnter && form != undefined" type="submit" [disabled]="!form.valid" style="display: none" />
+      <input *ngIf="submitOnEnter && form != undefined && valid" type="submit" style="display: none" />
       
       <ng-content></ng-content>
 
