@@ -1,5 +1,74 @@
 <section class="container">
-  <md-card>
+  <gui-form [formGroup]="form" [title]="newVersionMode ? 'Ajouter une nouvelle version' : 'Ajouter un fichier'" submitOnEnter="true"
+    [submitCondition]="isValidForm" (formSubmit)="submit()">
+
+    <div gui-form-input>
+      <input-file (fileSelect)="fileSelect($event)" [accept]="'*/*'">
+        <span class="buttonText">Choisir un fichier</span>
+      </input-file>
+      <div class="margin"></div>
+    </div>
+    <md-input-container gui-form-input>
+      <input mdInput type="text" placeholder="Nom du fichier choisi" formControlName="filename" required/>
+      <md-error>Veuillez choisir un fichier à ajouter</md-error>
+    </md-input-container>
+
+    <section *ngIf="! newVersionMode" gui-form-input>
+      <div *ngFor="let container of userContainers" class="userContainerDataTable">
+        <datatable *ngIf="container.isListMode()" [options]="{addButton: container.availableSize > 0, addButtonTooltip: 'Ajouter',
+                emptyMessage: container.availableSize > 0 ? 'Veuillez ajouter au moins un ' +
+                container.name + '.' : 'Pas encore de ' + container.name + ' affecté à ce projet.'}" [dataObs]="container.users"
+          [columns]="container.size > 1 ? ['Rang', 'Priorité', 'Ordre', 'Nom', 'Prénom', ''] : ['Nom', 'Prénom', '']" (addButtonClick)="switchContainerMode(container)">
+          <datatable-title>
+            <h3>{{container.title}}</h3>
+          </datatable-title>
+          <ng-template let-user="item" let-index="index" let-last="last">
+            <td *ngIf="container.size > 1" class="updownCol">
+              <up-down [first]="index == 0" [last]="last" (up)="container.swap(index, index - 1)" (down)="container.swap(index, index + 1)"></up-down>
+            </td>
+            <td *ngIf="container.size > 1" class="thinCol">
+              <button *ngIf="index > 0" class="smallButton" md-raised-button type="button" (click)="container.chainToggle(index)" mdTooltip="Priorité : comme le précédent / après le précédent"
+                mdTooltipPosition="above">
+                <md-icon *ngIf="container.isChained(index)">low_priority</md-icon>
+                <md-icon *ngIf="! container.isChained(index)">link</md-icon> 
+              </button>
+            </td>
+            <td *ngIf="container.size > 1">{{container.countOrderValue(index)}}</td>
+            <td>{{user.name}}</td>
+            <td>{{user.firstname}}</td>
+            <td class="alignRight">
+              <button md-raised-button class="smallButton" color="warn" type="button" (click)="container.delete(index)" mdTooltip="Supprimer"
+                mdTooltipPosition="above">
+                <md-icon>clear</md-icon>
+              </button>
+            </td>
+          </ng-template>
+        </datatable>
+
+        <datatable *ngIf="container.isAddMode()" [options]="{selectionCol: true, displayFooter: true, emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'}"
+          [dataObs]="container.availableUsers" [columns]="['Nom', 'Prénom', '']" (selectedDataUpdate)="updateUsersToAdd(container, $event)">
+          <datatable-title>
+            <h3>{{container.title}}</h3>
+          </datatable-title>
+          <ng-template let-user="item">
+            <td>{{user.name}}</td>
+            <td>{{user.firstname}}</td>
+            <td></td>
+          </ng-template>
+          <datatable-footer>
+            <button md-raised-button color="primary" type="button" [disabled]="! container.hasUsersToAdd" (click)="addContainerUsers(container)">Ajouter</button>
+            <button md-raised-button color="warn" type="button" (click)="switchContainerMode(container)">Annuler</button>
+          </datatable-footer>
+        </datatable>
+      </div>
+    </section>
+
+    <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!isValidForm">Ajouter le fichier</button>
+    <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
+
+  </gui-form>
+
+  <!--<md-card>
     <md-card-title *ngIf="! newVersionMode" class="centerText">Ajouter un fichier</md-card-title>
     <md-card-title *ngIf="newVersionMode" class="centerText">Ajouter une nouvelle version</md-card-title>
 
@@ -19,13 +88,10 @@
 
       <section *ngIf="! newVersionMode">
         <div *ngFor="let container of userContainers" class="userContainerDataTable">
-          <datatable *ngIf="container.isListMode()"
-              [options]="{addButton: container.availableSize > 0, addButtonTooltip: 'Ajouter',
+          <datatable *ngIf="container.isListMode()" [options]="{addButton: container.availableSize > 0, addButtonTooltip: 'Ajouter',
                 emptyMessage: container.availableSize > 0 ? 'Veuillez ajouter au moins un ' +
-                container.name + '.' : 'Pas encore de ' + container.name + ' affecté à ce projet.'}"
-              [dataObs]="container.users"
-              [columns]="container.size > 1 ? ['Rang', 'Priorité', 'Ordre', 'Nom', 'Prénom', ''] : ['Nom', 'Prénom', '']"
-              (addButtonClick)="switchContainerMode(container)">
+                container.name + '.' : 'Pas encore de ' + container.name + ' affecté à ce projet.'}" [dataObs]="container.users"
+            [columns]="container.size > 1 ? ['Rang', 'Priorité', 'Ordre', 'Nom', 'Prénom', ''] : ['Nom', 'Prénom', '']" (addButtonClick)="switchContainerMode(container)">
             <datatable-title>
               <h3>{{container.title}}</h3>
             </datatable-title>
@@ -34,7 +100,8 @@
                 <up-down [first]="index == 0" [last]="last" (up)="container.swap(index, index - 1)" (down)="container.swap(index, index + 1)"></up-down>
               </td>
               <td *ngIf="container.size > 1" class="thinCol">
-                <button *ngIf="index > 0" class="smallButton" md-raised-button type="button" (click)="container.chainToggle(index)" mdTooltip="Priorité : comme le précédent / après le précédent" mdTooltipPosition="above">
+                <button *ngIf="index > 0" class="smallButton" md-raised-button type="button" (click)="container.chainToggle(index)" mdTooltip="Priorité : comme le précédent / après le précédent"
+                  mdTooltipPosition="above">
                 <md-icon *ngIf="container.isChained(index)">low_priority</md-icon>
                 <md-icon *ngIf="! container.isChained(index)">link</md-icon> 
               </button>
@@ -43,18 +110,16 @@
               <td>{{user.name}}</td>
               <td>{{user.firstname}}</td>
               <td class="alignRight">
-                <button md-raised-button class="smallButton" color="warn" type="button" (click)="container.delete(index)" mdTooltip="Supprimer" mdTooltipPosition="above">
+                <button md-raised-button class="smallButton" color="warn" type="button" (click)="container.delete(index)" mdTooltip="Supprimer"
+                  mdTooltipPosition="above">
                 <md-icon>clear</md-icon>
               </button>
               </td>
             </ng-template>
           </datatable>
 
-          <datatable *ngIf="container.isAddMode()"
-              [options]="{selectionCol: true, displayFooter: true, emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'}"
-              [dataObs]="container.availableUsers"
-              [columns]="['Nom', 'Prénom', '']"
-              (selectedDataUpdate)="updateUsersToAdd(container, $event)">
+          <datatable *ngIf="container.isAddMode()" [options]="{selectionCol: true, displayFooter: true, emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'}"
+            [dataObs]="container.availableUsers" [columns]="['Nom', 'Prénom', '']" (selectedDataUpdate)="updateUsersToAdd(container, $event)">
             <datatable-title>
               <h3>{{container.title}}</h3>
             </datatable-title>
@@ -77,5 +142,5 @@
       <button md-raised-button class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!isValidForm">Ajouter le fichier</button>
       <button md-raised-button class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
     </md-card-actions>
-  </md-card>
-  </section>
+  </md-card>-->
+</section>

@@ -6,6 +6,7 @@ import { Subscription } from "rxjs/Subscription";
 import { FileUploadService } from "app/services/file-upload.service";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { GuiForm } from "app/gui/gui-form";
 import { GuiProgressComponent } from "app/gui/gui-progress";
 import { DatatableSelection } from "app/gui/datatable";
 import { UserContainer } from "app/user/add-file/user-container";
@@ -21,8 +22,7 @@ import { Version } from "entities/version";
   templateUrl: './add-file.component.html',
   styleUrls: ['./add-file.component.css']
 })
-export class AddFileComponent implements OnInit, OnDestroy {
-  private _form: FormGroup;
+export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
   private _uploadFile: File = undefined;
   private _paramsSub: Subscription;
   private _project: Project = new Project();
@@ -41,9 +41,7 @@ export class AddFileComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _session: SessionService,
     private _dialog: MdDialog
-  ) {
-    this._form = this._buildForm();
-  }
+  ) { super(); }
 
   ngOnInit() {
     if (!this._session.logged) {
@@ -64,10 +62,6 @@ export class AddFileComponent implements OnInit, OnDestroy {
     }
   }
 
-  get form(): FormGroup {
-    return this._form;
-  }
-
   get filename(): string {
     return this._file && this._uploadFile.name || '';
   }
@@ -82,14 +76,14 @@ export class AddFileComponent implements OnInit, OnDestroy {
 
   fileSelect(file: File): void {
     this._uploadFile = file;
-    this._form.controls.filename.setValue(this._uploadFile.name);
+    this.form.controls.filename.setValue(this._uploadFile.name);
   }
 
   // On vérifie le form à la main : le champ 'filename' est désactivé pour qu'on ne puisse pas l'éditer.
   // Malheureusement, un champ désactivé est considéré invalide par défaut... On doit donc vérifier les champs un par un
   // et faire un test particulier pour le champ 'filename'
   get isValidForm(): boolean {
-    if(this._form.controls.filename.value == '') { return false; }
+    if(this.form.controls.filename.value == '') { return false; }
     if(! this._newVersionMode) {
       for(let container of this._userContainers) {
         if(container.size <= 0) { return false; }
@@ -196,13 +190,9 @@ export class AddFileComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Function to build our form
-     *
-     * @returns {FormGroup}
-     *
-     * @private
+     * @override
      */
-  private _buildForm(): FormGroup {
+  protected _buildForm(): FormGroup {
     return new FormGroup({
       filename: new FormControl({ value: '', disabled: true }, Validators.compose([
         Validators.required
