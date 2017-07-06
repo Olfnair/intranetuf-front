@@ -1,0 +1,16 @@
+.comment {
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  height: calc(100vh - 300px);
+  min-height: 150px;
+  padding: 5px;
+  font-family: "Verdana, Tahoma";
+  color: #6565cc;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.error {
+  color: #ff0000;
+  font-size: 0.8em;
+}

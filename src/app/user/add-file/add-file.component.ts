@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { MdDialogRef, MdDialog } from "@angular/material";
@@ -6,7 +6,7 @@ import { Subscription } from "rxjs/Subscription";
 import { FileUploadService } from "app/services/file-upload.service";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
-import { ProgressComponent } from "app/gui/progress";
+import { GuiProgressComponent } from "app/gui/gui-progress";
 import { DatatableSelection } from "app/gui/datatable";
 import { UserContainer } from "app/user/add-file/user-container";
 import { CheckType } from "entities/workflow-check";
@@ -21,14 +21,14 @@ import { Version } from "entities/version";
   templateUrl: './add-file.component.html',
   styleUrls: ['./add-file.component.css']
 })
-export class AddFileComponent implements OnInit {
+export class AddFileComponent implements OnInit, OnDestroy {
   private _form: FormGroup;
   private _uploadFile: File = undefined;
   private _paramsSub: Subscription;
   private _project: Project = new Project();
   private _file: FileEntity = new FileEntity();
   private _newVersionMode: boolean = false;
-  private _progressModal: MdDialogRef<ProgressComponent> = undefined;
+  private _progressModal: MdDialogRef<GuiProgressComponent> = undefined;
   private _uploadProgress: number = 0;
   private _aborted: boolean = false;
 
@@ -59,7 +59,9 @@ export class AddFileComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this._paramsSub.unsubscribe();
+    if(this._paramsSub) {
+      this._paramsSub.unsubscribe();
+    }
   }
 
   get form(): FormGroup {
@@ -151,7 +153,7 @@ export class AddFileComponent implements OnInit {
         uploadSub.unsubscribe();
       }
     );
-    this._progressModal = this._dialog.open(ProgressComponent, { data: this._uploadService.progress });
+    this._progressModal = this._dialog.open(GuiProgressComponent, { data: this._uploadService.progress });
     let progressModalSub: Subscription = this._progressModal.afterClosed().subscribe(
       (totalProgress: number) => {
         if (totalProgress == undefined || totalProgress < 100) {

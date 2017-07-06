@@ -35,13 +35,13 @@
       </span>
       <span *ngIf="hasControl(file.version.id)">
         <a md-raised-button color="warn" mdTooltip="Contrôler" mdTooltipPosition="above"
-            [routerLink]="['/add_file', project.id, file.id]">
+            [routerLink]="['/check', getControlAsParameter(file.version.id)]">
           Contrôler
         </a>
       </span>
       <span *ngIf="hasValidation(file.version.id)">
         <a md-raised-button color="warn" mdTooltip="Valider" mdTooltipPosition="above"
-            [routerLink]="['/add_file', project.id, file.id]">
+            [routerLink]="['/check', getValidationAsParameter(file.version.id)]">
           Valider
         </a>
       </span>

@@ -3,10 +3,10 @@ import { MdCheckbox, MdCheckboxChange } from "@angular/material";
 
 @Component({
   selector: 'gui-checkbox',
-  templateUrl: './checkbox.component.html',
-  styleUrls: ['./checkbox.component.css']
+  templateUrl: './gui-checkbox.component.html',
+  styleUrls: ['./gui-checkbox.component.css']
 })
-export class CheckboxComponent {
+export class GuiCheckboxComponent {
   @ViewChild(MdCheckbox) private _mdCheckbox: MdCheckbox;
   private _change$: EventEmitter<MdCheckboxChange> = new EventEmitter<MdCheckboxChange>();
 

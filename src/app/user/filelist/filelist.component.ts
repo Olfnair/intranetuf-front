@@ -137,7 +137,23 @@ export class FilelistComponent {
     return this._url + versionId + '?token="' + encodeURIComponent(JSON.stringify(this._session.authToken)) + '"';
   }
 
-  private _hasCheck(type: CheckType, versionId): boolean {
+  private _getCheckAsParameter(type: CheckType, versionId: number): string {
+    let map: Map<number, WorkflowCheck> = this._getChecksMapFromType(type);
+    if(! map) { return ''; }
+    let check: WorkflowCheck = map.get(versionId);
+    if(! check) { return ''; }
+    return encodeURIComponent(JSON.stringify(check));
+  }
+
+  getControlAsParameter(versionId: number): string {
+    return this._getCheckAsParameter(CheckType.CONTROL, versionId);
+  }
+
+  getValidationAsParameter(versionId: number): string {
+    return this._getCheckAsParameter(CheckType.VALIDATION, versionId);
+  }
+
+  private _hasCheck(type: CheckType, versionId: number): boolean {
     let map: Map<number, WorkflowCheck> = this._getChecksMapFromType(type);
     if(! map) { return false; }
     return map.has(versionId);

@@ -21,6 +21,7 @@ import { ActivateAccountComponent } from "./activate-account/activate-account.co
 import { FilelistComponent } from "./filelist/filelist.component";
 import { AddProjectComponent } from "./projectlist/add-project/add-project.component";
 import { AddFileComponent } from "./add-file/add-file.component";
+import { CheckVersionComponent } from './check-version/check-version.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { AddFileComponent } from "./add-file/add-file.component";
     ActivateAccountComponent,
     FilelistComponent,
     AddProjectComponent,
-    AddFileComponent
+    AddFileComponent,
+    CheckVersionComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     AddProjectComponent
@@ -55,7 +57,8 @@ import { AddFileComponent } from "./add-file/add-file.component";
     ActivateAccountComponent,
     FilelistComponent,
     AddProjectComponent,
-    AddFileComponent
+    AddFileComponent,
+    CheckVersionComponent
   ]
 })
 export class UserModule {}

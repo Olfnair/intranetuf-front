@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MdDialog, MdDialogRef } from "@angular/material";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -16,7 +16,7 @@ import { User } from "entities/user";
   templateUrl: './activate-account.component.html',
   styleUrls: ['./activate-account.component.css']
 })
-export class ActivateAccountComponent implements OnInit {
+export class ActivateAccountComponent implements OnInit, OnDestroy {
   public static readonly minlength: number = 8;
 
   private _dialogRef: MdDialogRef<InfoModalComponent> = undefined;

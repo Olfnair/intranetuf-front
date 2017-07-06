@@ -5,10 +5,10 @@ import { Observable } from "rxjs/Observable";
 
 @Component({
   selector: 'gui-progress',
-  templateUrl: './progress.component.html',
-  styleUrls: ['./progress.component.css']
+  templateUrl: './gui-progress.component.html',
+  styleUrls: ['./gui-progress.component.css']
 })
-export class ProgressComponent implements OnInit {
+export class GuiProgressComponent implements OnInit {
   private _progress: number = 0;
   private _sub: Subscription;
 
