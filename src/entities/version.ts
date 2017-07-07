@@ -5,7 +5,8 @@ import { WorkflowCheck } from "entities/workflow-check";
 export enum Status { 
   CREATED = 0,
   CONTROLLED = 1,
-  VALIDATED = 2
+  VALIDATED = 2,
+  REFUSED = 3
 }
 
 export class Version {

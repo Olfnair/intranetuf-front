@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
+import { RestApiService } from "app/services/rest-api.service";
 import { GuiForm } from "app/gui/gui-form";
-import { WorkflowCheck, CheckType } from "entities/workflow-check";
+import { WorkflowCheck, CheckType, Status } from "entities/workflow-check";
 
 @Component({
   selector: 'app-check-version',
@@ -14,7 +15,7 @@ export class CheckVersionComponent extends GuiForm implements OnInit, OnDestroy 
   private _paramsSub: Subscription = undefined;
   private _check: WorkflowCheck = undefined;
 
-  constructor(private _route: ActivatedRoute, private _router: Router) {
+  constructor(private _route: ActivatedRoute, private _router: Router, private _restService: RestApiService) {
     super();
   }
 
@@ -45,8 +46,20 @@ export class CheckVersionComponent extends GuiForm implements OnInit, OnDestroy 
     return this._check.version.filename;
   }
 
-  submit(accepted: boolean): void {
-    this._router.navigate(['/home']);
+  submit(validated: boolean): void {
+    this._check.comment = this.form.controls.comment.value;
+    this._check.status = validated ? Status.CHECK_OK : Status.CHECK_KO;
+    let sub: Subscription = this._restService.updateWorkflowCheck(this._check).finally(() => {
+      sub.unsubscribe();
+      this._router.navigate(['/home']);
+    }).subscribe(
+      (status: number) => {
+        // ok
+      },
+      (error: Response) => {
+        // gérer erreur ?
+      }
+    );
   }
 
   /**

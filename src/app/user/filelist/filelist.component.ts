@@ -11,6 +11,7 @@ import { SessionService } from "app/services/session.service";
 import { File } from "entities/file";
 import { Project } from "entities/project";
 import { WorkflowCheck, Status, CheckType } from "entities/workflow-check";
+import { Status as VersionStatus} from "entities/version";
 
 @Component({
   selector: 'app-filelist',
@@ -127,6 +128,11 @@ export class FilelistComponent {
 
   get userId(): number {
     return this._session.userId;
+  }
+
+  canDownload(file: File): boolean {
+    return file.version.status == VersionStatus.VALIDATED || file.author.id == this._session.userId
+           || this.hasControl(file.version.id) || this.hasValidation(file.version.id);
   }
 
   add(): void {

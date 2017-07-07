@@ -14,6 +14,8 @@ export class VersionStatusPipe implements PipeTransform {
         return 'Contrôlé';
       case Status.VALIDATED:
         return 'Validé';
+      case Status.REFUSED:
+        return 'Refusé';
       default:
         return '';
     }

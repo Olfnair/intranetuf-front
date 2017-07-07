@@ -1,7 +1,7 @@
 // Angular
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 
 // Material
 import { MaterialModule } from '@angular/material';
@@ -37,7 +37,6 @@ import { UpDownComponent } from "./up-down";
   ],
   imports: [ // modules importés
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     MaterialModule,
   ],

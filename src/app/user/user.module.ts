@@ -1,7 +1,7 @@
 // Angular
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 
 // Material
@@ -44,7 +44,6 @@ import { CheckVersionComponent } from './check-version/check-version.component';
     MaterialModule,
     RouterModule,
     ReactiveFormsModule,
-    FormsModule,
     GuiModule,
     PipesModule,
     ServicesModule

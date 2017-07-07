@@ -118,7 +118,6 @@ export class RestApiService {
     });
   }
 
-  // trié croissant sur type puis version
   fetchWorkflowCheckByStatusUserVersions(status: Status, userId: number, files: File[]): Observable<WorkflowCheck[]> {
     let versionIds: RestLong[] = [];
     files.forEach((file: File) => {
@@ -126,6 +125,12 @@ export class RestApiService {
     });
     return this._http.post(this._backendURL.workflowCheck + '/' + userId + '/' + status, {restLong: versionIds}, this._session.options()).map((res: Response) => {
       return res.json().workflowCheck;
+    });
+  }
+
+  updateWorkflowCheck(check: WorkflowCheck): Observable<number> {
+    return this._http.put(this._backendURL.workflowCheck + '/' + check.id, {workflowCheck: check}, this._session.options()).map((res: Response) => {
+      return res.status;
     });
   }
 

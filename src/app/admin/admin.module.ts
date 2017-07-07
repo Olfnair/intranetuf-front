@@ -1,7 +1,7 @@
 // Angular
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 
 // Material
 import { MaterialModule } from '@angular/material';
@@ -30,7 +30,6 @@ import { RightslistComponent } from "./rightslist/rightslist.component";
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
-    FormsModule,
     GuiModule,
     PipesModule,
     ServicesModule
