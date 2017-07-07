@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { User } from "entities/user";
+import { DefaultRoleChecker } from "app/shared/role-checker";
 
 export enum ComponentState {
   LIST = 0,
@@ -18,7 +19,7 @@ export enum ComponentState {
   templateUrl: './userlist.component.html',
   styleUrls: ['./userlist.component.css']
 })
-export class UserlistComponent implements OnInit {
+export class UserlistComponent extends DefaultRoleChecker {
   
   private _users: Observable<User[]> = undefined;
   private _state: number = ComponentState.LIST;
@@ -27,13 +28,10 @@ export class UserlistComponent implements OnInit {
   private _selectedUser: User = undefined;
 
   constructor(
-    private _session: SessionService,
+    session: SessionService,
     private _restService: RestApiService,
     private _router: Router
-  ) { }
-
-  ngOnInit() {
-  }
+  ) { super(session); }
 
   updateUsers(): void {
     this._users = this._restService.fetchUsers();
@@ -91,7 +89,7 @@ export class UserlistComponent implements OnInit {
   }
 
   adminLoginAs(login: string): void {
-    let sub: Subscription = this._session.adminLoginAs(login).finally(() => {
+    let sub: Subscription = this.session.adminLoginAs(login).finally(() => {
       sub.unsubscribe();
     }).subscribe((success: boolean) => {
       if(success) {
@@ -99,5 +97,4 @@ export class UserlistComponent implements OnInit {
       }
     });
   }
-
 }

@@ -57,6 +57,13 @@ export class RestApiService {
     });
   }
 
+  // supression logique
+  deleteFile(file: File) {
+    return this._http.delete(this._backendURL.file + '/' + file.id, this._session.options()).map((res: Response) => {
+      return res.status;
+    });
+  }
+
   /**
    * Function to create project
    *

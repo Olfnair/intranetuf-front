@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { SessionService } from "app/services/session.service";
 
 @Component({
@@ -6,7 +6,7 @@ import { SessionService } from "app/services/session.service";
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
 
   private _displayListButton: boolean = false;
 
@@ -14,9 +14,6 @@ export class HeaderComponent implements OnInit {
   private _toggleOnSmall$: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private _session: SessionService) { }
-
-  ngOnInit() {
-  }
 
   @Output('toggleOnLarge') get toggleOnLarge$(): EventEmitter<void> {
     return this._toggleOnLarge$;
@@ -38,8 +35,8 @@ export class HeaderComponent implements OnInit {
     return this._session.logged;
   }
 
-  get admin(): boolean {
-    return true;
+  get isAdmin(): boolean {
+    return this._session.userIsAdmin || this._session.userIsSuperAdmin;
   }
 
   get userLogin(): string {

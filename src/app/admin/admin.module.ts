@@ -2,6 +2,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 
 // Material
 import { MaterialModule } from '@angular/material';
@@ -16,13 +17,15 @@ import { UserFormComponent } from "./user-form/user-form.component";
 import { AdminPanelComponent } from "./admin-panel/admin-panel.component";
 import { UserlistComponent } from "./userlist/userlist.component";
 import { RightslistComponent } from "./rightslist/rightslist.component";
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
     UserFormComponent,
     AdminPanelComponent,
     UserlistComponent,
-    RightslistComponent
+    RightslistComponent,
+    UnauthorizedComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
   ],
@@ -30,6 +33,7 @@ import { RightslistComponent } from "./rightslist/rightslist.component";
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    RouterModule,
     GuiModule,
     PipesModule,
     ServicesModule

@@ -1,0 +1,14 @@
+.unauthorized {
+  margin: 3em auto;
+  text-align: center;
+}
+
+.homeButton {
+  margin: 1.5em auto;
+  text-align: center;
+}
+
+.warning {
+  text-align: center;
+  color: #ff0000;
+}

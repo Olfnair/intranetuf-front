@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { SessionService } from "app/services/session.service";
@@ -9,13 +9,15 @@ import { Project } from "entities/project";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
   private _sidenavShowOnLarge: boolean = true;
   private _sidenavShowOnSmall: boolean = false;
 
-  private _routerEventsSub: Subscription;
+  private _routerEventsSub: Subscription = undefined;
 
-  constructor(private _router: Router, private _session: SessionService) {
+  constructor(private _router: Router, private _session: SessionService) { }
+
+  ngOnInit() {
     this._routerEventsSub = this._router.events.subscribe((event) => {
       if(this.showProjectList()) {
         this._session.readyForContent = false;
@@ -24,7 +26,9 @@ export class AppComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._routerEventsSub.unsubscribe();
+    if(this._routerEventsSub) {
+      this._routerEventsSub.unsubscribe();
+    }
   }
 
   get showSidenav(): boolean {

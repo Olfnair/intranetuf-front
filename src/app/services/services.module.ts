@@ -2,6 +2,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HttpModule } from "@angular/http";
+import { RouterModule } from "@angular/router";
 
 // Services
 import { FileUploadService } from "./file-upload.service";
@@ -16,7 +17,8 @@ import { SessionService } from "./session.service";
   ],
   imports: [ // modules importés
     CommonModule,
-    HttpModule
+    HttpModule,
+    RouterModule,
   ]
 })
 export class ServicesModule {}

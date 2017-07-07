@@ -12,7 +12,7 @@
     <md-icon>account_box</md-icon>
     <label>{{userLogin}}</label>
   </a>
-  <a *ngIf="logged && admin" class="right" [routerLink]="['/admin']" mdTooltip="Administration" mdTooltipPosition="below">
+  <a *ngIf="logged && isAdmin" class="right" [routerLink]="['/admin']" mdTooltip="Administration" mdTooltipPosition="below">
     <md-icon>build</md-icon>
     <label>Administration</label>
   </a>

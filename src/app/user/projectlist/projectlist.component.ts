@@ -5,6 +5,7 @@ import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { AddProjectComponent } from "app/user/projectlist/add-project/add-project.component";
 import { NavList, NavListSelection } from "app/gui/nav-list";
+import { DefaultRoleChecker } from "app/shared/role-checker";
 import { Project } from "entities/project";
 
 @Component({
@@ -22,14 +23,23 @@ export class ProjectlistComponent extends NavList implements OnInit {
   // ref sur le projet sélectionné
   private _selectedProject: Project = undefined;
 
+  private _roleChecker: DefaultRoleChecker;
+
   constructor(
     private _restService: RestApiService,
     private _session: SessionService,
     private _dialog: MdDialog
-  ) { super(); }
+  ) {
+    super();
+    this._roleChecker = new DefaultRoleChecker(this._session);
+  }
 
   ngOnInit() {
     this._loadProjects();
+  }
+
+  get roleChecker(): DefaultRoleChecker {
+    return this._roleChecker;
   }
 
   private _loadProjects(): void {

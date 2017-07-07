@@ -8,6 +8,8 @@ import 'rxjs/Rx';
 import { environment } from "environments/environment";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { RightsChecker } from "app/shared/rights-checker";
+import { DefaultRoleChecker } from "app/shared/role-checker";
 import { File } from "entities/file";
 import { Project } from "entities/project";
 import { WorkflowCheck, Status, CheckType } from "entities/workflow-check";
@@ -31,11 +33,17 @@ export class FilelistComponent {
                + environment.backend.port
                + environment.backend.endpoints.download;
 
+  private _rightsChecker: RightsChecker;
+  private _roleChecker: DefaultRoleChecker; 
+
   constructor(
     private _session: SessionService,
     private _restService: RestApiService,
     private _router: Router
-  ) { }
+  ) {
+    this._rightsChecker = new RightsChecker(this._session);
+    this._roleChecker = new DefaultRoleChecker(this._session);
+  }
 
   private _resetChecksMap(): void {
     this._controls = new Map<number, WorkflowCheck>();
@@ -130,6 +138,22 @@ export class FilelistComponent {
     return this._session.userId;
   }
 
+  userCanAddFile(): boolean {
+    return this._roleChecker.userIsAdmin() || this._rightsChecker.userCanAddFiles();
+  }
+
+  userCanDeleteFile(): boolean {
+    return this._roleChecker.userIsAdmin() || this._rightsChecker.userCanDeleteFiles();
+  }
+
+  userCanEditProject(): boolean {
+    return this._roleChecker.userIsAdmin() || this._rightsChecker.userCanEditProject();
+  }
+
+  userCanDeleteProject(): boolean {
+    return this._roleChecker.userIsAdmin() || this._rightsChecker.userCanDeleteProject();
+  }
+
   canDownload(file: File): boolean {
     return file.version.status == VersionStatus.VALIDATED || file.author.id == this._session.userId
            || this.hasControl(file.version.id) || this.hasValidation(file.version.id);
@@ -171,6 +195,19 @@ export class FilelistComponent {
 
   hasValidation(versionId: number): boolean {
     return ! this.hasControl(versionId) && this._hasCheck(CheckType.VALIDATION, versionId);
+  }
+
+  deleteFile(file: File): void {
+    let sub : Subscription = this._restService.deleteFile(file).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (status: number) => {
+        this._loadFiles();
+      },
+      (error: Response) => {
+
+      }
+    );
   }
 
 }

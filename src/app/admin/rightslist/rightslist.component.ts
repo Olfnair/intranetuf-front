@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { MdCheckboxChange } from "@angular/material";
 import { User } from "entities/user";
 import { ProjectRight, Right } from "entities/project-right";
@@ -12,7 +12,7 @@ import { Observer } from "rxjs/Observer";
   templateUrl: './rightslist.component.html',
   styleUrls: ['./rightslist.component.css']
 })
-export class RightslistComponent implements OnInit {
+export class RightslistComponent implements OnDestroy {
 
   private _user: User = undefined;
   private _rights: ProjectRight[] = [];
@@ -25,9 +25,6 @@ export class RightslistComponent implements OnInit {
   private _done$: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private _restService: RestApiService) { }
-
-  ngOnInit() {
-  }
 
   ngOnDestroy() {
     this._unsub();
@@ -84,7 +81,7 @@ export class RightslistComponent implements OnInit {
   }
 
   hasRight(projectRight: ProjectRight, right: Right): boolean {
-    return (projectRight.rights & right) > 0;
+    return ProjectRight.hasRight(projectRight.rights, right);
   }
 
   isSameAsOriginal(projectRight: ProjectRight): boolean {

@@ -29,7 +29,7 @@ export class ProjectRight {
     this.user = user;
   }
 
-  hasRight(right: Right): boolean {
-    return (this.rights & right) > 0;
+  public static hasRight(projectRights: number, rightToCheck: Right): boolean {
+    return (projectRights & rightToCheck) > 0;
   }
 }

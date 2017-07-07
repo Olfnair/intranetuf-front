@@ -5,9 +5,9 @@
 </md-card>
 
 <datatable *ngIf="project"
-    [options] = "{addButton: true, addButtonTooltip: 'Ajouter un fichier', emptyMessage: 'Ce projet ne contient pas encore de fichier.'}"
+    [options] = "{addButton: userCanAddFile(), addButtonTooltip: 'Ajouter un fichier', emptyMessage: 'Ce projet ne contient pas encore de fichier.'}"
     [dataObs]="filesObs"
-    [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '']"
+    [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '', '']"
     (addButtonClick)="add()">
   <datatable-title>
     <h2>Projet : {{project.name}}</h2>
@@ -44,6 +44,14 @@
             [routerLink]="['/check', getValidationAsParameter(file.version.id)]">
           Valider
         </a>
+      </span>
+    </td>
+    <td>
+      <span *ngIf="userCanDeleteFile()">
+        <button md-raised-button class="smallButton" type="button" color="warn"
+            mdTooltip="Supprimer" mdTooltipPosition="above" (click)="deleteFile(file)">
+          <md-icon>clear</md-icon>
+        </button>
       </span>
     </td>
   </ng-template>
