@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy, Inject } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from "@angular/http";
+import { Http, Response } from "@angular/http";
 import { Router } from "@angular/router";
 import { environment } from "environments/environment";
 import { Observable, Subscription } from "rxjs";
 import 'rxjs/add/operator/map';
+import { RestApiService } from "app/services/rest-api.service";
 import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
 import { Project } from "entities/project";
@@ -30,24 +31,13 @@ export class SessionService implements OnDestroy {
   private _roleLoading: boolean = false;
   private _rightsLoading: boolean = false;
 
-  // backend urls
-  private _authUrl: string = environment.backend.protocol + "://"
-                           + environment.backend.host + ":"
-                           + environment.backend.port
-                           + environment.backend.endpoints.auth;
-
-  private _rightsUrl: string = environment.backend.protocol + "://"
-                           + environment.backend.host + ":"
-                           + environment.backend.port
-                           + environment.backend.endpoints.projectRight;
-
   constructor(
     private _http: Http,
     private _router: Router,
+    private _restService: RestApiService
   ) {
     this._routerEventsSub = this._router.events.subscribe((event) => {
       this.loadRole();
-      this.loadRights();
     });
   }
 
@@ -70,8 +60,10 @@ export class SessionService implements OnDestroy {
         this._rightsLoading = false;
         sub.unsubscribe();
       }).subscribe(
-        (projectRights: ProjectRight) => {
-          this._userRights = projectRights.rights;
+        (projectRights: ProjectRight[]) => {
+          if(projectRights.length > 0) {
+            this._userRights = projectRights[0].rights;
+          }
         },
         (error: Response) => {
           // gérer erreur ?
@@ -174,6 +166,7 @@ export class SessionService implements OnDestroy {
     this.logout();
     this._userLogin = login;
     this._authToken = res.json();
+    this._restService.authToken = this._authToken;
     this._userRole = this._authToken.r;
     this._logged = true;
     return true;
@@ -185,13 +178,13 @@ export class SessionService implements OnDestroy {
    * @returns {Observable<boolean>}
    */
   login(login: string, pwd: string): Observable<boolean> {
-    return this._http.post(this._authUrl, {credentials: new Credentials(login, pwd)}).map((res: Response) => {
+    return this._restService.login(new Credentials(login, pwd)).map((res: Response) => {
       return this._login(login, res);
     });
   }
 
   adminLoginAs(login: string): Observable<boolean> {
-    return this._http.get(this._authUrl + '/adminLoginAs/' + login, this.options('text/plain')).map((res: Response) => {
+    return this._restService.adminLoginAs(login).map((res: Response) => {
       return this._login(login, res);
     });
   }
@@ -199,25 +192,16 @@ export class SessionService implements OnDestroy {
   logout(): void {
     this._userLogin = undefined;
     this._authToken = undefined;
+    this._restService.authToken = undefined;
     this._userRole = undefined;
     this._logged = false;
     this._selectedProject = undefined;
   }
 
-  getRightsForProject(project: Project) : Observable<ProjectRight> {
-    return this._http.get(this._rightsUrl + '/' + project.id, this.options()).map((res: Response) => {
+  getRightsForProject(project: Project) : Observable<ProjectRight[]> {
+    return this._restService.getRightsForProject(project).map((res: Response) => {
       return res.json().projectRight;
     });
-  }
-
-  /**
-     * Function to return request options
-     *
-     * @returns {RequestOptions}
-     */
-  public options(accept: string = 'application/json', headerList: Object = {}): RequestOptions {
-    const headers: Headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + JSON.stringify(this._authToken) }, headerList));
-    return new RequestOptions({ headers: headers });
   }
 
 }

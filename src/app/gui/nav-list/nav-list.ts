@@ -3,6 +3,7 @@ import { NavListSelection } from "app/gui/nav-list";
 
 export class NavList {
   private _title: string = undefined;
+  private _error: string = undefined;
 
   private _selectables: NavListSelection[] = undefined;
   private _select$: EventEmitter<NavListSelection> = new EventEmitter<NavListSelection>();
@@ -19,6 +20,14 @@ export class NavList {
 
   get title(): string {
     return this._title;
+  }
+
+  @Input() set error(error: string) {
+    this._error = error;
+  }
+
+  get error(): string {
+    return this._error;
   }
 
   @Input() set selectables(selectables: NavListSelection[]) {
