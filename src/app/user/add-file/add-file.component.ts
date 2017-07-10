@@ -10,12 +10,12 @@ import { GuiForm } from "app/gui/gui-form";
 import { GuiProgressComponent } from "app/gui/gui-progress";
 import { DatatableSelection } from "app/gui/datatable";
 import { UserContainer } from "app/user/add-file/user-container";
-import { CheckType } from "entities/workflow-check";
 import { File as FileEntity } from "entities/file";
 import { Project } from "entities/project";
 import { Right } from "entities/project-right";
 import { User } from "entities/user";
 import { Version } from "entities/version";
+import { WorkflowCheck, CheckType } from "entities/workflow-check";
 
 @Component({
   selector: 'app-add-file',
@@ -53,6 +53,32 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
       this._newVersionMode = (this._file.id != undefined);
       this._userContainers.push(new UserContainer('Contrôleurs', CheckType.CONTROL, this._project, Right.CONTROLFILE, this._restService));
       this._userContainers.push(new UserContainer('Valideurs', CheckType.VALIDATION, this._project, Right.VALIDATEFILE, this._restService));
+      if(this._newVersionMode) {
+        let sub: Subscription = this._restService.getWorkflowChecksForFile(this._file.id).finally(() => {
+          sub.unsubscribe();
+        }).subscribe(
+          (checks: WorkflowCheck[]) => {
+            let old_order = 0;
+            let new_order = 0;
+            checks.forEach((check: WorkflowCheck) => { // on suppose triés ASC sur Type puis order
+              new_order = check.order_num;
+              this._userContainers.forEach((container: UserContainer) => {
+                if(container.type == check.type) {
+                  container.users.push(check.user);
+                  container.chained.push(new_order > old_order ? true : false);
+                }
+              });
+              old_order = new_order;
+            });
+            this._userContainers.forEach((container: UserContainer) => {
+              container.update();
+            });
+          },
+          (error: Response) => {
+            // gestion d'erreur
+          }
+        );
+      }
     });
   }
 

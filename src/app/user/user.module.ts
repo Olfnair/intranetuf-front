@@ -22,6 +22,7 @@ import { FilelistComponent } from "./filelist/filelist.component";
 import { AddProjectComponent } from "./projectlist/add-project/add-project.component";
 import { AddFileComponent } from "./add-file/add-file.component";
 import { CheckVersionComponent } from './check-version/check-version.component';
+import { VersionDetailsComponent } from './version-details/version-details.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { CheckVersionComponent } from './check-version/check-version.component';
     FilelistComponent,
     AddProjectComponent,
     AddFileComponent,
-    CheckVersionComponent
+    CheckVersionComponent,
+    VersionDetailsComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     AddProjectComponent
@@ -57,7 +59,8 @@ import { CheckVersionComponent } from './check-version/check-version.component';
     FilelistComponent,
     AddProjectComponent,
     AddFileComponent,
-    CheckVersionComponent
+    CheckVersionComponent,
+    VersionDetailsComponent
   ]
 })
 export class UserModule {}

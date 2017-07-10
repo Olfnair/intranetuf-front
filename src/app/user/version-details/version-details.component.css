@@ -1,0 +1,32 @@
+.details {
+  margin: 0 auto;
+  width: 90%;
+}
+
+.checkContainer {
+  margin-bottom: 1.5em;
+}
+
+.commentCell {
+  max-width: 200px;
+}
+
+.fileSummary {
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  margin-bottom: 1.5em;
+}
+
+.fileSummary h1 {
+  font-size: 1.5em;
+  margin-bottom: 0.3em;
+}
+
+.keyText {
+  font-size: 1.35em;
+  font-weight: bold;
+}
+
+.valueText {
+  font-size: 1.3em;
+}

@@ -40,7 +40,8 @@ export class UserContainer {
   constructor(
     title: string,
     type: CheckType = CheckType.CONTROL,
-    project: Project, right: Right = 0,
+    project: Project,
+    right: Right = 0,
     restService: RestApiService
   ) {
     this._restService = restService;
@@ -72,6 +73,9 @@ export class UserContainer {
   set right(right: Right) {
     this.reset();
     this._right = right;
+    if(! this._right) {
+      return;
+    }
     let sub: Subscription = this._restService.fetchUsersByRightOnProject(this._project, right).subscribe(
       (users: User[]) => {
         this._availableUsers = users;
@@ -102,11 +106,23 @@ export class UserContainer {
     return this._project;
   }
 
+  get type(): CheckType {
+    return this._type;
+  }
+
   get right(): Right {
     return this._right;
   }
 
-  get users(): Observable<User[]> {
+  get users(): User[] {
+    return this._users;
+  }
+
+  get chained(): boolean[] {
+    return this._chained;
+  }
+
+  get usersObs(): Observable<User[]> {
     return this._usersObs;
   }
 

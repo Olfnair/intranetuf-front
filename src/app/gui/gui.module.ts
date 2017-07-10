@@ -17,6 +17,7 @@ import { NavListComponent } from "./nav-list"
 import { SidenavLayoutComponent, SlSidenav, SlContent } from "./sidenav-layout";
 import { SortButtonComponent } from "./sort-button";
 import { UpDownComponent } from "./up-down";
+import { StatusIconComponent } from './status-icon/status-icon.component';
 
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
@@ -30,6 +31,7 @@ import { UpDownComponent } from "./up-down";
     SidenavLayoutComponent, SlSidenav, SlContent,
     SortButtonComponent,
     UpDownComponent,
+    StatusIconComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     GuiProgressComponent,
@@ -50,7 +52,8 @@ import { UpDownComponent } from "./up-down";
     NavListComponent,
     SidenavLayoutComponent, SlSidenav, SlContent,
     SortButtonComponent,
-    UpDownComponent
+    UpDownComponent,
+    StatusIconComponent
   ]
 })
 export class GuiModule {}

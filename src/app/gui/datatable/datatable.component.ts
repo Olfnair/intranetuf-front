@@ -46,6 +46,9 @@ export class DatatableComponent<T> {
   private _selectAllTrue: boolean = false;
   private _selectAllFalse: boolean = false;
 
+  // si le displayToggle est actif
+  private _showContent: boolean = false;
+
   /* options :
    * selectionCol: boolean => Crée une colonne de sélection pour les rangées : émet (selectedDataUpdate) quand les données selectionnées changent
    * addButton: boolean => Bouton pour ajouter des données : émet (addButtonClick) quand on click dessus
@@ -168,6 +171,10 @@ export class DatatableComponent<T> {
     return this._columns.length + (this._options.selectionCol ? 1 : 0);
   }
 
+  get showContent(): boolean {
+    return this._showContent;
+  }
+
   add(): void {
     this._addButtonClick$.emit();
   }
@@ -215,5 +222,9 @@ export class DatatableComponent<T> {
       }
     }
     this._selectedData = newSelectedData;
+  }
+
+  toggleDisplay(): void {
+    this._showContent = ! this._showContent;
   }
 }

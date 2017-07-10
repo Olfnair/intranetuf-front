@@ -141,4 +141,16 @@ export class RestApiService {
     });
   }
 
+  getWorkflowChecksForVersion(versionId: number): Observable<WorkflowCheck[]> {
+    return this._http.get(this._backendURL.workflowCheck + '/forVersion/' + versionId, this._session.options()).map((res: Response) => {
+      return res.json().workflowCheck;
+    });
+  }
+
+  getWorkflowChecksForFile(fileId: number): Observable<WorkflowCheck[]> {
+    return this._http.get(this._backendURL.workflowCheck + '/forLastVersion/' + fileId, this._session.options()).map((res: Response) => {
+      return res.json().workflowCheck;
+    });
+  }
+
 }

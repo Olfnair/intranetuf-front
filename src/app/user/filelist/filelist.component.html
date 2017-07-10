@@ -5,7 +5,11 @@
 </md-card>
 
 <datatable *ngIf="project"
-    [options] = "{addButton: userCanAddFile(), addButtonTooltip: 'Ajouter un fichier', emptyMessage: 'Ce projet ne contient pas encore de fichier.'}"
+    [options]="{
+      addButton: userCanAddFile(),
+      addButtonTooltip: 'Ajouter un fichier',
+      emptyMessage: 'Ce projet ne contient pas encore de fichier.'
+    }"
     [dataObs]="filesObs"
     [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '', '']"
     (addButtonClick)="add()">
@@ -14,7 +18,11 @@
   </datatable-title>
   <ng-template let-file="item">
     <td>
-      <span mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0">{{file.version?.filename | truncate:30}}</span>
+      <a
+          [routerLink]="['/version_details', encodeURIFile(file)]"
+          mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0">
+        {{file.version?.filename | truncate:30}}
+      </a>
     </td>
     <td>{{file.author?.firstname}} {{file.author?.name}}</td>
     <td>{{file.version?.num}}</td>
