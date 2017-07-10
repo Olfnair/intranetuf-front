@@ -1,6 +1,11 @@
 <md-card>
-  <ng-content select="datatable-title"></ng-content>
-  <md-card-content>
+  <table>
+    <tr>
+      <td *ngIf="options.displayToggle"><md-icon class="toggle" color="primary" (click)="toggleDisplay()">menu</md-icon></td>
+      <td><ng-content select="datatable-title"></ng-content></td>
+    </tr>
+  </table>
+  <md-card-content *ngIf="! options.displayToggle || options.displayToggle && showContent">
     <table class="dataTable" cellspacing="0">
       <thead>
         <ng-content select="datatable-header"></ng-content>

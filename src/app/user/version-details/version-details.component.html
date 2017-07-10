@@ -1,0 +1,52 @@
+<md-card class="details">
+  <md-card-title>Fichier : {{file.version?.filename}}</md-card-title>
+  
+  <md-card-content>
+    <md-list dense class="fileSummary">
+      <h1 md-subheader>Sommaire</h1>
+      <md-list-item>
+        <span class="keyText">Auteur :</span>
+        <span class="valueText">&nbsp;{{file.author?.firstname}} {{file.author?.name}}</span>
+      </md-list-item>
+      <md-list-item>
+        <span class="keyText">Version :</span>
+        <span class="valueText">&nbsp;{{file.version?.num}}</span>
+      </md-list-item>
+      <md-list-item>
+        <span class="keyText">Date d'upload :</span>
+        <span class="valueText">&nbsp;{{file.version?.date_upload?.day | numberLen:2}}/{{file.version?.date_upload?.month | numberLen:2}}/{{file.version?.date_upload?.year | numberLen:4}}</span>
+      </md-list-item>
+      <md-list-item>
+        <span class="keyText">Statut :</span>
+        <span class="valueText">&nbsp;{{file.version?.status | versionStatus}}&nbsp;</span>
+        <status-icon [status]="fileIconStatus()"></status-icon>
+      </md-list-item>
+    </md-list>
+
+    <section *ngFor="let container of checkContainers" class="checkContainer">
+      <datatable
+          [options]="{displayToggle: true, emptyMessage: 'Pas d\'action sur ce fichier.'}"
+          [dataObs]="container.checksObs"
+          [columns]="['Ordre', 'Nom', 'Prénom', 'Statut', 'Commentaire']">
+        <datatable-title>
+          <h2>{{container.title}} <status-icon [status]="checksStatus(container)"></status-icon></h2>
+        </datatable-title>
+        <ng-template let-check="item">
+          <td>{{check.order_num + 1}}</td>
+          <td>{{check.user.name}}</td>
+          <td>{{check.user.firstname}}</td>
+          <td>{{check.status | checkStatus}}</td>
+          <td class="commentCell">
+            <p>{{check.comment}}</p>
+          </td>
+        </ng-template>
+      </datatable>
+    </section>
+  </md-card-content>
+
+  <md-card-actions align="end">
+    <button md-raised-button class="submitButton" color="primary" type="button" [routerLink]="['/home']">
+      Retour
+    </button>
+  </md-card-actions>
+</md-card>

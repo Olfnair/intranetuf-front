@@ -13,7 +13,7 @@ import { DefaultRoleChecker } from "app/shared/role-checker";
 import { File } from "entities/file";
 import { Project } from "entities/project";
 import { WorkflowCheck, Status, CheckType } from "entities/workflow-check";
-import { Status as VersionStatus} from "entities/version";
+import { Status as VersionStatus, Version } from "entities/version";
 
 @Component({
   selector: 'app-filelist',
@@ -165,6 +165,10 @@ export class FilelistComponent {
 
   downloadLink(versionId: number): string {
     return this._url + versionId + '?token="' + encodeURIComponent(JSON.stringify(this._session.authToken)) + '"';
+  }
+
+  encodeURIFile(file: File): string {
+    return encodeURIComponent(JSON.stringify(file));
   }
 
   private _getCheckAsParameter(type: CheckType, versionId: number): string {

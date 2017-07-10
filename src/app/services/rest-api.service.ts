@@ -164,6 +164,18 @@ export class RestApiService {
     return this._http.get(this._backendURL.projectRight + '/' + project.id, this.options());
   }
 
+  getWorkflowChecksForVersion(versionId: number): Observable<WorkflowCheck[]> {
+    return this._http.get(this._backendURL.workflowCheck + '/forVersion/' + versionId, this.options()).map((res: Response) => {
+      return res.json().workflowCheck;
+    });
+  }
+
+  getWorkflowChecksForFile(fileId: number): Observable<WorkflowCheck[]> {
+    return this._http.get(this._backendURL.workflowCheck + '/forLastVersion/' + fileId, this.options()).map((res: Response) => {
+      return res.json().workflowCheck;
+    });
+  }
+
   /**
      * Function to return request options
      *

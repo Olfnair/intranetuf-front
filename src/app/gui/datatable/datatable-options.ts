@@ -15,5 +15,8 @@ export class DatatableOptions {
   // message si la table est vide
   public emptyMessage: string = undefined;
 
+  // ajoute un bouton qui permet d'afficher ou non le contenu de la table
+  public displayToggle = false;
+
   constructor() { }
 }

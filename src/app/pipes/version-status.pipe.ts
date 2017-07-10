@@ -6,7 +6,7 @@ import { Status } from "entities/version";
 })
 export class VersionStatusPipe implements PipeTransform {
 
-  transform(status: number): string {
+  transform(status: Status): string {
     switch(status) {
       case Status.CREATED:
         return 'Créé';

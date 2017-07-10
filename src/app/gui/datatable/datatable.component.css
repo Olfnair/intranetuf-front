@@ -1,3 +1,15 @@
+.toggle {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  margin-right: 10px;
+  user-select: none;
+  cursor: pointer;
+  background-color: #bbb;
+  border: 2px solid #bbb;
+  border-radius: 2px;
+}
+
 table.dataTable {
   table-layout: auto;
   width: 100%;
