@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { MdDialog, MdDialogRef } from "@angular/material";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { ModalService } from "app/gui/modal.service";
 import { AddProjectComponent } from "app/user/projectlist/add-project/add-project.component";
 import { NavList, NavListSelection } from "app/gui/nav-list";
 import { DefaultRoleChecker } from "app/shared/role-checker";
@@ -15,10 +15,8 @@ import { Project } from "entities/project";
 })
 export class ProjectlistComponent extends NavList implements OnInit {
 
-  private _projectSubsciption: Subscription;
   private _projects: Project[] = [];
   private _progress: number = -1;
-  private _dialogRef: MdDialogRef<AddProjectComponent> = undefined;
 
   // ref sur le projet sélectionné
   private _selectedProject: Project = undefined;
@@ -28,7 +26,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
   constructor(
     private _restService: RestApiService,
     private _session: SessionService,
-    private _dialog: MdDialog
+    private _modal: ModalService
   ) {
     super();
     this._roleChecker = new DefaultRoleChecker(this._session);
@@ -43,7 +41,9 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   private _loadProjects(): void {
-    let sub: Subscription = this._projectSubsciption = this._restService.fetchProjects().subscribe(
+    let sub: Subscription = this._restService.fetchProjects().finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
       (projects: Project[]) => {
         this.selectables = [];
         this._projects = projects;
@@ -54,9 +54,6 @@ export class ProjectlistComponent extends NavList implements OnInit {
       },
       (error: Response) => {
         this.error = "Une erreur s'est produite pendant le chargement de la liste des projets.";
-      },
-      () => {
-        sub.unsubscribe();
       }
     );
   }
@@ -92,36 +89,28 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   add(): void {
-    this._dialogRef = this._dialog.open(AddProjectComponent, { data: this });
-    let addProjectDlgSub: Subscription = this._dialogRef.afterClosed()
-      .finally(() => {
-        addProjectDlgSub.unsubscribe();
-        this._dialogRef = undefined;
-      })
-      .subscribe(projectName => {
-        if (projectName) {
+    let sub : Subscription = this._modal.popup(AddProjectComponent).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (projectName: string) => {
+        if(projectName) {
           let createProjectSub: Subscription = this._restService.createProject(projectName).finally(() => {
             createProjectSub.unsubscribe();
           }).subscribe(
             (project: Project) => {
-              if(this._projectSubsciption) {
-                this._projectSubsciption.unsubscribe();
-              }
               this._selectedProject = project;
               this._loadProjects();
             },
             (error: Response) => {
-              console.log(error);
+              // gestion d'erreur
             }
           );
         }
-      });
-  }
-
-  closeAddDlg(projectName: string): void {
-    if (this._dialogRef) {
-      this._dialogRef.close(projectName);
-    }
+      },
+      (error: any) => {
+        // gestion d'erreur
+      }
+    );
   }
 
   select(selection: NavListSelection) {

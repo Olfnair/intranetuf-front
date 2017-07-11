@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MdDialog, MdDialogRef } from "@angular/material";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { Response } from "@angular/http";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { ModalService } from "app/gui/modal.service";
 import { GuiForm } from "app/gui/gui-form";
-import { GuiModal } from "app/gui/gui-modal";
 import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
 import { User } from "entities/user";
@@ -19,9 +18,6 @@ import { User } from "entities/user";
 })
 export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestroy {
   public static readonly minlength: number = 8;
-
-  //private _dialogRef: MdDialogRef<GuiModalComponent> = undefined;
-  private _modal: GuiModal;
   
   private _paramsSub: Subscription;
 
@@ -35,11 +31,8 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
     private _route: ActivatedRoute,
     private _session: SessionService,
     private _restService: RestApiService,
-    private _dialog: MdDialog
-  ) {
-    super();
-    this._modal = new GuiModal(this._dialog);
-  }
+    private _modal: ModalService
+  ) { super(); }
 
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
@@ -141,17 +134,18 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
   }
 
   infoModal(title: string, text: string, success: boolean = false): void {
-    this._dialogRef = this._dialog.open(GuiModalComponent, { data: {title: title, text: text, success: success} });
-    let modalSub: Subscription = this._dialogRef.afterClosed()
-      .finally(() => {
-        modalSub.unsubscribe();
-        this._dialogRef = undefined;
-      })
-      .subscribe((success: boolean) => {
+    let modalSub: Subscription = this._modal.info(title, text, success).finally(() => {
+      modalSub.unsubscribe();
+    }).subscribe(
+      (success: boolean) => {
         if(success) {
           this._router.navigate(['/home']);
         }
-      });
+      },
+      (error: any) => {
+        // gestion erreur
+      }
+    );
   }
 
   /**

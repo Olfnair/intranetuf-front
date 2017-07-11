@@ -1,28 +1,22 @@
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { MD_DIALOG_DATA } from '@angular/material';
 import { ProjectlistComponent } from "app/user/projectlist/projectlist.component";
+import { GuiForm } from "app/gui/gui-form";
+import { ModalService } from "app/gui/modal.service";
 
 @Component({
   selector: 'app-add-project',
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css']
 })
-export class AddProjectComponent {
-  private _form: FormGroup;
+export class AddProjectComponent extends GuiForm {
 
-  constructor(@Inject(MD_DIALOG_DATA) private _projectList: ProjectlistComponent) {
-    this._form = this._buildForm();
+  constructor(private _modal: ModalService) {
+    super();
   }
 
-  close(projectName: string): void {
-    if(this._projectList && this._form.valid) {
-      this._projectList.closeAddDlg(projectName);
-    }
-  }
-
-  get form(): FormGroup {
-    return this._form;
+  submit(): void {
+    this._modal.close(this.form.controls.name.value);
   }
 
   /**
@@ -30,9 +24,9 @@ export class AddProjectComponent {
      *
      * @returns {FormGroup}
      *
-     * @private
+     * @override
      */
-  private _buildForm(): FormGroup {
+  protected _buildForm(): FormGroup {
     return new FormGroup({
       name: new FormControl('', Validators.compose([
         Validators.required

@@ -5,11 +5,10 @@ import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import 'rxjs/Rx';
-import { MdDialog } from "@angular/material";
-import { GuiModal } from "app/gui/gui-modal";
 import { environment } from "environments/environment";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { ModalService } from "app/gui/modal.service";
 import { RightsChecker } from "app/shared/rights-checker";
 import { DefaultRoleChecker } from "app/shared/role-checker";
 import { File } from "entities/file";
@@ -37,18 +36,15 @@ export class FilelistComponent {
 
   private _rightsChecker: RightsChecker;
   private _roleChecker: DefaultRoleChecker;
-
-  private _modal: GuiModal;
   
   constructor(
     private _session: SessionService,
     private _restService: RestApiService,
     private _router: Router,
-    private _dialog: MdDialog
+    private _modal: ModalService
   ) {
     this._rightsChecker = new RightsChecker(this._session);
     this._roleChecker = new DefaultRoleChecker(this._session);
-    this._modal = new GuiModal(this._dialog);
   }
 
   private _resetChecksMap(): void {
@@ -219,7 +215,7 @@ export class FilelistComponent {
         this._loadFiles();
       },
       (error: Response) => {
-        this._modal.info('Erreur', 'Erreur lors de la tentative de suppression du fichier', false).subscribe();
+        this._modal.info('Erreur', 'Erreur lors de la tentative de suppression du fichier', false);
       }
     );
   }
@@ -245,18 +241,18 @@ export class FilelistComponent {
           this._session.selectedProject = undefined;
         }
         if(activate) {
-          this._modal.info('Info', 'Projet actif', true).subscribe();
+          this._modal.info('Projet Restauré', 'Le projet a bien été restauré.', true);
         }
         else {
-          this._modal.info('Info', 'Projet Supprimé', true).subscribe();
+          this._modal.info('Projet Supprimé', 'Le projet a bien été supprimé.', true);
         }
       },
       (error: Response) => {
         if(activate) {
-          this._modal.info('Erreur', 'Impossible d\'activer le projet', true).subscribe();
+          this._modal.info('Erreur', 'Erreur lors de la tentative de restauration du projet.', true);
         }
         else {
-          this._modal.info('Erreur', 'Impossible de supprimer le projet', true).subscribe();
+          this._modal.info('Erreur', 'Erreur lors de la tentative de suppression du projet', true);
         }
       }
     );

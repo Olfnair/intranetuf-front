@@ -14,7 +14,7 @@
     [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '', '']"
     (addButtonClick)="add()">
   <datatable-title>
-    <h2>Projet : {{project.name}} <span [class.hidden]="project.active" class="inactive">(Inactif)</span></h2>
+    <h2>Projet : {{project.name}} <span [class.hidden]="project.active" class="inactive">(Supprimé)</span></h2>
     <div class="projectActions">
       <button [class.hidden]="! userCanEditProject()" md-raised-button class="smallButton" type="button" color="accent"
           mdTooltip="Editer" mdTooltipPosition="above" (click)="editProject()">
@@ -25,7 +25,7 @@
         <md-icon>delete_forever</md-icon>
       </button>
       <button [class.hidden]="! userCanActivateProject()" md-raised-button class="smallButton" type="button" color="warn"
-          mdTooltip="Activer" mdTooltipPosition="above" (click)="activateProject(true)">
+          mdTooltip="Restaurer" mdTooltipPosition="above" (click)="activateProject(true)">
         <md-icon>replay</md-icon>
       </button>
     </div>

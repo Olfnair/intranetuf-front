@@ -18,6 +18,7 @@ import { SidenavLayoutComponent, SlSidenav, SlContent } from "./sidenav-layout";
 import { SortButtonComponent } from "./sort-button";
 import { UpDownComponent } from "./up-down";
 import { StatusIconComponent } from './status-icon/status-icon.component';
+import { ModalService } from "app/gui/modal.service";
 
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
@@ -41,6 +42,9 @@ import { StatusIconComponent } from './status-icon/status-icon.component';
     CommonModule,
     ReactiveFormsModule,
     MaterialModule
+  ],
+  providers: [
+    ModalService
   ],
   exports: [ // tous les composants, pipes, directives pour un module qui importe celui-ci
     DatatableComponent, DatatableHeader, DatatableTitle, DatatableFooter,
