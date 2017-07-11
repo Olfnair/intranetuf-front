@@ -8,12 +8,10 @@
 }
 
 .commentCell {
-  max-width: 200px;
+  max-width: 35vw;
 }
 
 .fileSummary {
-  border: 1px solid #ccc;
-  border-radius: 2px;
   margin-bottom: 1.5em;
 }
 

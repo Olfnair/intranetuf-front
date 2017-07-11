@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, Inject } from '@angular/core';
-import { Http, Response } from "@angular/http";
+import { Response } from "@angular/http";
 import { Router } from "@angular/router";
 import { environment } from "environments/environment";
 import { Observable, Subscription } from "rxjs";
@@ -32,7 +32,6 @@ export class SessionService implements OnDestroy {
   private _rightsLoading: boolean = false;
 
   constructor(
-    private _http: Http,
     private _router: Router,
     private _restService: RestApiService
   ) {
@@ -95,6 +94,9 @@ export class SessionService implements OnDestroy {
   }
 
   set selectedProject(project : Project) {
+    if(project == this._selectedProject) {
+      return;
+    }
     this._selectedProject = project;
     this.loadRights();
   }
@@ -159,17 +161,14 @@ export class SessionService implements OnDestroy {
     return this._logged;
   }
 
-  private _login(login: string, res: Response): boolean {
-    if(res.status !== 200) {
-        return false;
-    }
+  private _login(login: string, res: Response): Response {
     this.logout();
     this._userLogin = login;
     this._authToken = res.json();
     this._restService.authToken = this._authToken;
     this._userRole = this._authToken.r;
     this._logged = true;
-    return true;
+    return res;
   }
 
   /**
@@ -177,13 +176,13 @@ export class SessionService implements OnDestroy {
    *
    * @returns {Observable<boolean>}
    */
-  login(login: string, pwd: string): Observable<boolean> {
+  login(login: string, pwd: string): Observable<Response> {
     return this._restService.login(new Credentials(login, pwd)).map((res: Response) => {
       return this._login(login, res);
     });
   }
 
-  adminLoginAs(login: string): Observable<boolean> {
+  adminLoginAs(login: string): Observable<Response> {
     return this._restService.adminLoginAs(login).map((res: Response) => {
       return this._login(login, res);
     });

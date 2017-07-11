@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Response } from "@angular/http";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { GuiForm } from "app/gui/gui-form";
 import { Router } from "@angular/router";
@@ -11,6 +12,7 @@ import { SessionService } from "app/services/session.service";
 })
 export class LoginComponent extends GuiForm {
   private _loginFail: boolean = false;
+  private _loginFailMessage: string = undefined;
 
   constructor(private _router: Router, private _session: SessionService) {
     super();
@@ -20,7 +22,20 @@ export class LoginComponent extends GuiForm {
     return this._loginFail;
   }
 
-  private _loginFailure(): void {
+  get loginFailMessage(): string {
+    return this._loginFailMessage;
+  }
+
+  private _loginFailure(res: Response): void {
+    if(res.status == 401) {
+      this._loginFailMessage = 'Identifiants invalides !';
+    }
+    else if(res.status == 0) {
+      this._loginFailMessage = 'Problème de connexion au serveur...';
+    }
+    else {
+      this._loginFailMessage = 'Une erreur indéterminée est survenue.';
+    }
     this._loginFail = true;
     this.reset(); 
   }
@@ -34,8 +49,8 @@ export class LoginComponent extends GuiForm {
     let login: string = this.form.value.login;
     let password: string = this.form.value.pwd;
     this._session.login(this.form.value.login, this.form.value.pwd).subscribe(
-      data => data ? this._loginSuccess() : this._loginFailure(),
-      error => this._loginFailure()
+      (success: Response) => this._loginSuccess(),
+      (error: Response) => this._loginFailure(error)
     );
   }
 

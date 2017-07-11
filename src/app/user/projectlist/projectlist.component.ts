@@ -53,7 +53,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
         this.selectedProject = this._selectedProject; // tordu mais nécessaire (on appelle la propriété qui fait des trucs en plus)
       },
       (error: Response) => {
-        this.error = "Une erreur s'est produite pendent le chargement de la liste des projets.";
+        this.error = "Une erreur s'est produite pendant le chargement de la liste des projets.";
       },
       () => {
         sub.unsubscribe();
@@ -70,10 +70,6 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   @Input() set selectedProject(project: Project) {
-    if(project == this._selectedProject) {
-      return;
-    }
-
     this._selectedProject = project;
     let i: number;
     let found: boolean = false;

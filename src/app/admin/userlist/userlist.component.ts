@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from "@angular/router";
+import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { RestApiService } from "app/services/rest-api.service";
@@ -91,10 +92,13 @@ export class UserlistComponent extends DefaultRoleChecker {
   adminLoginAs(login: string): void {
     let sub: Subscription = this.session.adminLoginAs(login).finally(() => {
       sub.unsubscribe();
-    }).subscribe((success: boolean) => {
-      if(success) {
+    }).subscribe(
+      (success: Response) => {
         this._router.navigate(['/home']);
+      },
+      (error: Response) => {
+        // TODO : afficher un beau message d'erreur (hints : utiliser le composant InfoModal)
       }
-    });
+    );
   }
 }
