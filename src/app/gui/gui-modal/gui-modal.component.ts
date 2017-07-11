@@ -1,15 +1,15 @@
 import { Component, Inject } from '@angular/core';
 import { MD_DIALOG_DATA } from '@angular/material';
-import { InfoModalData } from "app/gui/info-modal";
+import { GuiModalData } from "app/gui/gui-modal";
 
 @Component({
-  selector: 'info-modal',
-  templateUrl: './info-modal.component.html',
-  styleUrls: ['./info-modal.component.css']
+  selector: 'gui-modal',
+  templateUrl: './gui-modal.component.html',
+  styleUrls: ['./gui-modal.component.css']
 })
-export class InfoModalComponent {
+export class GuiModalComponent {
 
-  constructor(@Inject(MD_DIALOG_DATA) private _data: InfoModalData) { }
+  constructor(@Inject(MD_DIALOG_DATA) private _data: GuiModalData) { }
 
   get title(): string {
     return this._data.title;

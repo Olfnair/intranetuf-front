@@ -26,7 +26,7 @@ export class DatatableFooter { }
 })
 export class DatatableComponent<T> {
   @ContentChild(TemplateRef)
-  private _contentTpl: TemplateRef<Element>;
+  public content: TemplateRef<Element>;
 
   // events
   private _addButtonClick$: EventEmitter<void> = new EventEmitter<void>();

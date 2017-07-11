@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { MD_DIALOG_DATA } from '@angular/material';
 import { ProjectlistComponent } from "app/user/projectlist/projectlist.component";
@@ -8,14 +8,11 @@ import { ProjectlistComponent } from "app/user/projectlist/projectlist.component
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css']
 })
-export class AddProjectComponent implements OnInit {
+export class AddProjectComponent {
   private _form: FormGroup;
 
   constructor(@Inject(MD_DIALOG_DATA) private _projectList: ProjectlistComponent) {
     this._form = this._buildForm();
-  }
-
-  ngOnInit() {
   }
 
   close(projectName: string): void {

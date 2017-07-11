@@ -42,7 +42,10 @@
             <td *ngIf="options.selectionCol" class="selectionCol">
               <gui-checkbox [checked]="selectAllState" (change)="checkSelect($event, index, last)"></gui-checkbox>
             </td>
-            <ng-template [ngTemplateOutlet]="_contentTpl" [ngOutletContext]="{item: item, index: index, even: even, odd: odd, last: last}"></ng-template>
+            <ng-container 
+                *ngTemplateOutlet="content;
+                context: {item: item, index: index, even: even, odd: odd, last: last}">
+            </ng-container>
           </tr>
         </ng-template>
         <tr *ngIf="options.displayFooter" class="footer">

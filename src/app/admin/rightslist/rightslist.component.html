@@ -16,7 +16,13 @@
     <td><gui-checkbox [checked]="hasRight(right, 64)" (change)="switchRight($event, right, 64)"></gui-checkbox></td>
   </ng-template>
   <datatable-footer>
-    <button md-raised-button color="primary" type="button" (click)="submit()" [disabled]="! modified">Enregistrer les modifications</button>
-    <button md-raised-button color="warn" type="button" (click)="cancel()">Annuler</button>
+    <button md-raised-button color="primary" type="button"
+        (click)="submit()" [disabled]="! modified">
+      Enregistrer les modifications
+    </button>
+    <button md-raised-button color="warn" type="button"
+        (click)="cancel()">
+      Annuler
+    </button>
   </datatable-footer>
 </datatable>

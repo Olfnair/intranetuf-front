@@ -10,8 +10,8 @@ import { MaterialModule } from '@angular/material';
 import { DatatableComponent, DatatableHeader, DatatableTitle, DatatableFooter } from './datatable';
 import { GuiCheckboxComponent } from "./gui-checkbox";
 import { GuiFormComponent } from './gui-form';
+import { GuiModalComponent } from "./gui-modal";
 import { GuiProgressComponent } from "./gui-progress";
-import { InfoModalComponent } from "./info-modal";
 import { InputFileComponent } from "./input-file";
 import { NavListComponent } from "./nav-list"
 import { SidenavLayoutComponent, SlSidenav, SlContent } from "./sidenav-layout";
@@ -24,8 +24,8 @@ import { StatusIconComponent } from './status-icon/status-icon.component';
     DatatableComponent, DatatableHeader, DatatableTitle, DatatableFooter,
     GuiCheckboxComponent,
     GuiFormComponent,
+    GuiModalComponent,
     GuiProgressComponent,
-    InfoModalComponent,
     InputFileComponent,
     NavListComponent,
     SidenavLayoutComponent, SlSidenav, SlContent,
@@ -34,20 +34,20 @@ import { StatusIconComponent } from './status-icon/status-icon.component';
     StatusIconComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
-    GuiProgressComponent,
-    InfoModalComponent
+    GuiModalComponent,
+    GuiProgressComponent
   ],
   imports: [ // modules importés
     CommonModule,
     ReactiveFormsModule,
-    MaterialModule,
+    MaterialModule
   ],
   exports: [ // tous les composants, pipes, directives pour un module qui importe celui-ci
     DatatableComponent, DatatableHeader, DatatableTitle, DatatableFooter,
     GuiCheckboxComponent,
     GuiFormComponent,
+    GuiModalComponent,
     GuiProgressComponent,
-    InfoModalComponent,
     InputFileComponent,
     NavListComponent,
     SidenavLayoutComponent, SlSidenav, SlContent,

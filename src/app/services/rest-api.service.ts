@@ -57,14 +57,14 @@ export class RestApiService {
     });
   }
 
-  createFile(file: File) {
+  createFile(file: File): Observable<File> {
     return this._http.post(this._backendURL.file, {file: file}, this.options()).map((res: Response) => {
       return res.json().file;
     });
   }
 
   // supression logique
-  deleteFile(file: File) {
+  deleteFile(file: File): Observable<number> {
     return this._http.delete(this._backendURL.file + '/' + file.id, this.options()).map((res: Response) => {
       return res.status;
     });
@@ -81,6 +81,14 @@ export class RestApiService {
     return this._http.post(this._backendURL.project, {project: project}, this.options()).map((res: Response) => {
       return res.json().project;
     });
+  }
+
+  editProject(project: Project): Observable<Response> {
+    return this._http.put(this._backendURL.project + '/' + project.id, {project: project}, this.options());
+  }
+
+  deleteProject(project: Project): Observable<Response> {
+    return this._http.delete(this._backendURL.project + '/' + project.id, this.options());
   }
 
   /**

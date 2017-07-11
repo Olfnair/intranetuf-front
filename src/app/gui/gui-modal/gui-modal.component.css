@@ -9,3 +9,7 @@ h2 {
 .warning {
   background-color: #ffdddd;
 }
+
+.center {
+  text-align: center;
+}

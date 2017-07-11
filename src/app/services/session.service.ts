@@ -19,6 +19,8 @@ export class SessionService implements OnDestroy {
   private _selectedProject: Project = undefined;
   private _selectedAdminTab: number = 0;
 
+  private _updateProjectList = false;
+
   private _routerEventsSub: Subscription = undefined;
 
   // utilisateur
@@ -101,6 +103,16 @@ export class SessionService implements OnDestroy {
     this.loadRights();
   }
 
+  get updateProjectList(): boolean {
+    return this._updateProjectList;
+  }
+
+  set updateProjectList(update: boolean) {
+    setTimeout(() => {
+      this._updateProjectList = update;
+    }, 0);
+  }
+
   get selectedAdminTab(): number {
     return this._selectedAdminTab;
   }
@@ -155,6 +167,7 @@ export class SessionService implements OnDestroy {
 
   set authToken(authToken: AuthToken) {
     this._authToken = authToken;
+    this._restService.authToken = authToken;
   }
 
   get logged(): boolean {

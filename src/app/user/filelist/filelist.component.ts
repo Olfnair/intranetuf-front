@@ -5,6 +5,8 @@ import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import 'rxjs/Rx';
+import { MdDialog } from "@angular/material";
+import { GuiModal } from "app/gui/gui-modal";
 import { environment } from "environments/environment";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
@@ -34,15 +36,19 @@ export class FilelistComponent {
                + environment.backend.endpoints.download;
 
   private _rightsChecker: RightsChecker;
-  private _roleChecker: DefaultRoleChecker; 
+  private _roleChecker: DefaultRoleChecker;
 
+  private _modal: GuiModal;
+  
   constructor(
     private _session: SessionService,
     private _restService: RestApiService,
-    private _router: Router
+    private _router: Router,
+    private _dialog: MdDialog
   ) {
     this._rightsChecker = new RightsChecker(this._session);
     this._roleChecker = new DefaultRoleChecker(this._session);
+    this._modal = new GuiModal(this._dialog);
   }
 
   private _resetChecksMap(): void {
@@ -151,7 +157,11 @@ export class FilelistComponent {
   }
 
   userCanDeleteProject(): boolean {
-    return this._roleChecker.userIsAdmin() || this._rightsChecker.userCanDeleteProject();
+    return this._project.active && (this._roleChecker.userIsAdmin() || this._rightsChecker.userCanDeleteProject());
+  }
+
+  userCanActivateProject(): boolean {
+    return ! this._project.active && this._roleChecker.userIsAdmin();
   }
 
   canDownload(file: File): boolean {
@@ -209,7 +219,45 @@ export class FilelistComponent {
         this._loadFiles();
       },
       (error: Response) => {
+        this._modal.info('Erreur', 'Erreur lors de la tentative de suppression du fichier', false).subscribe();
+      }
+    );
+  }
 
+  editProject(): void {
+
+  }
+
+  activateProject(activate: boolean): void {
+    let obs: Observable<Response>;
+    let project: Project = new Project();
+    project.id = this._project.id;
+    project.active = activate;
+    obs = activate ? this._restService.editProject(project) : this._restService.deleteProject(project);
+    let sub: Subscription = obs.finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (res: Response) => {
+        this._session.updateProjectList = true;
+        this._project.active = activate;
+        if(! activate && ! this._roleChecker.userIsAdmin()) {
+          this._project = undefined;
+          this._session.selectedProject = undefined;
+        }
+        if(activate) {
+          this._modal.info('Info', 'Projet actif', true).subscribe();
+        }
+        else {
+          this._modal.info('Info', 'Projet Supprimé', true).subscribe();
+        }
+      },
+      (error: Response) => {
+        if(activate) {
+          this._modal.info('Erreur', 'Impossible d\'activer le projet', true).subscribe();
+        }
+        else {
+          this._modal.info('Erreur', 'Impossible de supprimer le projet', true).subscribe();
+        }
       }
     );
   }

@@ -5,7 +5,7 @@
 </app-header>
 <sidenav-layout [openSidenavOnSmall]="sidenavShowOnSmall" [openSidenavOnLarge]="sidenavShowOnLarge">
   <sl-sidenav *ngIf="showProjectList()">
-    <app-projectlist [selectedProject]="selectedProject" (loaded)="loaded()" sidenav></app-projectlist>
+    <app-projectlist [selectedProject]="selectedProject" [update]="updateProjectList" (loaded)="loaded()" sidenav></app-projectlist>
   </sl-sidenav>
   <sl-content>
     <router-outlet></router-outlet>

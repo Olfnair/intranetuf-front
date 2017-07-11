@@ -5,14 +5,14 @@
     <md-spinner *ngIf="!selectables && !error" class="spinner" mode="indeterminate"></md-spinner>
     <p *ngIf="error" class="errors">{{error}}</p>
     <md-nav-list *ngIf="selectables" dense>
-      <div *ngFor="let selectable of selectables">
+      <ng-container *ngFor="let selectable of selectables">
         <md-list-item *ngIf="isSelected(selectable)" class="selected no-padding">
           <span md-line>{{selectable.text}}</span>
         </md-list-item>
         <md-list-item *ngIf="! isSelected(selectable)" (click)="select(selectable)" class="no-padding">
           <span md-line>{{selectable.text}}</span>
         </md-list-item>
-      </div>
+      </ng-container>
     </md-nav-list>
   </md-card-content>
 </md-card>

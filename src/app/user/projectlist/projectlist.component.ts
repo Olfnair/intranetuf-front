@@ -84,6 +84,13 @@ export class ProjectlistComponent extends NavList implements OnInit {
     return this._selectedProject;
   }
 
+  @Input() set update(update: boolean) {
+    if(update) {
+      this._loadProjects();
+      this._session.updateProjectList = false;
+    }
+  }
+
   add(): void {
     this._dialogRef = this._dialog.open(AddProjectComponent, { data: this });
     let addProjectDlgSub: Subscription = this._dialogRef.afterClosed()

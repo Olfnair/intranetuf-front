@@ -55,6 +55,10 @@ export class AppComponent implements OnInit, OnDestroy {
     return this._session.selectedProject;
   }
 
+  get updateProjectList(): boolean {
+    return this._session.updateProjectList;
+  }
+
   toggleSidenavOnSmall(): void {
     this._sidenavShowOnSmall = ! this._sidenavShowOnSmall;
   }

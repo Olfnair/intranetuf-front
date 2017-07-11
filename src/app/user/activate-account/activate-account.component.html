@@ -43,32 +43,4 @@
     </button>
 
   </gui-form>
-  <!--<md-card>
-    <md-card-title class="centerText">Choix de votre mot de passe</md-card-title>
-
-    <md-card-content>
-      <form novalidate [formGroup]="form" (ngSubmit)="submit()">
-        <md-input-container class="blockContainer">
-          <input mdInput type="password" placeholder="Mot de passe" formControlName="pwd" required/>
-          <md-error *ngIf="form.controls.pwd.errors?.required">Veuillez choisir un mot de passe</md-error>
-          <md-error *ngIf="form.controls.pwd.errors?.minlength">Au moins {{minlength}} caractères</md-error>
-        </md-input-container>
-
-        <md-input-container class="blockContainer">
-          <input mdInput type="password" placeholder="Confirmation du mot de passe" formControlName="pwd_confirm" required/>
-          <md-error>Veuillez retaper le mot de passe choisi</md-error>
-        </md-input-container>
-
-        <input type="submit" [disabled]="! (form.valid && form.controls.pwd.value == form.controls.pwd_confirm.value)" style="display: none"/>
-
-        <p class="errors" *ngIf="form.controls.pwd.touched && form.controls.pwd_confirm.touched && form.controls.pwd.value != form.controls.pwd_confirm.value">
-          Les 2 mots de passe sont différents !
-        </p>
-      </form>
-    </md-card-content>
-
-    <md-card-actions>
-      <button md-raised-button class="submitButton" color="primary" type="submit" (click)="submit()" [disabled]="! (form.valid && form.controls.pwd.value == form.controls.pwd_confirm.value)">Activer mon compte</button>
-    </md-card-actions>
-  </md-card>-->
 </section>

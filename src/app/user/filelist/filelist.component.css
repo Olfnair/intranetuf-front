@@ -1,0 +1,11 @@
+.projectActions {
+  margin-bottom: 0.5em;
+}
+
+.hidden {
+  display: none;
+}
+
+.inactive {
+  color: #ff0000;
+}

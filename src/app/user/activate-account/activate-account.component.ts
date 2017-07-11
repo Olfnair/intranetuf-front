@@ -7,7 +7,7 @@ import { Response } from "@angular/http";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { GuiForm } from "app/gui/gui-form";
-import { InfoModalComponent } from "app/gui/info-modal";
+import { GuiModal } from "app/gui/gui-modal";
 import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
 import { User } from "entities/user";
@@ -20,7 +20,8 @@ import { User } from "entities/user";
 export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestroy {
   public static readonly minlength: number = 8;
 
-  private _dialogRef: MdDialogRef<InfoModalComponent> = undefined;
+  //private _dialogRef: MdDialogRef<GuiModalComponent> = undefined;
+  private _modal: GuiModal;
   
   private _paramsSub: Subscription;
 
@@ -35,11 +36,15 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
     private _session: SessionService,
     private _restService: RestApiService,
     private _dialog: MdDialog
-  ) { super(); }
+  ) {
+    super();
+    this._modal = new GuiModal(this._dialog);
+  }
 
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
-      this._authToken = JSON.parse(params['token'] || undefined);
+      this._authToken = JSON.parse(decodeURIComponent(params['token']) || undefined);
+      console.log(this._authToken);
       if (!this._authToken) {
         this._router.navigate(['/home']);
       }
@@ -136,7 +141,7 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
   }
 
   infoModal(title: string, text: string, success: boolean = false): void {
-    this._dialogRef = this._dialog.open(InfoModalComponent, { data: {title: title, text: text, success: success} });
+    this._dialogRef = this._dialog.open(GuiModalComponent, { data: {title: title, text: text, success: success} });
     let modalSub: Subscription = this._dialogRef.afterClosed()
       .finally(() => {
         modalSub.unsubscribe();
