@@ -7,6 +7,7 @@ import { RestApiService } from "app/services/rest-api.service";
 import { File } from "entities/file";
 import { Version, Status as VersionStatus } from "entities/version";
 import { WorkflowCheck, CheckType, Status as CheckStatus } from "entities/workflow-check";
+import { Base64 } from "app/shared/base64";
 
 class CheckContainer {
   private _title: string = '';
@@ -70,7 +71,7 @@ export class VersionDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
-      this._file = JSON.parse(decodeURIComponent(params['file']) || undefined);
+      this._file = JSON.parse(Base64.urlDecode(params['file']) || undefined);
       let sub: Subscription = this._restService.getWorkflowChecksForVersion(this._file.version.id).finally(() => {
         sub.unsubscribe();
       }).subscribe(

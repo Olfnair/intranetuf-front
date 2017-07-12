@@ -3,31 +3,39 @@ import { MdTabChangeEvent } from "@angular/material";
 import { SessionService } from "app/services/session.service";
 import { RoleChecker } from "app/shared/role-checker";
 
+class AdminRoleChecker extends RoleChecker { 
+  public roleCheck(): boolean {
+    return this.userIsAdmin() || this.userIsSuperAdmin();
+  }
+}
+
 @Component({
   selector: 'app-admin-panel',
   templateUrl: './admin-panel.component.html',
   styleUrls: ['./admin-panel.component.css']
 })
-export class AdminPanelComponent extends RoleChecker {
+export class AdminPanelComponent {
+
+  private _roleChecker: AdminRoleChecker = undefined;
   
-  constructor(session: SessionService) {
-    super(session);
+  constructor(private _session: SessionService) {
+    this._roleChecker = new AdminRoleChecker(this._session);
+  }
+
+  get roleChecker(): AdminRoleChecker {
+    return this._roleChecker;
   }
 
   get selectedTab(): number {
-    return this.session.selectedAdminTab;
+    return this._session.selectedAdminTab;
   }
 
   set selectedTab(tab: number) {
-    this.session.selectedAdminTab = tab;
+    this._session.selectedAdminTab = tab;
   }
 
   setSelectedTab(event: MdTabChangeEvent): void {
-    this.session.selectedAdminTab = event.index;
-  }
-
-  roleCheck(): boolean {
-    return this.userIsAdmin() || this.userIsSuperAdmin();
+    this._session.selectedAdminTab = event.index;
   }
 
 }

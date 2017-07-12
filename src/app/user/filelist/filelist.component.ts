@@ -9,8 +9,10 @@ import { environment } from "environments/environment";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
+import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { RightsChecker } from "app/shared/rights-checker";
 import { DefaultRoleChecker } from "app/shared/role-checker";
+import { Base64 } from "app/shared/base64";
 import { File } from "entities/file";
 import { Project } from "entities/project";
 import { WorkflowCheck, Status, CheckType } from "entities/workflow-check";
@@ -161,8 +163,11 @@ export class FilelistComponent {
   }
 
   canDownload(file: File): boolean {
-    return file.version.status == VersionStatus.VALIDATED || file.author.id == this._session.userId
-           || this.hasControl(file.version.id) || this.hasValidation(file.version.id);
+    return file.version.status == VersionStatus.VALIDATED
+        || file.author.id == this._session.userId
+        || this.hasControl(file.version.id)
+        || this.hasValidation(file.version.id)
+        || this._roleChecker.userIsAdmin();
   }
 
   add(): void {
@@ -170,11 +175,11 @@ export class FilelistComponent {
   }
 
   downloadLink(versionId: number): string {
-    return this._url + versionId + '?token="' + encodeURIComponent(JSON.stringify(this._session.authToken)) + '"';
+    return this._url + versionId + '?token=' + Base64.urlEncode(JSON.stringify(this._session.authToken));
   }
 
-  encodeURIFile(file: File): string {
-    return encodeURIComponent(JSON.stringify(file));
+  base64UrlEncode(file: File): string {
+    return Base64.urlEncode(JSON.stringify(file));
   }
 
   private _getCheckAsParameter(type: CheckType, versionId: number): string {
@@ -182,7 +187,7 @@ export class FilelistComponent {
     if(! map) { return ''; }
     let check: WorkflowCheck = map.get(versionId);
     if(! check) { return ''; }
-    return encodeURIComponent(JSON.stringify(check));
+    return Base64.urlEncode(JSON.stringify(check));
   }
 
   getControlAsParameter(versionId: number): string {
@@ -221,7 +226,37 @@ export class FilelistComponent {
   }
 
   editProject(): void {
-
+    let sub : Subscription = this._modal.popup(ChoseProjectNameComponent, {
+      title: "Nom du projet",
+      errorText: "Veuillez choisir un nom de projet",
+      submitText: "Changer le nom",
+      cancelText: "Annuler"
+    }).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (projectName: string) => {
+        if(! projectName) {
+          return;
+        }
+        let project: Project = new Project();
+        project.id = this._project.id;
+        project.name = projectName;
+        let restSub: Subscription = this._restService.editProject(project).finally(() => {
+          restSub.unsubscribe();
+        }).subscribe(
+          (res: Response) => {
+            this._session.updateProjectList = true;
+            this._project.name = projectName;
+          },
+          (error: Response) => {
+            this._modal.info('Erreur', 'Erreur lors du changment de nom du projet.', false);
+          }
+        );
+      },
+      (error: any) => {
+        // gestion d'erreur
+      }
+    );
   }
 
   activateProject(activate: boolean): void {
@@ -249,10 +284,10 @@ export class FilelistComponent {
       },
       (error: Response) => {
         if(activate) {
-          this._modal.info('Erreur', 'Erreur lors de la tentative de restauration du projet.', true);
+          this._modal.info('Erreur', 'Erreur lors de la tentative de restauration du projet.', false);
         }
         else {
-          this._modal.info('Erreur', 'Erreur lors de la tentative de suppression du projet', true);
+          this._modal.info('Erreur', 'Erreur lors de la tentative de suppression du projet', false);
         }
       }
     );

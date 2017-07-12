@@ -19,8 +19,8 @@ import { LoginComponent } from "./login/login.component";
 import { HeaderComponent } from "./header/header.component";
 import { ActivateAccountComponent } from "./activate-account/activate-account.component";
 import { FilelistComponent } from "./filelist/filelist.component";
-import { AddProjectComponent } from "./projectlist/add-project/add-project.component";
 import { AddFileComponent } from "./add-file/add-file.component";
+import { ChoseProjectNameComponent } from "./modals/chose-project-name/chose-project-name.component";
 import { CheckVersionComponent } from './check-version/check-version.component';
 import { VersionDetailsComponent } from './version-details/version-details.component';
 
@@ -33,13 +33,13 @@ import { VersionDetailsComponent } from './version-details/version-details.compo
     HeaderComponent,
     ActivateAccountComponent,
     FilelistComponent,
-    AddProjectComponent,
     AddFileComponent,
+    ChoseProjectNameComponent,
     CheckVersionComponent,
     VersionDetailsComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
-    AddProjectComponent
+    ChoseProjectNameComponent
   ],
   imports: [ // modules importés
     CommonModule,
@@ -57,8 +57,8 @@ import { VersionDetailsComponent } from './version-details/version-details.compo
     HeaderComponent,
     ActivateAccountComponent,
     FilelistComponent,
-    AddProjectComponent,
     AddFileComponent,
+    ChoseProjectNameComponent,
     CheckVersionComponent,
     VersionDetailsComponent
   ]

@@ -33,7 +33,7 @@
   <ng-template let-file="item">
     <td>
       <a
-          [routerLink]="['/version_details', encodeURIFile(file)]"
+          [routerLink]="['/version_details', base64UrlEncode(file)]"
           mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0">
         {{file.version?.filename | truncate:30}}
       </a>

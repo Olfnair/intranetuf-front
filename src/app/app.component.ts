@@ -25,6 +25,12 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
+  /*get date() {
+    let d: Date  = new Date(Date.now());
+    console.log(d.getDate() + '/' + d.getMonth() + '/' + d.getFullYear() + ' - ' + d.getHours() + ':' + d.getMinutes() + '::' + d.getSeconds());
+    return d.valueOf();
+  }*/
+
   ngOnDestroy() {
     if(this._routerEventsSub) {
       this._routerEventsSub.unsubscribe();

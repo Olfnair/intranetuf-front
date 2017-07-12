@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
 import { GuiForm } from "app/gui/gui-form";
+import { Base64 } from "app/shared/base64";
 import { WorkflowCheck, CheckType, Status } from "entities/workflow-check";
 
 @Component({
@@ -21,7 +22,7 @@ export class CheckVersionComponent extends GuiForm implements OnInit, OnDestroy 
 
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
-      this._check = JSON.parse(decodeURIComponent(params['check']) || undefined);
+      this._check = JSON.parse(Base64.urlDecode(params['check']) || undefined);
     });
   }
 

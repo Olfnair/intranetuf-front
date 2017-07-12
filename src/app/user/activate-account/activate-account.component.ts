@@ -7,6 +7,7 @@ import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
 import { GuiForm } from "app/gui/gui-form";
+import { Base64 } from "app/shared/base64";
 import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
 import { User } from "entities/user";
@@ -36,7 +37,7 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
 
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
-      this._authToken = JSON.parse(decodeURIComponent(params['token']) || undefined);
+      this._authToken = JSON.parse(Base64.urlDecode(params['token']) || undefined);
       console.log(this._authToken);
       if (!this._authToken) {
         this._router.navigate(['/home']);

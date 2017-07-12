@@ -3,7 +3,7 @@ import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
-import { AddProjectComponent } from "app/user/projectlist/add-project/add-project.component";
+import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { NavList, NavListSelection } from "app/gui/nav-list";
 import { DefaultRoleChecker } from "app/shared/role-checker";
 import { Project } from "entities/project";
@@ -89,7 +89,12 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   add(): void {
-    let sub : Subscription = this._modal.popup(AddProjectComponent).finally(() => {
+    let sub : Subscription = this._modal.popup(ChoseProjectNameComponent, {
+      title: "Nouveau Projet",
+      errorText: "Veuillez choisir un nom de projet",
+      submitText: "Créer le projet",
+      cancelText: "Annuler"
+    }).finally(() => {
       sub.unsubscribe();
     }).subscribe(
       (projectName: string) => {
