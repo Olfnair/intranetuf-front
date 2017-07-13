@@ -2,11 +2,18 @@ export const environment = {
   production: true,
   backend: {
     protocol: 'https',
-    host: 'localhost',
+    host: 'test.advensys.fr/intrauf',
     port: '8443',
     endpoints: {
-      allUsers: '/IUF/rest/entities.user',
-      oneUser: '/IUF/rest/entities.user/:id'
+      auth: '/IUF/rest/auth',
+      activate: '/IUF/rest/entities.user/activate',
+      download: '/IUF/rest/download/',
+      file: '/IUF/rest/entities.file',
+      project: '/IUF/rest/entities.project',
+      projectRight: '/IUF/rest/entities.projectright',
+      user: '/IUF/rest/entities.user',
+      version: '/IUF/rest/entities.version',
+      workflowCheck: '/IUF/rest/entities.workflowcheck'
     }
   }
 };
