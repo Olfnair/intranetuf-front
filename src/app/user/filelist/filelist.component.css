@@ -9,3 +9,7 @@
 .inactive {
   color: #ff0000;
 }
+
+.inlineForm {
+  display: inline-block;
+}

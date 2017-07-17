@@ -26,6 +26,7 @@ export class SessionService implements OnDestroy {
   // utilisateur
   private _userLogin: string = undefined;
   private _authToken: AuthToken = undefined;
+  private _base64AuthToken: string = undefined;
   private _logged: boolean = false;
 
   private _userRole: number = undefined;
@@ -165,9 +166,14 @@ export class SessionService implements OnDestroy {
     return this._authToken;
   }
 
+  get base64AuthToken(): string {
+    return this._base64AuthToken;
+  }
+
   set authToken(authToken: AuthToken) {
     this._authToken = authToken;
     this._restService.authToken = authToken;
+    this._base64AuthToken = btoa(JSON.stringify(this._authToken));
   }
 
   get logged(): boolean {
@@ -204,6 +210,7 @@ export class SessionService implements OnDestroy {
   logout(): void {
     this._userLogin = undefined;
     this._authToken = undefined;
+    this._base64AuthToken = undefined;
     this._restService.authToken = undefined;
     this._userRole = undefined;
     this._logged = false;

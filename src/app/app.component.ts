@@ -26,9 +26,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   /*get date() {
-    let d: Date  = new Date(Date.now());
-    console.log(d.getDate() + '/' + d.getMonth() + '/' + d.getFullYear() + ' - ' + d.getHours() + ':' + d.getMinutes() + '::' + d.getSeconds());
-    return d.valueOf();
+    if(this._session.authToken) {
+      let d : Date = new Date(this._session.authToken.e * 1000);
+      console.log(d.getDate() + '/' + d.getMonth() + 1 + '/' + d.getFullYear() + ' - ' + d.getHours() + ':' + d.getMinutes() + '::' + d.getSeconds());
+      return d.valueOf();
+    }
   }*/
 
   ngOnDestroy() {

@@ -1,4 +1,4 @@
-export class Date {
+/*export class Date {
   public id: number = undefined;
   public day: number = undefined;
   public month: number = undefined;
@@ -51,4 +51,4 @@ export class Date {
   isBissex(): boolean {
     return this.year % 400 == 0 || this.year % 4 == 0 && this.year % 100 != 0;
   }
-}
+}*/

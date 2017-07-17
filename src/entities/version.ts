@@ -1,4 +1,3 @@
-import { Date } from "entities/date";
 import { File } from "entities/file";
 import { WorkflowCheck } from "entities/workflow-check";
 
@@ -15,7 +14,7 @@ export class Version {
   public num: number = undefined;
   public status: number = undefined;
   public file: File = undefined;
-  public date_upload: Date = undefined;
+  public date_upload: number = undefined;
   public workflowChecks: WorkflowCheck[] = undefined;
 
   constructor() { }

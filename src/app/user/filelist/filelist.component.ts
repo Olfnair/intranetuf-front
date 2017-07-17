@@ -175,7 +175,11 @@ export class FilelistComponent {
   }
 
   downloadLink(versionId: number): string {
-    return this._url + versionId + '?token=' + Base64.urlEncode(JSON.stringify(this._session.authToken));
+    return this._url + versionId;
+  }
+
+  getToken(): string {
+    return this._session.base64AuthToken;
   }
 
   base64UrlEncode(file: File): string {
