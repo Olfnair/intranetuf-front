@@ -44,7 +44,7 @@
     <td>{{file.version?.status | versionStatus}}</td>
     <td>
       <span *ngIf="file.version && canDownload(file)">
-        <form class="inlineForm" ngNoForm [action]="downloadLink(file.version.id)" method="POST">
+        <form ngNoForm class="inlineForm" [action]="downloadLink(file.version.id)" method="POST">
           <input type="hidden" name="token" [value]="getToken()">
           <button md-raised-button class="smallButton" type="submit" color="primary" mdTooltip="Télécharger" mdTooltipPosition="above">
             <md-icon>file_download</md-icon>

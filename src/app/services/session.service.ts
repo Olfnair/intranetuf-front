@@ -183,8 +183,7 @@ export class SessionService implements OnDestroy {
   private _login(login: string, res: Response): Response {
     this.logout();
     this._userLogin = login;
-    this._authToken = res.json();
-    this._restService.authToken = this._authToken;
+    this.authToken = res.json();
     this._userRole = this._authToken.r;
     this._logged = true;
     return res;

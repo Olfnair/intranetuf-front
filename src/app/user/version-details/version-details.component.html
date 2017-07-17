@@ -16,7 +16,7 @@
           </md-list-item>
           <md-list-item>
             <span class="keyText">Date d'upload :</span>
-            <span class="valueText">&nbsp;{{file.version?.date_upload?.day | numberLen:2}}/{{file.version?.date_upload?.month | numberLen:2}}/{{file.version?.date_upload?.year | numberLen:4}}</span>
+            <span class="valueText">&nbsp;{{file.version?.date_upload | date}}</span>
           </md-list-item>
           <md-list-item>
             <span class="keyText">Statut :</span>
