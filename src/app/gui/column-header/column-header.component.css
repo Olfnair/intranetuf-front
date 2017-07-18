@@ -1,0 +1,46 @@
+.inactive {
+  color: #a1a1a1;
+}
+
+.td {
+  display: table-cell;
+  padding: 0;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.tdLeft {
+  display: table-cell;
+  padding: 0;
+  vertical-align: middle;
+  text-align: left;
+  width: 80%;
+}
+
+.tdRight {
+  display: table-cell;
+  padding: 0;
+  vertical-align: middle;
+  text-align: left;
+  width: 10%;
+}
+
+.tableRow {
+  display: table-row;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+}
+
+label {
+  color: #313131;
+  cursor: pointer;
+}
+
+md-icon {
+  display: block;
+  width: 1em;
+  height: 0.6em;
+  margin: 0 auto;
+  font-size: 1.4em;
+}

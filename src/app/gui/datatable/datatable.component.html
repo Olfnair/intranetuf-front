@@ -18,7 +18,9 @@
           <th *ngIf="options.selectionCol" class="selectionCol">
             <md-checkbox color="warn" [checked]="selectAllTrue" (change)="setSelectAllState($event)"></md-checkbox>
           </th>
-          <th *ngFor="let column of columns">{{column}}</th>
+          <th *ngFor="let column of columns" [style.width]="columnWidth(column.width)">
+            <column-header [column]="column"></column-header>
+          </th>
         </tr>
       </thead>
       <tbody>

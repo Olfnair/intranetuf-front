@@ -1,0 +1,29 @@
+<section class="tableRow">
+  <ng-container *ngIf="column.search && column.label != undefined">
+    <span class="tdLeft" style="width: 100%;">
+      <md-input-container style="width: 100%;">
+        <input #search mdInput [placeholder]="column.label" (change)="columnSearch(search.value)">
+      </md-input-container>
+    </span>
+  </ng-container>
+  <ng-container *ngIf="! column.search && column.label != undefined">
+    <span class="td" (click)="toggleSortOrder()">
+      <label>{{column.label}}</label>
+    </span>
+  </ng-container>
+  <ng-container *ngIf="column.label == undefined">
+    <span class="td">
+      <label>{{column}}</label>
+    </span>
+  </ng-container>
+  <span *ngIf="column.sort" [class.tdRight]="column.search" [class.td]="! column.search" (click)="toggleSortOrder()">
+    <ng-container *ngIf="! selected">
+      <md-icon class="inactive">arrow_drop_up</md-icon>
+      <md-icon class="inactive">arrow_drop_down</md-icon>
+    </ng-container>
+    <ng-container *ngIf="selected">
+      <md-icon *ngIf="growingSortOrder">arrow_drop_up</md-icon>
+      <md-icon *ngIf="! growingSortOrder">arrow_drop_down</md-icon>
+    </ng-container>
+  </span>
+<section>

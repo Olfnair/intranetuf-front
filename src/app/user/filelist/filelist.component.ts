@@ -280,10 +280,10 @@ export class FilelistComponent {
           this._session.selectedProject = undefined;
         }
         if(activate) {
-          this._modal.info('Projet Restauré', 'Le projet a bien été restauré.', true);
+          this._modal.info('Projet Restauré', 'Le projet a été restauré.', true);
         }
         else {
-          this._modal.info('Projet Supprimé', 'Le projet a bien été supprimé.', true);
+          this._modal.info('Projet Supprimé', 'Le projet a été supprimé.', true);
         }
       },
       (error: Response) => {

@@ -21,7 +21,7 @@ md-toolbar md-icon.list {
 }
 
 md-toolbar a {
-  display: table-row;
+  display: flex;
 }
 
 md-toolbar a md-icon,

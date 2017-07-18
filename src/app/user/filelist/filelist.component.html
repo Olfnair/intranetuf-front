@@ -11,7 +11,15 @@
       emptyMessage: 'Ce projet ne contient pas encore de fichier.'
     }"
     [dataObs]="filesObs"
-    [columns]="['Fichier', 'Auteur', 'Version', 'Date d\'upload', 'Statut', '', '']"
+    [columns]="[
+      { label: 'Fichier', sort: true, search: true, width: '30%' },
+      { label: 'Auteur', sort: true, search: true, width: '20%' },
+      { label: 'Version', sort: true, search: true, width: '8%' },
+      { label: 'Date d\'upload', sort: true, width: '14%' },
+      { label: 'Statut', search: true, width: '12%' },
+      { label: '', width: '11%' },
+      { label: '', width: '5%' }
+    ]"
     (addButtonClick)="add()">
   <datatable-title>
     <h2>Projet : {{project.name}} <span [class.hidden]="project.active" class="inactive">(Supprimé)</span></h2>

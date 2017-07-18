@@ -1,5 +1,6 @@
 import { Component, ContentChild, TemplateRef, Input, Directive, EventEmitter, Output } from '@angular/core';
 import { MdCheckboxChange } from "@angular/material";
+import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { DatatableColumn, DatatableOptions, DatatableSelection } from "app/gui/datatable";
@@ -59,7 +60,7 @@ export class DatatableComponent<T> {
    */
   private _options: DatatableOptions = new DatatableOptions(); // génère les options par défaut
 
-  constructor() { }
+  constructor(private _sanitizer: DomSanitizer) { }
 
   @Output('addButtonClick') get addButtonClick(): EventEmitter<void> {
     return this._addButtonClick$;
@@ -226,5 +227,9 @@ export class DatatableComponent<T> {
 
   toggleDisplay(): void {
     this._showContent = ! this._showContent;
+  }
+
+  columnWidth(width: string): SafeStyle {
+    return this._sanitizer.bypassSecurityTrustStyle(width ? width : '');
   }
 }
