@@ -1,8 +1,12 @@
 <md-card>
   <table>
     <tr>
-      <td *ngIf="options.displayToggle"><md-icon class="toggle" color="primary" (click)="toggleDisplay()">menu</md-icon></td>
-      <td><ng-content select="datatable-title"></ng-content></td>
+      <td *ngIf="options.displayToggle">
+        <md-icon class="toggle" color="primary" (click)="toggleDisplay()">menu</md-icon>
+      </td>
+      <td>
+        <ng-content select="datatable-title"></ng-content>
+      </td>
     </tr>
   </table>
   <md-card-content *ngIf="! options.displayToggle || options.displayToggle && showContent">
@@ -11,7 +15,9 @@
         <ng-content select="datatable-header"></ng-content>
         <tr *ngIf="options.addButton" class="add">
           <td>
-            <button md-mini-fab (click)="add()" mdTooltip="{{options.addButtonTooltip}}" mdTooltipPosition="after"><md-icon>add</md-icon></button>
+            <button md-mini-fab (click)="add()" mdTooltip="{{options.addButtonTooltip}}" mdTooltipPosition="after">
+              <md-icon>add</md-icon>
+            </button>
           </td>
         </tr>
         <tr class="columnTitles" *ngIf="! emptyData && loaded || options.displayEmpty">
@@ -19,7 +25,9 @@
             <md-checkbox color="warn" [checked]="selectAllTrue" (change)="setSelectAllState($event)"></md-checkbox>
           </th>
           <th *ngFor="let column of columns" [style.width]="columnWidth(column.width)">
-            <column-header [column]="column"></column-header>
+            <column-header [column]="column" [selected]="column === selectedColumn" (select)="selectCol($event)"
+                (order)="setOrderParam($event)" (search)="setSearchParam($event)">
+            </column-header>
           </th>
         </tr>
       </thead>
@@ -39,7 +47,8 @@
             <p class="emptyMessage">{{options.emptyMessage}}</p>
           </td>
         </tr>
-        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="data" let-index="index" let-event="even" let-odd="odd" let-last="last">
+        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="data"
+            let-index="index" let-event="even" let-odd="odd" let-last="last">
           <tr [class.oddRow]="odd">
             <td *ngIf="options.selectionCol" class="selectionCol">
               <gui-checkbox [checked]="selectAllState" (change)="checkSelect($event, index, last)"></gui-checkbox>

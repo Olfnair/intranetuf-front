@@ -1,7 +1,17 @@
 <datatable
     [options]="{selectionCol: true, displayFooter: true}"
     [dataObs]="rightsObs"
-    [columns]="['Projet', 'Voir', 'Editer', 'Supprimer', 'Ajout fichier', 'Supprimer fichier', 'Contrôleur', 'Valideur']">
+    [columns]="[
+      { label: 'Projet', width: '19%' },
+      { label: 'Voir', width: '11%' },
+      { label: 'Editer', width: '11%' },
+      { label: 'Supprimer', width: '11%' },
+      { label: 'Ajout fichier', width: '11%' },
+      { label: 'Supprimer fichier', width: '11%' },
+      { label: 'Contrôleur', width: '11%' },
+      { label: 'Valideur', width: '11%' }
+    ]">
+  <!-- total width: 96% : 4% de width pour la colonne de selection -->
   <datatable-title>
     <h2>Droits de {{user.firstname}} {{user.name}}</h2>
   </datatable-title>

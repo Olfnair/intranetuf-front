@@ -9,6 +9,7 @@ import { environment } from "environments/environment";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
+import { DatatableQueryParams, DatatableDataLoader } from "app/gui/datatable";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { RightsChecker } from "app/shared/rights-checker";
 import { DefaultRoleChecker } from "app/shared/role-checker";
@@ -29,12 +30,19 @@ export class FilelistComponent {
   private _project: Project = undefined;
   private _files : File[] = undefined;
   private _filesObs: Observable<File[]> = undefined;
+  
+  // indique si on affiche le rechargement de la filelist ou pas
+  // (oui quand on change de projet, non quand on fait une recherche dans un projet)
+  private _reload: boolean = true;
+  
   private _controls: Map<number, WorkflowCheck> = undefined;
   private _validations: Map<number, WorkflowCheck> = undefined;
   private _url = environment.backend.protocol + "://"
                + environment.backend.host + ":"
                + environment.backend.port
                + environment.backend.endpoints.download;
+
+  private _params: DatatableQueryParams = undefined;
 
   private _rightsChecker: RightsChecker;
   private _roleChecker: DefaultRoleChecker;
@@ -95,9 +103,14 @@ export class FilelistComponent {
   private _loadFiles(): void {
     // teste s'il faut vraiment charger quelque chose
     if(! this._project || ! this._startLoading) { return; }
-
+    
     this._setFiles(undefined, undefined);
-    let sub: Subscription = this._restService.fetchFilesByProject(this._project).finally(() => {
+    
+    let searchParams: string = this._params ? this._params.searchParams.toString() : 'default';
+    let orderparams: string = this._params ? this._params.orderParams.toString() : 'default';
+    let sub: Subscription = this._restService.fetchFilesByProject(
+      this._project, searchParams, orderparams
+    ).finally(() => {
       sub.unsubscribe(); // finally
     }).subscribe(
       (files: File[]) => { // data
@@ -108,8 +121,9 @@ export class FilelistComponent {
         this._loadChecks();
       },
       (error: Response) => { // erreur
-        this._setFiles(this._files, Observable.create((observer: Observer<File[]>) => {
+        this._setFiles(undefined, Observable.create((observer: Observer<File[]>) => {
           observer.error(error);
+          observer.complete();
         }));
       },
     );
@@ -126,6 +140,7 @@ export class FilelistComponent {
   @Input() set project(project: Project) {
     if(project) {
       this._project = project;
+      this._reload = true;
       this._loadFiles();
     }
   }
@@ -134,8 +149,8 @@ export class FilelistComponent {
     return this._project;
   }
 
-  get filesObs(): Observable<File[]> {
-    return this._filesObs;
+  get dataLoader(): DatatableDataLoader<File[]> {
+    return new DatatableDataLoader<File[]>(this._filesObs, this._reload);
   }
 
   get userId(): number {
@@ -172,6 +187,14 @@ export class FilelistComponent {
 
   add(): void {
     this._router.navigate(['/add_file', this._project.id]);
+  }
+
+  paramsChange(params: DatatableQueryParams): void {
+    this._params = params;
+    // on n'affiche pas de rechargement pour une recherche
+    // (ça bousille tout le dom et donc les champs de recherche)
+    this._reload = false;
+    this._loadFiles();
   }
 
   downloadLink(versionId: number): string {

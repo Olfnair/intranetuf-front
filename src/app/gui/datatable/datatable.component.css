@@ -71,7 +71,7 @@ table.dataTable tr.add td {
 }
 
 table.dataTable tr th.selectionCol,td.selectionCol {
-  width: 50px;
+  width: 4%;
   text-align: center;
 }
 

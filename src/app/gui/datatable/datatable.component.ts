@@ -3,7 +3,9 @@ import { MdCheckboxChange } from "@angular/material";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
-import { DatatableColumn, DatatableOptions, DatatableSelection } from "app/gui/datatable";
+import { DatatableColumn, DatatableOptions, DatatableSelection, DatatableQueryParams,
+  DatatableQueryOptions, DatatableDataLoader } from ".";
+import { ColumnParam } from "../column-header";
 
 @Directive({
   selector: 'datatable-title'
@@ -33,6 +35,9 @@ export class DatatableComponent<T> {
   private _addButtonClick$: EventEmitter<void> = new EventEmitter<void>();
   private _selectedDataUpdate$: EventEmitter<DatatableSelection<T>[]> = new EventEmitter<DatatableSelection<T>[]>();
 
+  // event des params recherche/ordre
+  private _params$: EventEmitter<DatatableQueryParams> = new EventEmitter<DatatableQueryParams>();
+
   // titres colonnes et données
   private _columns: DatatableColumn[] = [];
   private _data: T[] = [];
@@ -49,6 +54,12 @@ export class DatatableComponent<T> {
 
   // si le displayToggle est actif
   private _showContent: boolean = false;
+
+  // colonne sélectionnée
+  private _selectedColumn: DatatableColumn = undefined;
+
+  // paramètres de recherche/ordre
+  private _params: DatatableQueryParams = new DatatableQueryParams();
 
   /* options :
    * selectionCol: boolean => Crée une colonne de sélection pour les rangées : émet (selectedDataUpdate) quand les données selectionnées changent
@@ -70,6 +81,10 @@ export class DatatableComponent<T> {
     return this._selectedDataUpdate$;
   }
 
+  @Output('params') get order(): EventEmitter<DatatableQueryParams> {
+    return this._params$;
+  }
+
   get columns(): DatatableColumn[] {
     return this._columns;
   }
@@ -82,8 +97,8 @@ export class DatatableComponent<T> {
     return this._data;
   }
 
-  private startLoading(): void {
-    this.loading = true;
+  private startLoading(reload: boolean = true): void {
+    this.loading = reload ? true : this.loading;
     this.loadingError = false
   }
 
@@ -95,8 +110,17 @@ export class DatatableComponent<T> {
     this.loading = false;
   }
 
-  @Input() set dataObs(dataObservable: Observable<T[]>) {
-    this.startLoading();
+  @Input() set dataObs(dataLoader: DatatableDataLoader<T[]> | Observable<T[]>) {
+    let dataObservable: Observable<T[]> = undefined;
+    let reload: boolean = true;
+    if(dataLoader instanceof DatatableDataLoader) {
+      dataObservable = dataLoader.dataObs;
+      reload = (dataLoader.reload != undefined) ? dataLoader.reload : reload;
+    }
+    else if(dataLoader instanceof Observable) {
+      dataObservable = dataLoader;
+    }
+    this.startLoading(reload);
     if(dataObservable == undefined || dataObservable == null) {
       // Ici, je suppose que le chargement est en cours et que l'Observable sera mis à jour plus tard.
       // J'arrête donc ici et laisse la table dans l'état 'en cours de chargement'.
@@ -176,6 +200,10 @@ export class DatatableComponent<T> {
     return this._showContent;
   }
 
+  get selectedColumn(): DatatableColumn {
+    return this._selectedColumn;
+  }
+
   add(): void {
     this._addButtonClick$.emit();
   }
@@ -223,6 +251,24 @@ export class DatatableComponent<T> {
       }
     }
     this._selectedData = newSelectedData;
+  }
+
+  selectCol(column: DatatableColumn): void {
+    this._selectedColumn = column;
+  }
+
+  setParam(params: DatatableQueryOptions, columnParam: ColumnParam): void {
+    params.set(columnParam.col, columnParam.param);
+    this._params$.emit(this._params);
+  }
+
+  setOrderParam(columnParam: ColumnParam): void {
+    this._params.orderParams.searchMap.clear();
+    this.setParam(this._params.orderParams, columnParam);
+  }
+
+  setSearchParam(columnParam: ColumnParam): void {
+    this.setParam(this._params.searchParams, columnParam);
   }
 
   toggleDisplay(): void {

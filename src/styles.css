@@ -22,8 +22,11 @@ table.dataTable tbody tr td:first-child {
   padding-left: 5px;
 }
 
-table.dataTable tbody tr td:first-child {
-   padding-left: 5px;
+table.dataTable thead tr th:last-child,
+table.dataTable thead tr td:last-child,
+table.dataTable tbody tr th:last-child,
+table.dataTable tbody tr td:last-child {
+  padding-right: 5px;
 }
 
 /* form */

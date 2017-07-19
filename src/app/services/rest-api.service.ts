@@ -3,6 +3,7 @@ import { Http, Response, RequestOptions, Headers } from "@angular/http";
 import { environment } from "environments/environment";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
+import { Base64 } from "app/shared/base64";
 import { RestLong } from "objects/rest-long";
 import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
@@ -51,8 +52,12 @@ export class RestApiService {
     });
   }
 
-  fetchFilesByProject(project: Project): Observable<File[]> {
-    return this._http.get(this._backendURL.file + '/project/' + project.id.toString(), this.options()).map((res: Response) => {
+  fetchFilesByProject(project: Project, searchParams: string, orderParams: string): Observable<File[]> {
+    return this._http.get(
+      this._backendURL.file + '/project/' + project.id.toString() + '/'
+      + Base64.urlEncode(searchParams) + '/' + Base64.urlEncode(orderParams),
+      this.options()
+    ).map((res: Response) => {
       return res.json().file;
     });
   }

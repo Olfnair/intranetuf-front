@@ -1,25 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DatatableColumn } from "../datatable";
-
-export class ColumnOrder {
-  public name: string = '';
-  public asc: boolean = true;
-
-  constructor(name: string = '', asc: boolean = true) {
-    this.name = name;
-    this.asc = asc;
-  }
-}
-
-export class ColumnSearch {
-  public name: string = '';
-  public value: string = '';
-
-  constructor(name: string = '', value: string = '') {
-    this.name = name;
-    this.value = value;
-  }
-}
+import { ColumnParam } from ".";
 
 @Component({
   selector: 'column-header',
@@ -30,8 +11,9 @@ export class ColumnHeaderComponent {
   private _column: DatatableColumn = undefined;
   private _growingSortOrder: boolean = false;
   private _selected: boolean = false;
-  private _selected$: EventEmitter<boolean> = new EventEmitter<boolean>();
-  private _order$: EventEmitter<boolean> = new EventEmitter<boolean>();
+  private _select$: EventEmitter<DatatableColumn> = new EventEmitter<DatatableColumn>();
+  private _order$: EventEmitter<ColumnParam> = new EventEmitter<ColumnParam>();
+  private _search$: EventEmitter<ColumnParam> = new EventEmitter<ColumnParam>();
 
   constructor() { }
 
@@ -49,26 +31,42 @@ export class ColumnHeaderComponent {
   
   @Input() set selected(selected: boolean) {
     this._selected = selected;
-    this._selected$.emit(this._selected);
+    if(! this._selected) {
+      this._growingSortOrder = false;
+    }
   }
   
   get selected(): boolean {
     return this._selected;
   }
 
-  @Output('selected') get selected$(): EventEmitter<boolean> {
-    return this._selected$;
+  @Output('select') get select$(): EventEmitter<DatatableColumn> {
+    return this._select$;
+  }
+
+  @Output('order') get order$(): EventEmitter<ColumnParam> {
+    return this._order$;
+  }
+
+  @Output('search') get search$(): EventEmitter<ColumnParam> {
+    return this._search$;
   }
 
   toggleSortOrder(): void {
     this._growingSortOrder = ! this._growingSortOrder;
+    this._order$.emit(
+      new ColumnParam(
+        this._column.query ? this._column.query : this._column.label, this._growingSortOrder ? 'ASC' : 'DESC'
+      )
+    );
     if(! this._selected) {
-      this.selected = true;
+      this._selected = true;
+      this._select$.emit(this._column);
     }
   }
 
-  columnSearch(value: string): void {
-    console.log(value);
+  columnSearch(param: string): void {
+    this._search$.emit(new ColumnParam(this._column.query ? this._column.query : this._column.label, param));
   }
 
 }

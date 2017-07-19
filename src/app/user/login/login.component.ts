@@ -3,6 +3,7 @@ import { Response } from "@angular/http";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { GuiForm } from "app/gui/gui-form";
 import { Router } from "@angular/router";
+import { Subscription } from "rxjs/Subscription";
 import { SessionService } from "app/services/session.service";
 
 @Component({
@@ -48,9 +49,15 @@ export class LoginComponent extends GuiForm {
   submit(): void {
     let login: string = this.form.value.login;
     let password: string = this.form.value.pwd;
-    this._session.login(this.form.value.login, this.form.value.pwd).subscribe(
-      (success: Response) => this._loginSuccess(),
-      (error: Response) => this._loginFailure(error)
+    let sub: Subscription = this._session.login(this.form.value.login, this.form.value.pwd).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (success: Response) => {
+        this._loginSuccess()
+      },
+      (error: Response) => {
+        this._loginFailure(error)
+      }
     );
   }
 
