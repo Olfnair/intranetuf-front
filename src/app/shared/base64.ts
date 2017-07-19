@@ -12,7 +12,7 @@ export class Base64 {
           urlStr += '_';
           break;
         case '=':
-          urlStr += '.';
+          // skip ce caractère
           break;
         default:
           urlStr += base64str[i];
@@ -33,7 +33,7 @@ export class Base64 {
           base64str += '/';
           break;
         case '.':
-          base64str += '=';
+          // skip ce caractère
           break;
         default:
           base64str += data[i];
