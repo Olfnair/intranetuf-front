@@ -20,7 +20,7 @@
             </button>
           </td>
         </tr>
-        <tr class="columnTitles" *ngIf="! emptyData && loaded || options.displayEmpty">
+        <tr class="columnTitles" *ngIf="! emptyData && loaded || ! params.isEmpty() || options.displayEmpty">
           <th *ngIf="options.selectionCol" class="selectionCol">
             <md-checkbox color="warn" [checked]="selectAllTrue" (change)="setSelectAllState($event)"></md-checkbox>
           </th>
@@ -42,9 +42,14 @@
             <p class="errorMessage">Une erreur est survenue pendant le chargement des données de la table !</p>
           </td>
         </tr> 
-        <tr *ngIf="loaded && emptyData && options.emptyMessage">
+        <tr *ngIf="loaded && emptyData && options.emptyMessage && params.isEmpty()">
           <td [colSpan]="nbCols">
-            <p class="emptyMessage">{{options.emptyMessage}}</p>
+            <p class="message">{{options.emptyMessage}}</p>
+          </td>
+        </tr>
+        <tr *ngIf="loaded && emptyData && options.emptySearchMessage && ! params.isEmpty()">
+          <td [colSpan]="nbCols">
+            <p class="message">{{options.emptySearchMessage}}</p>
           </td>
         </tr>
         <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="data"

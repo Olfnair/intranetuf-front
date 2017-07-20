@@ -12,7 +12,7 @@ export class Base64 {
           urlStr += '_';
           break;
         case '=':
-          // skip ce caractère
+          // skip le padding, on n'en veut pas
           break;
         default:
           urlStr += base64str[i];

@@ -3,10 +3,14 @@ import { DatatableQueryOptions } from ".";
 export class DatatableQueryParams {
   private _orderParams: DatatableQueryOptions = new DatatableQueryOptions();
   private _searchParams: DatatableQueryOptions = new DatatableQueryOptions();
+  private _params: DatatableQueryOptions[] = [];
   private _index: number = 0;
   private _limit: number = 0;
 
-  constructor() { }
+  constructor() {
+    this._params.push(this._orderParams);
+    this._params.push(this._searchParams);
+  }
 
   get orderParams(): DatatableQueryOptions {
     return this._orderParams
@@ -30,5 +34,20 @@ export class DatatableQueryParams {
 
   set limit(limit: number) {
     this._limit = limit;
+  }
+
+  reset(): void {
+    this._params.forEach((params: DatatableQueryOptions) => {
+      params.reset();
+    });
+    this._index = 0;
+    this._limit = 0;
+  }
+
+  isEmpty(): boolean {
+    for(let i: number = 0; i < this._params.length; ++i) {
+      if(! this._params[i].isEmpty()) { return false; }
+    }
+    return true;
   }
 }

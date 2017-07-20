@@ -23,6 +23,14 @@ export class DatatableQueryOptions {
     return this._colMap.delete(col);
   }
 
+  reset(): void {
+    this._colMap.clear();
+  }
+
+  isEmpty(): boolean {
+    return this._colMap.size <= 0;
+  }
+
   get searchMap(): Map<string, string> {
     return this._colMap;
   }
@@ -34,17 +42,14 @@ export class DatatableQueryOptions {
       if(replacers) {
         colname = replacers.get(col);
       }
-      colname ? colname : col;
-      if(ret.length > 0) {
-        ret += ','
-      }
-      ret += '{col:"' + colname + '",param:"' + param + '"}';
+      colname = colname ? colname : col;
+      ret += 'col:"' + colname + '"param:"' + param + '"';
     });
 
     if(ret.length <= 0) {
       return 'default'; // recherche par defaut
     }
-    return '[' + ret + ']';
+    return ret;
   }
 
 }

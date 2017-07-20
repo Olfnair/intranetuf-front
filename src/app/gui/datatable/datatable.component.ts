@@ -98,6 +98,10 @@ export class DatatableComponent<T> {
   }
 
   private startLoading(reload: boolean = true): void {
+    if(reload) {
+      this._params.reset();
+      this._selectedColumn = undefined;
+    }
     this.loading = reload ? true : this.loading;
     this.loadingError = false
   }
@@ -202,6 +206,10 @@ export class DatatableComponent<T> {
 
   get selectedColumn(): DatatableColumn {
     return this._selectedColumn;
+  }
+
+  get params(): DatatableQueryParams {
+    return this._params;
   }
 
   add(): void {
