@@ -58,6 +58,16 @@ table.dataTable tbody tr td p.errorMessage {
   color: #ff0000;
 }
 
+table.dataTable tbody tr.footer table.footerTable {
+  width: 100%;
+}
+
+table.dataTable tbody tr.footer td.pagination {
+  text-align: left;
+  width: 10%;
+  white-space: nowrap;
+}
+
 table.dataTable thead tr.columnTitles {
   background-color: #d1d1d1;
 }

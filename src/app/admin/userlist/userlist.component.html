@@ -1,5 +1,10 @@
 <datatable *ngIf="isListMode"
-    [options]="{selectionCol: true, addButton: true, addButtonTooltip: 'Ajouter un utilisateur'}"
+    [options]="{
+      pagination: true,
+      selectionCol: true,
+      addButton: true,
+      addButtonTooltip: 'Ajouter un utilisateur'
+    }"
     [dataObs]="users"
     [columns]="[
       { label: 'Nom', sort: true, search: true },

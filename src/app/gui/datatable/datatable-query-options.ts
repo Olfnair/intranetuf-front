@@ -4,7 +4,7 @@ export class DatatableQueryOptions {
   constructor() { }
 
   set(col: string, param: string): void {
-    if(param == '') { // si pas de recherche sur ce champ, on le supprime du map
+    if(! param) { // si pas de recherche/tri sur ce champ, on le supprime du map
       this._colMap.delete(col);
       return;
     }

@@ -7,9 +7,10 @@ export class DatatableQueryParams {
   private _index: number = 0;
   private _limit: number = 0;
 
-  constructor() {
+  constructor(limit?: number) {
     this._params.push(this._orderParams);
     this._params.push(this._searchParams);
+    this._limit = limit ? limit : 0;
   }
 
   get orderParams(): DatatableQueryOptions {
@@ -36,12 +37,12 @@ export class DatatableQueryParams {
     this._limit = limit;
   }
 
-  reset(): void {
+  reset(limit?: number): void {
     this._params.forEach((params: DatatableQueryOptions) => {
       params.reset();
     });
     this._index = 0;
-    this._limit = 0;
+    this._limit = limit ? limit : 0;
   }
 
   isEmpty(): boolean {

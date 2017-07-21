@@ -1,11 +1,26 @@
-import { Component, ContentChild, TemplateRef, Input, Directive, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  TemplateRef,
+  Input,
+  Directive,
+  EventEmitter,
+  Output
+} from '@angular/core';
 import { MdCheckboxChange } from "@angular/material";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
-import { DatatableColumn, DatatableOptions, DatatableSelection, DatatableQueryParams,
-  DatatableQueryOptions, DatatableDataLoader } from ".";
-import { ColumnParam } from "../column-header";
+import {
+  DatatableColumn,
+  DatatableOptions,
+  DatatableSelection,
+  DatatableQueryParams,
+  DatatableQueryOptions,
+  DatatableDataLoader,
+  DatatablePage
+} from ".";
+import { ColumnParam, ColumnHeaderComponent } from "../column-header";
 
 @Directive({
   selector: 'datatable-title'
@@ -29,7 +44,7 @@ export class DatatableFooter { }
 })
 export class DatatableComponent<T> {
   @ContentChild(TemplateRef)
-  public content: TemplateRef<Element>;
+  private _content: TemplateRef<Element>;
 
   // events
   private _addButtonClick$: EventEmitter<void> = new EventEmitter<void>();
@@ -55,14 +70,9 @@ export class DatatableComponent<T> {
   // si le displayToggle est actif
   private _showContent: boolean = false;
 
-  // colonne sélectionnée
-  private _selectedColumn: DatatableColumn = undefined;
-
-  // paramètres de recherche/ordre
-  private _params: DatatableQueryParams = new DatatableQueryParams();
-
   /* options :
-   * selectionCol: boolean => Crée une colonne de sélection pour les rangées : émet (selectedDataUpdate) quand les données selectionnées changent
+   * selectionCol: boolean => Crée une colonne de sélection pour les rangées :
+   *  émet (selectedDataUpdate) quand les données selectionnées changent
    * addButton: boolean => Bouton pour ajouter des données : émet (addButtonClick) quand on click dessus
    * addButtonTooltip: string => le texte du tooltip quand on survole le bouton addButton (optionnel)
    * displayFooter: boolean => afficher ou non le footer
@@ -71,7 +81,15 @@ export class DatatableComponent<T> {
    */
   private _options: DatatableOptions = new DatatableOptions(); // génère les options par défaut
 
-  constructor(private _sanitizer: DomSanitizer) { }
+  // page :
+  private _page: DatatablePage = new DatatablePage();
+
+  // paramètres de recherche/ordre
+  private _params: DatatableQueryParams = new DatatableQueryParams();
+
+  constructor(private _sanitizer: DomSanitizer) {
+    this.setPageSize(this._options.itemsPerPage);
+  }
 
   @Output('addButtonClick') get addButtonClick(): EventEmitter<void> {
     return this._addButtonClick$;
@@ -98,34 +116,49 @@ export class DatatableComponent<T> {
   }
 
   private startLoading(reload: boolean = true): void {
-    if(reload) {
+    if (reload) {
       this._params.reset();
-      this._selectedColumn = undefined;
     }
     this.loading = reload ? true : this.loading;
     this.loadingError = false
   }
 
-  private endLoading(sub?: Subscription): void{
-    if(sub) {
+  private endLoading(sub?: Subscription): void {
+    if (sub) {
       sub.unsubscribe();
     }
     this.emptyData = (this._data.length <= 0);
     this.loading = false;
   }
 
+  private setData(data: T[]): void {
+    if(data) {
+      this._data = data;
+    }
+    else {
+      this._data = [];
+    }
+    this._page.itemsCount = this._data.length; // on doit savoir s'il y a un élément de trop ou pas
+    // on a fait une requête avec le limit == this._page.pageSize + 1
+    // (pour savoir s'il y a une autre page après ou pas)
+    // on doit donc maintenant enlever un eventuel élément en trop :
+    while(this._data.length > this._page.pageSize) {
+      this._data.pop(); // enlève le dernier élément du tableau
+    }
+  }
+
   @Input() set dataObs(dataLoader: DatatableDataLoader<T[]> | Observable<T[]>) {
     let dataObservable: Observable<T[]> = undefined;
     let reload: boolean = true;
-    if(dataLoader instanceof DatatableDataLoader) {
+    if (dataLoader instanceof DatatableDataLoader) {
       dataObservable = dataLoader.dataObs;
       reload = (dataLoader.reload != undefined) ? dataLoader.reload : reload;
     }
-    else if(dataLoader instanceof Observable) {
+    else if (dataLoader instanceof Observable) {
       dataObservable = dataLoader;
     }
     this.startLoading(reload);
-    if(dataObservable == undefined || dataObservable == null) {
+    if (dataObservable == undefined || dataObservable == null) {
       // Ici, je suppose que le chargement est en cours et que l'Observable sera mis à jour plus tard.
       // J'arrête donc ici et laisse la table dans l'état 'en cours de chargement'.
       return;
@@ -134,12 +167,7 @@ export class DatatableComponent<T> {
       this.endLoading(sub); // finalement
     }).subscribe(
       (data: T[]) => { // ok
-        if (data) {
-          this._data = data;
-        }
-        else {
-          this._data = [];
-        }
+        this.setData(data);
       },
       (error: any) => { // erreur
         this.loadingError = true;
@@ -147,7 +175,7 @@ export class DatatableComponent<T> {
       () => { // complete (pas d'erreur)
         this.endLoading(sub);
       }
-    );
+      );
   }
 
   set loading(loading: boolean) {
@@ -159,14 +187,14 @@ export class DatatableComponent<T> {
   }
 
   get loaded(): boolean {
-    return ! this._loading && ! this._loadingError;
+    return !this._loading && !this._loadingError;
   }
 
   set loadingError(loadingError: boolean) {
-    this._loadingError = loadingError; 
+    this._loadingError = loadingError;
   }
 
-  get loadingError():boolean {
+  get loadingError(): boolean {
     return this._loadingError;
   }
 
@@ -180,6 +208,7 @@ export class DatatableComponent<T> {
 
   @Input() set options(options: DatatableOptions) {
     this._options = options;
+    this.setPageSize(this.options.itemsPerPage ? this.options.itemsPerPage : this._page.pageSize);
   }
 
   get options(): DatatableOptions {
@@ -204,12 +233,12 @@ export class DatatableComponent<T> {
     return this._showContent;
   }
 
-  get selectedColumn(): DatatableColumn {
-    return this._selectedColumn;
-  }
-
   get params(): DatatableQueryParams {
     return this._params;
+  }
+
+  get page(): DatatablePage {
+    return this._page;
   }
 
   add(): void {
@@ -223,8 +252,8 @@ export class DatatableComponent<T> {
 
   checkSelect(event: MdCheckboxChange, id: number, last: boolean): void {
     let index: number = -1;
-    for(let i = 0; i < this._selectedData.length; ++i) {
-      if(this._selectedData[i] && this._selectedData[i].id == id) {
+    for (let i = 0; i < this._selectedData.length; ++i) {
+      if (this._selectedData[i] && this._selectedData[i].id == id) {
         index = i;
         break;
       }
@@ -244,7 +273,7 @@ export class DatatableComponent<T> {
     // (Sinon, on va attendre la dernière pour envoyer l'event. Pas de flood inutile...)
     // on s'assure que l'event soit émit à tous les coups si c'est la dernière mise à jour, même en cas d'erreur
     // this.selectAllState != undefined indique une sélection ou désélection globale et donc, d'autres mises à jour à attendre
-    if(update && this.selectAllState == undefined || last) {    
+    if (update && this.selectAllState == undefined || last) {
       this._delUndefinedSelect();
       this._selectedDataUpdate$.emit(this._selectedData);
     }
@@ -253,25 +282,24 @@ export class DatatableComponent<T> {
   private _delUndefinedSelect() {
     // effectue les suppressions avant d'emettre les données
     let newSelectedData: DatatableSelection<T>[] = [];
-    for(let selection of this._selectedData) {
-      if(selection != undefined) {
+    for (let selection of this._selectedData) {
+      if (selection != undefined) {
         newSelectedData.push(selection);
       }
     }
     this._selectedData = newSelectedData;
   }
 
-  selectCol(column: DatatableColumn): void {
-    this._selectedColumn = column;
+  emitParams(): void {
+    this._params$.emit(this._params);
   }
 
   setParam(params: DatatableQueryOptions, columnParam: ColumnParam): void {
     params.set(columnParam.col, columnParam.param);
-    this._params$.emit(this._params);
+    this.emitParams();
   }
 
   setOrderParam(columnParam: ColumnParam): void {
-    this._params.orderParams.searchMap.clear();
     this.setParam(this._params.orderParams, columnParam);
   }
 
@@ -280,10 +308,33 @@ export class DatatableComponent<T> {
   }
 
   toggleDisplay(): void {
-    this._showContent = ! this._showContent;
+    this._showContent = !this._showContent;
   }
 
   columnWidth(width: string): SafeStyle {
     return this._sanitizer.bypassSecurityTrustStyle(width ? width : '');
+  }
+
+  setPageSize(pageSize: number) {
+    this._page.pageSize = pageSize;
+    this._params.limit = pageSize;
+  }
+
+  pageForward(next: boolean): boolean {
+    let ret = next ? this._page.goToNextPage() : this._page.goToPrevPage();
+    if(ret) {
+      this._params.index += next ? this.page.pageSize : -(this.page.pageSize);
+      this._params.limit += next ? this.page.pageSize : -(this.page.pageSize);
+      this.emitParams();
+    }
+    return ret;
+  }
+
+  goToPrevPage(): boolean {
+    return this.pageForward(false);
+  }
+
+  goToNextPage(): boolean {
+    return this.pageForward(true);
   }
 }

@@ -2,23 +2,29 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DatatableColumn } from "../datatable";
 import { ColumnParam } from ".";
 
+enum SearchState {
+  UNDEFINED = 0,
+  ASC = 1,
+  DESC = 2
+}
+
 @Component({
   selector: 'column-header',
   templateUrl: './column-header.component.html',
   styleUrls: ['./column-header.component.css']
 })
 export class ColumnHeaderComponent {
+  SearchState: typeof SearchState = SearchState; // on rend l'enum accessible depuis le template
+
   private _column: DatatableColumn = undefined;
-  private _growingSortOrder: boolean = false;
-  private _selected: boolean = false;
-  private _select$: EventEmitter<DatatableColumn> = new EventEmitter<DatatableColumn>();
+  private _searchState: SearchState = SearchState.UNDEFINED;
   private _order$: EventEmitter<ColumnParam> = new EventEmitter<ColumnParam>();
   private _search$: EventEmitter<ColumnParam> = new EventEmitter<ColumnParam>();
 
   constructor() { }
 
-  get growingSortOrder(): boolean {
-    return this._growingSortOrder;
+  get searchState(): SearchState {
+    return this._searchState;
   }
 
   @Input() set column(column: DatatableColumn) {
@@ -27,21 +33,6 @@ export class ColumnHeaderComponent {
 
   get column(): DatatableColumn {
     return this._column;
-  }
-  
-  @Input() set selected(selected: boolean) {
-    this._selected = selected;
-    if(! this._selected) {
-      this._growingSortOrder = false;
-    }
-  }
-  
-  get selected(): boolean {
-    return this._selected;
-  }
-
-  @Output('select') get select$(): EventEmitter<DatatableColumn> {
-    return this._select$;
   }
 
   @Output('order') get order$(): EventEmitter<ColumnParam> {
@@ -52,17 +43,26 @@ export class ColumnHeaderComponent {
     return this._search$;
   }
 
-  toggleSortOrder(): void {
-    this._growingSortOrder = ! this._growingSortOrder;
-    this._order$.emit(
-      new ColumnParam(
-        this._column.query ? this._column.query : this._column.label, this._growingSortOrder ? 'ASC' : 'DESC'
-      )
-    );
-    if(! this._selected) {
-      this._selected = true;
-      this._select$.emit(this._column);
+  reset(): void {
+    this._searchState = SearchState.UNDEFINED;
+  }
+
+  stateToString(): string {
+    switch(this._searchState) {
+      case SearchState.ASC:
+        return 'ASC';
+      case SearchState.DESC:
+        return 'DESC';
+      default:
+        return undefined;
     }
+  }
+
+  switchSortOrder(): void {
+    this._searchState = (this._searchState + 1) % 3;
+    this._order$.emit(
+      new ColumnParam(this._column.query ? this._column.query : this._column.label, this.stateToString())
+    );
   }
 
   columnSearch(param: string): void {

@@ -25,8 +25,7 @@
             <md-checkbox color="warn" [checked]="selectAllTrue" (change)="setSelectAllState($event)"></md-checkbox>
           </th>
           <th *ngFor="let column of columns" [style.width]="columnWidth(column.width)">
-            <column-header [column]="column" [selected]="column === selectedColumn" (select)="selectCol($event)"
-                (order)="setOrderParam($event)" (search)="setSearchParam($event)">
+            <column-header [column]="column" (order)="setOrderParam($event)" (search)="setSearchParam($event)">
             </column-header>
           </th>
         </tr>
@@ -41,7 +40,7 @@
           <td [colSpan]="nbCols">
             <p class="errorMessage">Une erreur est survenue pendant le chargement des données de la table !</p>
           </td>
-        </tr> 
+        </tr>
         <tr *ngIf="loaded && emptyData && options.emptyMessage && params.isEmpty()">
           <td [colSpan]="nbCols">
             <p class="message">{{options.emptyMessage}}</p>
@@ -52,24 +51,40 @@
             <p class="message">{{options.emptySearchMessage}}</p>
           </td>
         </tr>
-        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="data"
-            let-index="index" let-event="even" let-odd="odd" let-last="last">
+        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="data" let-index="index" let-event="even" let-odd="odd" let-last="last">
           <tr [class.oddRow]="odd">
             <td *ngIf="options.selectionCol" class="selectionCol">
               <gui-checkbox [checked]="selectAllState" (change)="checkSelect($event, index, last)"></gui-checkbox>
             </td>
-            <ng-container 
-                *ngTemplateOutlet="content;
+            <ng-container *ngTemplateOutlet="_content;
                 context: {item: item, index: index, even: even, odd: odd, last: last}">
             </ng-container>
           </tr>
         </ng-template>
-        <tr *ngIf="options.displayFooter" class="footer">
+        <tr *ngIf="options.displayFooter || options.pagination && (page.hasPrevPage() || page.hasNextPage())" class="footer">
           <td [colSpan]="nbCols">
-            <ng-content select="datatable-footer"></ng-content>
+            <table class="footerTable">
+              <tr>
+                <td *ngIf="options.pagination" class="pagination">
+                  <span>Page :&nbsp;</span>
+                  <button md-raised-button type="button" class="smallButton" color="accent"
+                      [disabled]="! page.hasPrevPage()" (click)="goToPrevPage()">
+                    <md-icon>arrow_back</md-icon>
+                  </button>
+                  <span>{{page.pageNum}}</span>
+                  <button md-raised-button type="button" class="smallButton" color="accent"
+                      [disabled]="! page.hasNextPage()" (click)="goToNextPage()">
+                    <md-icon>arrow_forward</md-icon>
+                  </button>
+                </td>
+                <td>
+                  <ng-content select="datatable-footer"></ng-content>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
       </tbody>
-    </table>
+      </table>
   </md-card-content>
 </md-card>

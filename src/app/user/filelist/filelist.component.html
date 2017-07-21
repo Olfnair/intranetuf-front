@@ -6,6 +6,8 @@
 
 <datatable *ngIf="project"
     [options]="{
+      pagination: true,
+      itemsPerPage: 2,
       addButton: userCanAddFile(),
       addButtonTooltip: 'Ajouter un fichier',
       emptyMessage: 'Ce projet ne contient pas encore de fichier.',
