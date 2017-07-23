@@ -34,6 +34,8 @@ export class FilelistComponent {
   // indique si on affiche le rechargement de la filelist ou pas
   // (oui quand on change de projet, non quand on fait une recherche dans un projet)
   private _reload: boolean = true;
+
+  private _pageSize: number = 2; // nombre d'éléments sur la page
   
   private _controls: Map<number, WorkflowCheck> = undefined;
   private _validations: Map<number, WorkflowCheck> = undefined;
@@ -108,8 +110,10 @@ export class FilelistComponent {
     
     let searchParams: string = this._params ? this._params.searchParams.toString() : 'default';
     let orderparams: string = this._params ? this._params.orderParams.toString() : 'default';
+    let index: number = this._params ? this._params.index : 0;
+    let limit: number = this._params ? this._params.limit : this._pageSize;
     let sub: Subscription = this._restService.fetchFilesByProject(
-      this._project, searchParams, orderparams
+      this._project, searchParams, orderparams, index, limit + 1
     ).finally(() => {
       sub.unsubscribe(); // finally
     }).subscribe(
@@ -155,6 +159,10 @@ export class FilelistComponent {
 
   get userId(): number {
     return this._session.userId;
+  }
+
+  get pageSize(): number {
+    return this._pageSize;
   }
 
   userCanAddFile(): boolean {

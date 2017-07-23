@@ -52,11 +52,11 @@ export class RestApiService {
     });
   }
 
-  fetchFilesByProject(project: Project, searchParams: string, orderParams: string): Observable<File[]> {
+  fetchFilesByProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<File[]> {
     return this._http.get(
       this._backendURL.file + '/project/' + project.id.toString() + '/'
-      + Base64.urlEncode(searchParams) + '/' + Base64.urlEncode(orderParams),
-      this.options()
+      + Base64.urlEncode(searchParams) + '/' + Base64.urlEncode(orderParams)
+      + '/' + index + '/' + limit, this.options()
     ).map((res: Response) => {
       return res.json().file;
     });

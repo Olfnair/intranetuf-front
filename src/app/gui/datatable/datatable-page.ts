@@ -16,10 +16,10 @@ export class DatatablePage {
   }
 
   get itemsCount(): number {
-    return (this.itemsCount <= this.pageSize) ? this.itemsCount : this.pageSize;
+    return (this._itemsCount <= this.pageSize) ? this._itemsCount : this.pageSize;
   }
 
-   get pageSize(): number {
+  get pageSize(): number {
     return this._pagesSize;
   }
 
@@ -28,7 +28,7 @@ export class DatatablePage {
   }
 
   public hasNextPage(): boolean {
-    return this._itemsCount === this._pagesSize;
+    return this._itemsCount > this._pagesSize;
   }
 
   public hasPrevPage(): boolean {

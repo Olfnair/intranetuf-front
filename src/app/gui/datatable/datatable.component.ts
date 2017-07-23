@@ -119,8 +119,9 @@ export class DatatableComponent<T> {
     if (reload) {
       this._params.reset();
     }
+    this._page.itemsCount = 0;
     this.loading = reload ? true : this.loading;
-    this.loadingError = false
+    this.loadingError = false;
   }
 
   private endLoading(sub?: Subscription): void {
@@ -132,11 +133,11 @@ export class DatatableComponent<T> {
   }
 
   private setData(data: T[]): void {
+    this._data = [];
     if(data) {
-      this._data = data;
-    }
-    else {
-      this._data = [];
+      data.forEach((item: T) => { // copie pour éviter les ennuis
+        this._data.push(item);
+      });
     }
     this._page.itemsCount = this._data.length; // on doit savoir s'il y a un élément de trop ou pas
     // on a fait une requête avec le limit == this._page.pageSize + 1
@@ -291,6 +292,8 @@ export class DatatableComponent<T> {
   }
 
   emitParams(): void {
+    this._params.index = (this._page.pageNum - 1) * this.page.pageSize;
+    this._params.limit = this.page.pageSize;
     this._params$.emit(this._params);
   }
 
@@ -315,16 +318,13 @@ export class DatatableComponent<T> {
     return this._sanitizer.bypassSecurityTrustStyle(width ? width : '');
   }
 
-  setPageSize(pageSize: number) {
+  setPageSize(pageSize: number): void {
     this._page.pageSize = pageSize;
-    this._params.limit = pageSize;
   }
 
   pageForward(next: boolean): boolean {
     let ret = next ? this._page.goToNextPage() : this._page.goToPrevPage();
     if(ret) {
-      this._params.index += next ? this.page.pageSize : -(this.page.pageSize);
-      this._params.limit += next ? this.page.pageSize : -(this.page.pageSize);
       this.emitParams();
     }
     return ret;
