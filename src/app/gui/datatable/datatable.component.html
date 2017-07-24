@@ -51,7 +51,7 @@
             <p class="message">{{options.emptySearchMessage}}</p>
           </td>
         </tr>
-        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="data" let-index="index" let-event="even" let-odd="odd" let-last="last">
+        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="content" let-index="index" let-event="even" let-odd="odd" let-last="last">
           <tr [class.oddRow]="odd">
             <td *ngIf="options.selectionCol" class="selectionCol">
               <gui-checkbox [checked]="selectAllState" (change)="checkSelect($event, index, last)"></gui-checkbox>
@@ -61,19 +61,19 @@
             </ng-container>
           </tr>
         </ng-template>
-        <tr *ngIf="options.displayFooter || options.pagination && (page.hasPrevPage() || page.hasNextPage())" class="footer">
+        <tr *ngIf="loaded && (options.displayFooter || (paginator.hasPrevPage() || paginator.hasNextPage()))" class="footer">
           <td [colSpan]="nbCols">
             <table class="footerTable">
               <tr>
-                <td *ngIf="options.pagination" class="pagination">
+                <td *ngIf="(paginator.hasPrevPage() || paginator.hasNextPage())" class="pagination">
                   <span>Page :&nbsp;</span>
                   <button md-raised-button type="button" class="smallButton" color="accent"
-                      [disabled]="! page.hasPrevPage()" (click)="goToPrevPage()">
+                      [disabled]="! paginator.hasPrevPage()" (click)="goToPrevPage()">
                     <md-icon>arrow_back</md-icon>
                   </button>
-                  <span>{{page.pageNum}}</span>
+                  <span>{{paginator.currentPageNum}}/{{paginator.totalPages}}</span>
                   <button md-raised-button type="button" class="smallButton" color="accent"
-                      [disabled]="! page.hasNextPage()" (click)="goToNextPage()">
+                      [disabled]="! paginator.hasNextPage()" (click)="goToNextPage()">
                     <md-icon>arrow_forward</md-icon>
                   </button>
                 </td>

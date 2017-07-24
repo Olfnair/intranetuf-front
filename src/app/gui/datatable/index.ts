@@ -1,6 +1,5 @@
 export { DatatableComponent, DatatableTitle, DatatableHeader, DatatableFooter } from "./datatable.component";
 export { DatatableColumn } from "./datatable-column";
-export { DatatableDataLoader } from "./datatable-data-loader";
 export { DatatableOptions } from "./datatable-options";
 export { DatatablePage } from "./datatable-page";
 export { DatatablePaginator } from "./datatable-paginator";

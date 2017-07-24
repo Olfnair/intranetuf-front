@@ -1,6 +1,6 @@
-export class DatatablePage {
+export class DatatablePage<T> {
   private _pageSize: number = 0;
-  private _content: any[];
+  private _content: T[] = [];
 
   constructor(pageSize?: number) {
     this._pageSize = pageSize ? pageSize : 0;
@@ -18,13 +18,22 @@ export class DatatablePage {
     this._pageSize = pageSize;
   }
 
-  setContent(content: any[]): boolean {
-    if(this._content.length > this._pageSize) { return false; }
-    this._content = content;
+  setContent(content: T[]): boolean {
+    if(content == undefined || content == null) {
+      this._content = [];
+      return true;
+    }
+    if(content instanceof Array) {
+      if(this._content.length > this._pageSize) { return false; }
+      this._content = content;
+    }
+    else {
+      this._content = [content];
+    }
     return true;
   }
 
-  get content(): any [] {
+  get content(): T[] {
     return this._content;
   }
 }

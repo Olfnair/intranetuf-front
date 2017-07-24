@@ -9,7 +9,8 @@ import { environment } from "environments/environment";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
-import { DatatableQueryParams, DatatableDataLoader } from "app/gui/datatable";
+import { FlexQueryResult } from "objects/flex-query-result";
+import { DatatableQueryParams, DatatablePaginator } from "app/gui/datatable";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { RightsChecker } from "app/shared/rights-checker";
 import { DefaultRoleChecker } from "app/shared/role-checker";
@@ -25,17 +26,13 @@ import { Status as VersionStatus, Version } from "entities/version";
   styleUrls: ['./filelist.component.css']
 })
 export class FilelistComponent {
+  private static readonly PAGE_SIZE = 5; // nombre d'éléments par page
+
   private _startLoading: boolean = true;
 
   private _project: Project = undefined;
-  private _files : File[] = undefined;
-  private _filesObs: Observable<File[]> = undefined;
-  
-  // indique si on affiche le rechargement de la filelist ou pas
-  // (oui quand on change de projet, non quand on fait une recherche dans un projet)
-  private _reload: boolean = true;
-
-  private _pageSize: number = 2; // nombre d'éléments sur la page
+  private _filesPaginator: DatatablePaginator<File> = new DatatablePaginator<File>(FilelistComponent.PAGE_SIZE);
+  private _filesObs: Observable<DatatablePaginator<File>> = undefined;
   
   private _controls: Map<number, WorkflowCheck> = undefined;
   private _validations: Map<number, WorkflowCheck> = undefined;
@@ -46,8 +43,8 @@ export class FilelistComponent {
 
   private _params: DatatableQueryParams = undefined;
 
-  private _rightsChecker: RightsChecker;
-  private _roleChecker: DefaultRoleChecker;
+  private _rightsChecker: RightsChecker = new RightsChecker(this._session);
+  private _roleChecker: DefaultRoleChecker = new DefaultRoleChecker(this._session);
   
   constructor(
     private _session: SessionService,
@@ -55,8 +52,13 @@ export class FilelistComponent {
     private _router: Router,
     private _modal: ModalService
   ) {
-    this._rightsChecker = new RightsChecker(this._session);
-    this._roleChecker = new DefaultRoleChecker(this._session);
+    this._initFileList();
+  }
+
+  private _initFileList(): void {
+    this._filesPaginator.goToIndex(0, [], 0);
+    this._filesPaginator.reloadBetweenPages = true;
+    this._params = undefined;
   }
 
   private _resetChecksMap(): void {
@@ -75,10 +77,10 @@ export class FilelistComponent {
   }
 
   private _loadChecks(): void {
-    if(! this._files) { return; }
+    if(! this._filesPaginator.content || this._filesPaginator.content.length <= 0) { return; }
 
     let sub: Subscription = this._restService.fetchWorkflowCheckByStatusUserVersions(
-      Status.TO_CHECK, this._session.userId, this._files
+      Status.TO_CHECK, this._session.userId, this._filesPaginator.content
     ).finally(() => {
       sub.unsubscribe();
     }).subscribe(
@@ -97,40 +99,34 @@ export class FilelistComponent {
     );
   }
 
-  private _setFiles(files: File[], fileObs: Observable<File[]>): void {
-    this._files = files;
-    this._filesObs = fileObs;
-  }
-
   private _loadFiles(): void {
     // teste s'il faut vraiment charger quelque chose
     if(! this._project || ! this._startLoading) { return; }
     
-    this._setFiles(undefined, undefined);
-    
     let searchParams: string = this._params ? this._params.searchParams.toString() : 'default';
     let orderparams: string = this._params ? this._params.orderParams.toString() : 'default';
     let index: number = this._params ? this._params.index : 0;
-    let limit: number = this._params ? this._params.limit : this._pageSize;
-    let sub: Subscription = this._restService.fetchFilesByProject(
-      this._project, searchParams, orderparams, index, limit + 1
-    ).finally(() => {
-      sub.unsubscribe(); // finally
-    }).subscribe(
-      (files: File[]) => { // data
-        this._setFiles(files, Observable.create((observer: Observer<File[]>) => {
-          observer.next(this._files);
+    let limit: number = this._params ? this._params.limit : this._filesPaginator.pagesSize;
+
+    this._filesObs = Observable.create((observer: Observer<DatatablePaginator<File>>) => {
+      let sub: Subscription = this._restService.fetchFilesByProject(
+        this._project, searchParams, orderparams, index, limit
+      ).finally(() => {
+        sub.unsubscribe(); // finally
+        this._filesPaginator.reloadBetweenPages = false;
+      }).subscribe(
+        (result: FlexQueryResult) => {
+          this._filesPaginator.goToIndex(index, result.list ? result.list : [], result.totalCount);
+          observer.next(this._filesPaginator);
           observer.complete();
-        }));
-        this._loadChecks();
-      },
-      (error: Response) => { // erreur
-        this._setFiles(undefined, Observable.create((observer: Observer<File[]>) => {
+          this._loadChecks();
+        },
+        (error: Response) => { // erreur
           observer.error(error);
           observer.complete();
-        }));
-      },
-    );
+        },
+      );
+    });
   }
 
   @Input() set startLoading(startLoading: boolean) {
@@ -144,7 +140,7 @@ export class FilelistComponent {
   @Input() set project(project: Project) {
     if(project) {
       this._project = project;
-      this._reload = true;
+      this._initFileList();
       this._loadFiles();
     }
   }
@@ -153,16 +149,12 @@ export class FilelistComponent {
     return this._project;
   }
 
-  get dataLoader(): DatatableDataLoader<File[]> {
-    return new DatatableDataLoader<File[]>(this._filesObs, this._reload);
+  get filesObs(): Observable<DatatablePaginator<File>> {
+    return this._filesObs;
   }
 
   get userId(): number {
     return this._session.userId;
-  }
-
-  get pageSize(): number {
-    return this._pageSize;
   }
 
   userCanAddFile(): boolean {
@@ -199,9 +191,6 @@ export class FilelistComponent {
 
   paramsChange(params: DatatableQueryParams): void {
     this._params = params;
-    // on n'affiche pas de rechargement pour une recherche
-    // (ça bousille tout le dom et donc les champs de recherche)
-    this._reload = false;
     this._loadFiles();
   }
 

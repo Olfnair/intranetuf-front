@@ -59,7 +59,6 @@ export class RestApiService {
       + Base64.urlEncode(searchParams) + '/' + Base64.urlEncode(orderParams)
       + '/' + index + '/' + limit, this.options()
     ).map((res: Response) => {
-      console.log(JSON.stringify(res.json()));
       return res.json().flexQueryResult;
     });
   }

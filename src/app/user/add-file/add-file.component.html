@@ -18,7 +18,7 @@
 
     <div *ngFor="let container of userContainers" gui-input-form class="userContainerDataTable">
       <datatable *ngIf="newVersionMode"
-          [dataObs]="container.usersObs"
+          [data]="container.usersObs"
           [columns]="container.size > 1 ? ['Ordre', 'Nom', 'Prénom'] : ['Nom', 'Prénom']">
         <datatable-title>
           <h3>{{container.title}}</h3>
@@ -36,7 +36,7 @@
           emptyMessage: container.availableSize > 0 ? 'Veuillez ajouter au moins un ' +
               container.name + '.' : 'Pas encore de ' + container.name + ' affecté à ce projet.'
         }"
-        [dataObs]="container.usersObs"
+        [data]="container.usersObs"
         [columns]="container.size > 1 ? ['Rang', 'Priorité', 'Ordre', 'Nom', 'Prénom', ''] : ['Nom', 'Prénom', '']"
         (addButtonClick)="switchContainerMode(container)">
         <datatable-title>
@@ -67,7 +67,7 @@
 
       <datatable *ngIf="! newVersionMode && container.isAddMode()"
         [options]="{selectionCol: true, displayFooter: true, emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'}"
-        [dataObs]="container.availableUsers"
+        [data]="container.availableUsers"
         [columns]="['Nom', 'Prénom', '']"
         (selectedDataUpdate)="updateUsersToAdd(container, $event)">
         <datatable-title>

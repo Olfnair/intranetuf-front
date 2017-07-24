@@ -30,7 +30,7 @@
     <section *ngFor="let container of checkContainers" class="checkContainer">
       <datatable
           [options]="{displayToggle: true, emptyMessage: 'Pas d\'action sur ce fichier.'}"
-          [dataObs]="container.checksObs"
+          [data]="container.checksObs"
           [columns]="['Ordre', 'Nom', 'Prénom', 'Statut', 'Commentaire']">
         <datatable-title>
           <h2>{{container.title}} <status-icon [status]="checksStatus(container)"></status-icon></h2>

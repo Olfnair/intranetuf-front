@@ -5,12 +5,6 @@ export class DatatableOptions {
   // bouton d'ajout et le texte affiché quand on le survole
   public addButton: boolean = false;
   public addButtonTooltip: string = undefined
-
-  // activer ou non la pagination
-  public pagination: boolean = false;
-
-  // nombre d'objets max affichés sur chaque page
-  public itemsPerPage: number = 20;
   
   // afficher ou non le footer
   public displayFooter: boolean = false;

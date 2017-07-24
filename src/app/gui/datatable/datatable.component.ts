@@ -17,7 +17,6 @@ import {
   DatatableSelection,
   DatatableQueryParams,
   DatatableQueryOptions,
-  DatatableDataLoader,
   DatatablePaginator
 } from ".";
 import { ColumnParam, ColumnHeaderComponent } from "../column-header";
@@ -55,7 +54,8 @@ export class DatatableComponent<T> {
 
   // titres colonnes et données
   private _columns: DatatableColumn[] = [];
-  private _data: T[] = [];
+  //private _data: T[] = [];
+  private _paginator: DatatablePaginator<T> = new DatatablePaginator<T>();
   private _emptyData: boolean = true;
 
   // chargement
@@ -70,6 +70,9 @@ export class DatatableComponent<T> {
   // si le displayToggle est actif
   private _showContent: boolean = false;
 
+  // paramètres de recherche/ordre
+  private _params: DatatableQueryParams = new DatatableQueryParams();
+
   /* options :
    * selectionCol: boolean => Crée une colonne de sélection pour les rangées :
    *  émet (selectedDataUpdate) quand les données selectionnées changent
@@ -81,15 +84,7 @@ export class DatatableComponent<T> {
    */
   private _options: DatatableOptions = new DatatableOptions(); // génère les options par défaut
 
-  // page :
-  private _paginator: DatatablePaginator = new DatatablePaginator();
-
-  // paramètres de recherche/ordre
-  private _params: DatatableQueryParams = new DatatableQueryParams();
-
-  constructor(private _sanitizer: DomSanitizer) {
-    this.setPageSize(this._options.itemsPerPage);
-  }
+  constructor(private _sanitizer: DomSanitizer) { }
 
   @Output('addButtonClick') get addButtonClick(): EventEmitter<void> {
     return this._addButtonClick$;
@@ -111,15 +106,14 @@ export class DatatableComponent<T> {
     this._columns = columns;
   }
 
-  get data(): T[] {
-    return this._data;
+  get content(): T[] {
+    return this._paginator.content;
   }
 
-  private startLoading(reload: boolean = true): void {
+  private startLoading(reload?: boolean): void {
     if (reload) {
       this._params.reset();
     }
-    this._paginator.setContent([], 0);
     this.loading = reload ? true : this.loading;
     this.loadingError = false;
   }
@@ -128,50 +122,30 @@ export class DatatableComponent<T> {
     if (sub) {
       sub.unsubscribe();
     }
-    this.emptyData = (this._data.length <= 0);
+    this.emptyData = this.content.length <= 0;
     this.loading = false;
   }
 
-  private setData(data: T[]): void {
-    this._data = [];
-    if(! data) { return; }
-    if(! this._options.pagination) {
-      this._data = data;
-      return;
-    }
-    data.forEach((item: T) => { // copie pour éviter les ennuis
-      this._data.push(item);
-    });
-    this._paginator. = this._data.length; // on doit savoir s'il y a un élément de trop ou pas
-    // on a fait une requête avec le limit == this._page.pageSize + 1
-    // (pour savoir s'il y a une autre page après ou pas)
-    // on doit donc maintenant enlever un eventuel élément en trop :
-    while(this._data.length > this._paginator.pageSize) {
-      this._data.pop(); // enlève le dernier élément du tableau
-    }
-  }
-
-  @Input() set dataObs(dataLoader: DatatableDataLoader<T[]> | Observable<T[]>) {
-    let dataObservable: Observable<T[]> = undefined;
-    let reload: boolean = true;
-    if (dataLoader instanceof DatatableDataLoader) {
-      dataObservable = dataLoader.dataObs;
-      reload = (dataLoader.reload != undefined) ? dataLoader.reload : reload;
-    }
-    else if (dataLoader instanceof Observable) {
-      dataObservable = dataLoader;
-    }
-    this.startLoading(reload);
-    if (dataObservable == undefined || dataObservable == null) {
+  @Input() set data(obs: Observable<DatatablePaginator<T>>) {
+    this.startLoading(this._paginator.reloadBetweenPages);
+    if (obs == undefined || obs == null) {
       // Ici, je suppose que le chargement est en cours et que l'Observable sera mis à jour plus tard.
       // J'arrête donc ici et laisse la table dans l'état 'en cours de chargement'.
       return;
     }
-    let sub: Subscription = dataObservable.finally(() => {
+    let sub: Subscription = obs.finally(() => {
       this.endLoading(sub); // finalement
     }).subscribe(
-      (data: T[]) => { // ok
-        this.setData(data);
+      (paginator: DatatablePaginator<T>) => { // ok
+        if(paginator instanceof DatatablePaginator) {
+          this._paginator = paginator;
+        }
+        else { // en fait on peut passer un simple observable content un tableau de données aussi...
+          let data: T[] = paginator;
+          this._paginator = new DatatablePaginator<T>(data.length);
+          this._paginator.goToPage(1, data, data.length);
+          this._paginator.reloadBetweenPages = true;
+        }
       },
       (error: any) => { // erreur
         this.loadingError = true;
@@ -212,7 +186,6 @@ export class DatatableComponent<T> {
 
   @Input() set options(options: DatatableOptions) {
     this._options = options;
-    this.setPageSize(this.options.itemsPerPage ? this.options.itemsPerPage : this._paginator.pagesSize);
   }
 
   get options(): DatatableOptions {
@@ -241,7 +214,7 @@ export class DatatableComponent<T> {
     return this._params;
   }
 
-  get paginator(): DatatablePaginator {
+  get paginator(): DatatablePaginator<T> {
     return this._paginator;
   }
 
@@ -270,7 +243,7 @@ export class DatatableComponent<T> {
     }
     else if (event.checked && index < 0) { // ajout
       this._selectAllFalse = false;// si on ajoute, on ne déselectionne pas tout
-      this._selectedData.push(new DatatableSelection<T>(id, this._data[id]));
+      this._selectedData.push(new DatatableSelection<T>(id, this._paginator.content[id]));
       update = true;
     }
     // On emet un évènement si il y a eu mise à jour et qu'il n'y en a pas d'autres qui vont suivre
@@ -295,7 +268,7 @@ export class DatatableComponent<T> {
   }
 
   emitParams(): void {
-    this._params.index = (this._paginator.currentPageNum - 1) * this._paginator.pagesSize;
+    this._params.index = this._paginator.pageToIndex(this._paginator.currentPageNum);
     this._params.limit = this._paginator.pagesSize;
     this._params$.emit(this._params);
   }
@@ -310,6 +283,7 @@ export class DatatableComponent<T> {
   }
 
   setSearchParam(columnParam: ColumnParam): void {
+    this.paginator.goToIndex(0, [], 0);
     this.setParam(this._params.searchParams, columnParam);
   }
 
@@ -326,7 +300,7 @@ export class DatatableComponent<T> {
   }
 
   pageForward(next: boolean): boolean {
-    let ret = next ? this._paginator.goToNextPage() : this._paginator.goToPrevPage();
+    let ret = next ? this._paginator.goToPage(this._paginator.currentPageNum + 1) : this._paginator.goToPage(this._paginator.currentPageNum - 1);
     if(ret) {
       this.emitParams();
     }

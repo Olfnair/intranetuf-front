@@ -38,7 +38,6 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
       this._authToken = JSON.parse(Base64.urlDecode(params['token']) || undefined);
-      console.log(this._authToken);
       if (!this._authToken) {
         this._router.navigate(['/home']);
       }

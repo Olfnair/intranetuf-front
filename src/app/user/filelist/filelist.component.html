@@ -6,14 +6,12 @@
 
 <datatable *ngIf="project"
     [options]="{
-      pagination: true,
-      itemsPerPage: pageSize,
       addButton: userCanAddFile(),
       addButtonTooltip: 'Ajouter un fichier',
       emptyMessage: 'Ce projet ne contient pas encore de fichier.',
       emptySearchMessage: 'Aucun fichier ne correspond à votre recherche.'
     }"
-    [dataObs]="dataLoader"
+    [data]="filesObs"
     [columns]="[
       { label: 'Fichier',        query: 'version.filename',    sort: true, search: true, width: '30%' },
       { label: 'Auteur',         query: 'author',              sort: true, search: true, width: '20%' },
