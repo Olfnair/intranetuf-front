@@ -4,6 +4,7 @@ import { environment } from "environments/environment";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
 import { Base64 } from "app/shared/base64";
+import { FlexQueryResult } from "objects/flex-query-result";
 import { RestLong } from "objects/rest-long";
 import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
@@ -52,13 +53,14 @@ export class RestApiService {
     });
   }
 
-  fetchFilesByProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<File[]> {
+  fetchFilesByProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult> {
     return this._http.get(
       this._backendURL.file + '/project/' + project.id.toString() + '/'
       + Base64.urlEncode(searchParams) + '/' + Base64.urlEncode(orderParams)
       + '/' + index + '/' + limit, this.options()
     ).map((res: Response) => {
-      return res.json().file;
+      console.log(JSON.stringify(res.json()));
+      return res.json().flexQueryResult;
     });
   }
 

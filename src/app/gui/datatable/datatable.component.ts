@@ -18,7 +18,7 @@ import {
   DatatableQueryParams,
   DatatableQueryOptions,
   DatatableDataLoader,
-  DatatablePage
+  DatatablePaginator
 } from ".";
 import { ColumnParam, ColumnHeaderComponent } from "../column-header";
 
@@ -82,7 +82,7 @@ export class DatatableComponent<T> {
   private _options: DatatableOptions = new DatatableOptions(); // génère les options par défaut
 
   // page :
-  private _page: DatatablePage = new DatatablePage();
+  private _paginator: DatatablePaginator = new DatatablePaginator();
 
   // paramètres de recherche/ordre
   private _params: DatatableQueryParams = new DatatableQueryParams();
@@ -119,7 +119,7 @@ export class DatatableComponent<T> {
     if (reload) {
       this._params.reset();
     }
-    this._page.itemsCount = 0;
+    this._paginator.setContent([], 0);
     this.loading = reload ? true : this.loading;
     this.loadingError = false;
   }
@@ -134,16 +134,19 @@ export class DatatableComponent<T> {
 
   private setData(data: T[]): void {
     this._data = [];
-    if(data) {
-      data.forEach((item: T) => { // copie pour éviter les ennuis
-        this._data.push(item);
-      });
+    if(! data) { return; }
+    if(! this._options.pagination) {
+      this._data = data;
+      return;
     }
-    this._page.itemsCount = this._data.length; // on doit savoir s'il y a un élément de trop ou pas
+    data.forEach((item: T) => { // copie pour éviter les ennuis
+      this._data.push(item);
+    });
+    this._paginator. = this._data.length; // on doit savoir s'il y a un élément de trop ou pas
     // on a fait une requête avec le limit == this._page.pageSize + 1
     // (pour savoir s'il y a une autre page après ou pas)
     // on doit donc maintenant enlever un eventuel élément en trop :
-    while(this._data.length > this._page.pageSize) {
+    while(this._data.length > this._paginator.pageSize) {
       this._data.pop(); // enlève le dernier élément du tableau
     }
   }
@@ -209,7 +212,7 @@ export class DatatableComponent<T> {
 
   @Input() set options(options: DatatableOptions) {
     this._options = options;
-    this.setPageSize(this.options.itemsPerPage ? this.options.itemsPerPage : this._page.pageSize);
+    this.setPageSize(this.options.itemsPerPage ? this.options.itemsPerPage : this._paginator.pagesSize);
   }
 
   get options(): DatatableOptions {
@@ -238,8 +241,8 @@ export class DatatableComponent<T> {
     return this._params;
   }
 
-  get page(): DatatablePage {
-    return this._page;
+  get paginator(): DatatablePaginator {
+    return this._paginator;
   }
 
   add(): void {
@@ -292,8 +295,8 @@ export class DatatableComponent<T> {
   }
 
   emitParams(): void {
-    this._params.index = (this._page.pageNum - 1) * this.page.pageSize;
-    this._params.limit = this.page.pageSize;
+    this._params.index = (this._paginator.currentPageNum - 1) * this._paginator.pagesSize;
+    this._params.limit = this._paginator.pagesSize;
     this._params$.emit(this._params);
   }
 
@@ -319,11 +322,11 @@ export class DatatableComponent<T> {
   }
 
   setPageSize(pageSize: number): void {
-    this._page.pageSize = pageSize;
+    this._paginator.pagesSize = pageSize;
   }
 
   pageForward(next: boolean): boolean {
-    let ret = next ? this._page.goToNextPage() : this._page.goToPrevPage();
+    let ret = next ? this._paginator.goToNextPage() : this._paginator.goToPrevPage();
     if(ret) {
       this.emitParams();
     }
