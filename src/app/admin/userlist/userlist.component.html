@@ -1,21 +1,23 @@
 <datatable *ngIf="isListMode"
     [options]="{
-      pagination: true,
       selectionCol: true,
       addButton: true,
-      addButtonTooltip: 'Ajouter un utilisateur'
+      addButtonTooltip: 'Ajouter un utilisateur',
+      emptyMessage: 'Il n\'y a pas encore d\'utilisateur.',
+      emptySearchMessage: 'Aucun utilisateur ne correspond à votre recherche.'
     }"
     [data]="users"
     [columns]="[
-      { label: 'Nom', sort: true, search: true },
-      { label: 'Prénom', sort: true, search: true },
-      { label: 'Identifiant', sort: true, search: true },
-      { label: 'Email', sort: true, search: true },
-      { label: 'Actif', sort: true },
-      { label: 'En Attente', sort: true },
+      { label: 'Prénom',      query: 'firstname', sort: true, search: true },
+      { label: 'Nom',         query: 'name',      sort: true, search: true },
+      { label: 'Identifiant', query: 'login',     sort: true, search: true },
+      { label: 'Email',       query: 'email',     sort: true, search: true },
+      { label: 'Actif',       query: 'active',    sort: true               },
+      { label: 'En Attente',  query: 'pending',   sort: true               },
       ''
     ]"
-    (addButtonClick)="add()">
+    (addButtonClick)="add()"
+    (params)="paramsChange($event)">
   <datatable-title>
     <h2>Liste des utilisateurs</h2>
   </datatable-title>

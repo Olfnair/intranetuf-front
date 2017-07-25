@@ -117,7 +117,16 @@ body {
   padding: 0 !important;
 }
 
-.smallButton md-icon {
+.tinyButton {
+  display: block;
+  min-width: 30px !important;
+  width: 30px;
+  height: 36px;
+  padding: 0 !important;
+}
+
+.smallButton md-icon,
+.tinyButton md-icon {
   margin: 0 auto;
   vertical-align: middle;
   width: inherit;

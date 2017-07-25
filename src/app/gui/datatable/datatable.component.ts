@@ -54,7 +54,6 @@ export class DatatableComponent<T> {
 
   // titres colonnes et données
   private _columns: DatatableColumn[] = [];
-  //private _data: T[] = [];
   private _paginator: DatatablePaginator<T> = new DatatablePaginator<T>();
   private _emptyData: boolean = true;
 
@@ -222,28 +221,41 @@ export class DatatableComponent<T> {
     this._addButtonClick$.emit();
   }
 
+  resetSelections(): void {
+    this._selectedData = [];
+    this._selectAllTrue = false;
+    this._selectAllFalse = false;
+  }
+
   setSelectAllState(event: MdCheckboxChange): void {
     this._selectAllTrue = event.checked;
     this._selectAllFalse = !event.checked;
   }
 
-  checkSelect(event: MdCheckboxChange, id: number, last: boolean): void {
-    let index: number = -1;
+  getSelectionIndex(id: number): number {
     for (let i = 0; i < this._selectedData.length; ++i) {
       if (this._selectedData[i] && this._selectedData[i].id == id) {
-        index = i;
-        break;
+        return i;
       }
     }
+    return -1;
+  }
+
+  isSelected(id: number): boolean {
+    return this.getSelectionIndex(id) >= 0;
+  }
+
+  checkSelect(event: MdCheckboxChange, id: number, item: T, last: boolean): void {
+    let index: number = this.getSelectionIndex(id); // récupère l'index de la sélection dans le tableau si elle existe
     let update: boolean = false;
-    if (!event.checked && index >= 0) { // supression
-      this._selectAllTrue = false; // si on supprime, on ne selectionne plus tout
+    if (!event.checked && index >= 0) { // suppression
+      this._selectAllTrue = false; // si on supprime, on ne sélectionne plus tout
       this._selectedData[index] = undefined; // on marque l'élément à supprimer
       update = true;
     }
     else if (event.checked && index < 0) { // ajout
-      this._selectAllFalse = false;// si on ajoute, on ne déselectionne pas tout
-      this._selectedData.push(new DatatableSelection<T>(id, this._paginator.content[id]));
+      this._selectAllFalse = false; // si on ajoute, on ne déselectionne pas tout
+      this._selectedData.push(new DatatableSelection<T>(id, item));
       update = true;
     }
     // On emet un évènement si il y a eu mise à jour et qu'il n'y en a pas d'autres qui vont suivre
@@ -253,10 +265,11 @@ export class DatatableComponent<T> {
     if (update && this.selectAllState == undefined || last) {
       this._delUndefinedSelect();
       this._selectedDataUpdate$.emit(this._selectedData);
+      console.log(JSON.stringify(this._selectedData));
     }
   }
 
-  private _delUndefinedSelect() {
+  private _delUndefinedSelect(): void {
     // effectue les suppressions avant d'emettre les données
     let newSelectedData: DatatableSelection<T>[] = [];
     for (let selection of this._selectedData) {
@@ -299,8 +312,8 @@ export class DatatableComponent<T> {
     this._paginator.pagesSize = pageSize;
   }
 
-  pageForward(next: boolean): boolean {
-    let ret = next ? this._paginator.goToPage(this._paginator.currentPageNum + 1) : this._paginator.goToPage(this._paginator.currentPageNum - 1);
+  goToPage(pageNum: number): boolean {
+    let ret = this._paginator.goToPage(pageNum);
     if(ret) {
       this.emitParams();
     }
@@ -308,10 +321,18 @@ export class DatatableComponent<T> {
   }
 
   goToPrevPage(): boolean {
-    return this.pageForward(false);
+    return this.goToPage(this._paginator.currentPageNum - 1);
   }
 
   goToNextPage(): boolean {
-    return this.pageForward(true);
+    return this.goToPage(this._paginator.currentPageNum + 1);
+  }
+
+  goToFirstPage(): boolean {
+    return this.goToPage(1);
+  }
+
+  goToLastPage(): boolean {
+    return this.goToPage(this._paginator.totalPages);
   }
 }

@@ -54,7 +54,15 @@
         <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="content" let-index="index" let-event="even" let-odd="odd" let-last="last">
           <tr [class.oddRow]="odd">
             <td *ngIf="options.selectionCol" class="selectionCol">
-              <gui-checkbox [checked]="selectAllState" (change)="checkSelect($event, index, last)"></gui-checkbox>
+              <gui-checkbox *ngIf="item.id != undefined"
+                  [checked]="selectAllState || selectAllState == undefined && isSelected(item.id)"
+                  (change)="checkSelect($event, item.id, item, last)">
+              </gui-checkbox>
+              <gui-checkbox *ngIf="item.id == undefined"
+                  [checked]="selectAllState || selectAllState == undefined &&
+                    isSelected(index + paginator.pageToIndex(paginator.currentPageNum))"
+                  (change)="checkSelect($event, index + paginator.pageToIndex(paginator.currentPageNum), item, last)">
+              </gui-checkbox>
             </td>
             <ng-container *ngTemplateOutlet="_content;
                 context: {item: item, index: index, even: even, odd: odd, last: last}">
@@ -67,14 +75,22 @@
               <tr>
                 <td *ngIf="(paginator.hasPrevPage() || paginator.hasNextPage())" class="pagination">
                   <span>Page :&nbsp;</span>
-                  <button md-raised-button type="button" class="smallButton" color="accent"
+                  <button md-raised-button type="button" class="tinyButton" color="accent"
+                      [disabled]="! paginator.hasPrevPage()" (click)="goToFirstPage()">
+                    <md-icon>first_page</md-icon>
+                  </button>
+                  <button md-raised-button type="button" class="tinyButton" color="accent"
                       [disabled]="! paginator.hasPrevPage()" (click)="goToPrevPage()">
-                    <md-icon>arrow_back</md-icon>
+                    <md-icon>chevron_left</md-icon>
                   </button>
                   <span>{{paginator.currentPageNum}}/{{paginator.totalPages}}</span>
-                  <button md-raised-button type="button" class="smallButton" color="accent"
+                  <button md-raised-button type="button" class="tinyButton" color="accent"
                       [disabled]="! paginator.hasNextPage()" (click)="goToNextPage()">
-                    <md-icon>arrow_forward</md-icon>
+                    <md-icon>chevron_right</md-icon>
+                  </button>
+                  <button md-raised-button type="button" class="tinyButton" color="accent"
+                      [disabled]="! paginator.hasNextPage()" (click)="goToLastPage()">
+                    <md-icon>last_page</md-icon>
                   </button>
                 </td>
                 <td>

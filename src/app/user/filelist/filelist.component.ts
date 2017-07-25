@@ -26,7 +26,7 @@ import { Status as VersionStatus, Version } from "entities/version";
   styleUrls: ['./filelist.component.css']
 })
 export class FilelistComponent {
-  private static readonly PAGE_SIZE = 5; // nombre d'éléments par page
+  private static readonly PAGE_SIZE = 2; // nombre d'éléments par page
 
   private _startLoading: boolean = true;
 

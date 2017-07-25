@@ -34,6 +34,10 @@ export class RestApiService {
     Object.keys(environment.backend.endpoints).forEach(k => this._backendURL[k] = `${baseUrl}${environment.backend.endpoints[k]}`);
   }
 
+  private static encodeQueryParams(searchParams: string, orderParams: string, index: number, limit: number): string {
+    return Base64.urlEncode(searchParams) + '/' + Base64.urlEncode(orderParams) + '/' + index + '/' + limit;
+  }
+
   get backendURL() {
     return this._backendURL;
   }
@@ -56,8 +60,8 @@ export class RestApiService {
   fetchFilesByProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult> {
     return this._http.get(
       this._backendURL.file + '/project/' + project.id.toString() + '/'
-      + Base64.urlEncode(searchParams) + '/' + Base64.urlEncode(orderParams)
-      + '/' + index + '/' + limit, this.options()
+      + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      this.options()
     ).map((res: Response) => {
       return res.json().flexQueryResult;
     });
@@ -102,9 +106,12 @@ export class RestApiService {
    *
    * @returns {Observable<R>}
    */
-  fetchUsers(): Observable<User[]> {
-    return this._http.get(this._backendURL.user, this.options()).map((res: Response) => {
-      return res.json().user;
+  fetchUsers(searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult> {
+    return this._http.get(
+      this._backendURL.user + '/' + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      this.options()
+    ).map((res: Response) => {
+      return res.json().flexQueryResult;
     });
   }
 
