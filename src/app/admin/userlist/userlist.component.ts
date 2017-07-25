@@ -23,7 +23,7 @@ export enum ComponentState {
   templateUrl: './userlist.component.html',
   styleUrls: ['./userlist.component.css']
 })
-export class UserlistComponent extends DefaultRoleChecker {
+export class UserlistComponent {
   private _usersPaginator: DatatablePaginator<User> = new DatatablePaginator<User>(2);
   private _usersPaginatorObs: Observable<DatatablePaginator<User>> = undefined;
   private _state: number = ComponentState.LIST;
@@ -33,36 +33,18 @@ export class UserlistComponent extends DefaultRoleChecker {
 
   private _params: DatatableQueryParams = undefined;
 
+  private _roleChecker: DefaultRoleChecker;
+
   constructor(
-    session: SessionService,
+    private _session: SessionService,
     private _restService: RestApiService,
     private _router: Router
-  ) { super(session); }
+  ) {
+    this._roleChecker = new DefaultRoleChecker(this._session);
+  }
 
   updateUsers(): void {
-    let searchParams: string = this._params ? this._params.searchParams.toString() : 'default';
-    let orderparams: string = this._params ? this._params.orderParams.toString() : 'default';
-    let index: number = this._params ? this._params.index : 0;
-    let limit: number = this._params ? this._params.limit : this._usersPaginator.pagesSize;
-
-    this._usersPaginator.reloadBetweenPages = false;
-
-    this._usersPaginatorObs = Observable.create((observer: Observer<DatatablePaginator<User>>) => {
-      let sub = this._restService.fetchUsers(
-        searchParams, orderparams, index, limit
-      ).finally(() => {
-        observer.complete();
-        sub.unsubscribe();
-      }).subscribe(
-        (result: FlexQueryResult) => {
-          this._usersPaginator.goToIndex(index, result.list ? result.list : [], result.totalCount);
-          observer.next(this._usersPaginator);
-        },
-        (error: Response) => {
-          observer.error(error);
-        }
-      );
-    });
+    this._usersPaginatorObs = this._usersPaginator.update(this._restService, 'fetchUsers', this._params);
   }
 
   paramsChange(params: DatatableQueryParams): void {
@@ -114,6 +96,10 @@ export class UserlistComponent extends DefaultRoleChecker {
     return this._selectedUser;
   }
 
+  get roleChecker(): DefaultRoleChecker {
+    return this._roleChecker;
+  }
+
   activateListMode(submited: boolean) {
     if (submited) {
       this.updateUsers();
@@ -122,7 +108,7 @@ export class UserlistComponent extends DefaultRoleChecker {
   }
 
   adminLoginAs(login: string): void {
-    let sub: Subscription = this.session.adminLoginAs(login).finally(() => {
+    let sub: Subscription = this._session.adminLoginAs(login).finally(() => {
       sub.unsubscribe();
     }).subscribe(
       (success: Response) => {

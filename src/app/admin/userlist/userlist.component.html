@@ -8,16 +8,16 @@
     }"
     [data]="users"
     [columns]="[
-      { label: 'Prénom',      query: 'firstname', sort: true, search: true },
-      { label: 'Nom',         query: 'name',      sort: true, search: true },
-      { label: 'Identifiant', query: 'login',     sort: true, search: true },
-      { label: 'Email',       query: 'email',     sort: true, search: true },
-      { label: 'Actif',       query: 'active',    sort: true               },
-      { label: 'En Attente',  query: 'pending',   sort: true               },
-      ''
+      { label: 'Prénom',      query: 'firstname', sort: true, search: true, width: '15%' },
+      { label: 'Nom',         query: 'name',      sort: true, search: true, width: '15%' },
+      { label: 'Identifiant', query: 'login',     sort: true, search: true, width: '15%' },
+      { label: 'Email',       query: 'email',     sort: true, search: true, width: '15%' },
+      { label: 'Actif',       query: 'active',    sort: true,               width: '8%' },
+      { label: 'En Attente',  query: 'pending',   sort: true,               width: '8%' },
+      { label: '',                                                          width: '20%' }
     ]"
     (addButtonClick)="add()"
-    (params)="paramsChange($event)">
+    (queryParams)="paramsChange($event)">
   <datatable-title>
     <h2>Liste des utilisateurs</h2>
   </datatable-title>
@@ -29,8 +29,8 @@
     <td>{{user.active}}</td>
     <td>{{user.pending}}</td>
     <td>
-      <button md-raised-button color="primary" type=button (click)="rights(user)">Droits</button>
-      <button *ngIf="userIsSuperAdmin()" md-raised-button color="primary" type=button (click)="adminLoginAs(user.login)">Utiliser Compte</button>
+      <button md-raised-button color="primary" type="button" (click)="rights(user)">Droits</button>
+      <button *ngIf="roleChecker.userIsSuperAdmin()" md-raised-button color="primary" type="button" (click)="adminLoginAs(user.login)">Utiliser Compte</button>
     </td>
   </ng-template>
 </datatable>

@@ -17,10 +17,13 @@ export class UserContainer {
   private _availableUsersObs: Observable<User[]> = undefined;
 
   // infos users
-  private _usersToAdd: number[] = []; // index des users à ajouter
+  private _usersToAdd: number[] = []; // identifiants des users à ajouter
   private _availableUsers: User[] = [];
   private _users: User[] = [];
   private _chained: boolean[] = [];
+
+  // mapping interne
+  private _idToAvailableUserMap: Map<number, User> = new Map<number, User>();
 
   // config
   private _right: Right = 0;
@@ -70,6 +73,14 @@ export class UserContainer {
     this._addMode ? this.updateAvailableUsers() : this.updateUsers();
   }
 
+  // effectue un mapping de l'id d'un user du tableau vers l'index de cet user dans le tableau
+  mapAvailableUsers(): void {
+    this._idToAvailableUserMap.clear();
+    for(let index: number = 0; this._availableUsers && index < this._availableUsers.length; ++index) {
+      this._idToAvailableUserMap.set(this._availableUsers[index].id, this._availableUsers[index]);
+    }
+  }
+
   set right(right: Right) {
     this.reset();
     this._right = right;
@@ -79,6 +90,7 @@ export class UserContainer {
     let sub: Subscription = this._restService.fetchUsersByRightOnProject(this._project, right).subscribe(
       (users: User[]) => {
         this._availableUsers = users;
+        this.mapAvailableUsers();
       },
       (error: Response) => {
         // gérer erreur ?
@@ -178,29 +190,29 @@ export class UserContainer {
     return ! this.isAddMode();
   }
 
-  delete(i: number): void {
-    this._availableUsers.push(this._users.splice(i, 1)[0]);
-    this._chained.splice(i, 1);
-    this.update();
+  delete(index: number): void {
+    let deletedUser: User = this._users.splice(index, 1)[0];      // supprime l'user de la liste
+    this._availableUsers.push(deletedUser);                       // cet user est denouveau disponible
+    this._idToAvailableUserMap.set(deletedUser.id, deletedUser); // fait le mapping vers cet user supprimé à nouveau disponible
+    this._chained.splice(index, 1);                               // on supprime également la priorité de cet user
+    this.update();                                                // indique une mise à jour à la datatable
   }
 
-  addUsers(indexes: number[]): void {
-    indexes.forEach((i: number) => {
-      this._users.push(this._availableUsers[i]);
-      this._chained.push(false);
-      this._availableUsers[i] = undefined; // on marque les utilisateurs qu'on a ajouté
+  addUsers(identifiers: number[]): void {
+    // Ajout des utilisateurs selectionnés...
+    identifiers.forEach((id: number) => {
+      let user: User = this._idToAvailableUserMap.get(id); // récupère l'utilisateur correspondant à cet identifiant
+      this._idToAvailableUserMap.delete(id);               // supression du mapping (user plus dispo)
+      this._users.push(user);                              // ajoute user à la liste des users sélectionnés
+      this._chained.push(false);                           // ajout priorité
     });
 
-    // on recrée le tableau des utilisateurs disponibles (Complexité temporelle: O(n), mémorielle: O(2n))
-    // Je ne vois pas de façon plus rapide pour supprimer des éléments d'un tableau dont on a les indexes, mais pas forcément triés.
-    // Le tri en lui même est de minimum O(n log(n)), ce qui est déjà plus long. Et il faut encore faire la suppression...
-    let newAvailableUsers: User[] = [];
-    this._availableUsers.forEach((user: User) => {
-      if(user != undefined) {
-        newAvailableUsers.push(user);
-      }
+    // Il faut maintenant recréer le tableau des utilisateurs disponibles
+    // On va se servir du mapping qui lui est à jour...
+    this._availableUsers = [];                                                // reset du tableau
+    this._idToAvailableUserMap.forEach((user: User, identifier: number) => {
+      this._availableUsers.push(user);                                        // ajout des users présents dans le mapping
     });
-    this._availableUsers = newAvailableUsers;
   }
 
   processUsersToAdd(): void {
@@ -208,25 +220,25 @@ export class UserContainer {
     this.resetUsersToAdd();
   }
 
-  chain(i: number, value: boolean): void {
-    this._chained[i] = value;
+  chain(index: number, value: boolean): void {
+    this._chained[index] = value;
   }
 
-  isChained(i: number): boolean {
-    return this._chained[i];
+  isChained(index: number): boolean {
+    return this._chained[index];
   }
 
-  chainToggle(i: number): void {
-    this._chained[i] = ! this._chained[i];
+  chainToggle(index: number): void {
+    this._chained[index] = ! this._chained[index];
   }
 
-  swap(i: number, j: number): void {
-    let tmpUser: User = this._users[i];
-    let tmpChained: boolean = this._chained[i];
-    this._users[i] = this._users[j];
-    this._chained[i] = this._chained[j];
-    this._users[j] = tmpUser;
-    this._chained[j] = tmpChained;
+  swap(indexA: number, indexB: number): void {
+    let tmpUser: User = this._users[indexA];
+    let tmpChained: boolean = this._chained[indexA];
+    this._users[indexA] = this._users[indexB];
+    this._chained[indexA] = this._chained[indexB];
+    this._users[indexB] = tmpUser;
+    this._chained[indexB] = tmpChained;
     this.update();
   }
 
@@ -242,11 +254,11 @@ export class UserContainer {
 
   addAsChecksToVersion(version: Version): void {
     let checks: WorkflowCheck[] = [];
-    for(let i: number = 0; i < this._users.length; ++i) {
+    for(let index: number = 0; index < this._users.length; ++index) {
       let check: WorkflowCheck = new WorkflowCheck();
       check.type = this._type;
-      check.order_num = this.countOrderValue(i) - 1;
-      check.user = this._users[i];
+      check.order_num = this.countOrderValue(index) - 1;
+      check.user = this._users[index];
       version.workflowChecks.push(check);
     }
   }

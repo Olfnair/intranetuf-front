@@ -15,7 +15,6 @@ class AdminRoleChecker extends RoleChecker {
   styleUrls: ['./admin-panel.component.css']
 })
 export class AdminPanelComponent {
-
   private _roleChecker: AdminRoleChecker = undefined;
   
   constructor(private _session: SessionService) {
@@ -37,5 +36,4 @@ export class AdminPanelComponent {
   setSelectedTab(event: MdTabChangeEvent): void {
     this._session.selectedAdminTab = event.index;
   }
-
 }

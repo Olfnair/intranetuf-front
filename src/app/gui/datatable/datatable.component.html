@@ -56,12 +56,12 @@
             <td *ngIf="options.selectionCol" class="selectionCol">
               <gui-checkbox *ngIf="item.id != undefined"
                   [checked]="selectAllState || selectAllState == undefined && isSelected(item.id)"
-                  (change)="checkSelect($event, item.id, item, last)">
+                  (change)="checkSelect($event, item.id, item)">
               </gui-checkbox>
               <gui-checkbox *ngIf="item.id == undefined"
                   [checked]="selectAllState || selectAllState == undefined &&
                     isSelected(index + paginator.pageToIndex(paginator.currentPageNum))"
-                  (change)="checkSelect($event, index + paginator.pageToIndex(paginator.currentPageNum), item, last)">
+                  (change)="checkSelect($event, index + paginator.pageToIndex(paginator.currentPageNum), item)">
               </gui-checkbox>
             </td>
             <ng-container *ngTemplateOutlet="_content;

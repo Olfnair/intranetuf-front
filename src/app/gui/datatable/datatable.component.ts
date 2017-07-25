@@ -14,7 +14,6 @@ import { Observable } from "rxjs/Observable";
 import {
   DatatableColumn,
   DatatableOptions,
-  DatatableSelection,
   DatatableQueryParams,
   DatatableQueryOptions,
   DatatablePaginator
@@ -47,7 +46,7 @@ export class DatatableComponent<T> {
 
   // events
   private _addButtonClick$: EventEmitter<void> = new EventEmitter<void>();
-  private _selectedDataUpdate$: EventEmitter<DatatableSelection<T>[]> = new EventEmitter<DatatableSelection<T>[]>();
+  private _selectedDataUpdate$: EventEmitter<Map<number, T>> = new EventEmitter<Map<number, T>>();
 
   // event des params recherche/ordre
   private _params$: EventEmitter<DatatableQueryParams> = new EventEmitter<DatatableQueryParams>();
@@ -62,7 +61,7 @@ export class DatatableComponent<T> {
   private _loadingError: boolean = false;
 
   // sélection des rangées (checkbox)
-  private _selectedData: DatatableSelection<T>[] = [];
+  private _selectedData: Map<number, T> = new Map<number, T>();
   private _selectAllTrue: boolean = false;
   private _selectAllFalse: boolean = false;
 
@@ -89,11 +88,11 @@ export class DatatableComponent<T> {
     return this._addButtonClick$;
   }
 
-  @Output('selectedDataUpdate') get selectedDataUpdate(): EventEmitter<DatatableSelection<T>[]> {
+  @Output('selectedDataUpdate') get selectedDataUpdate(): EventEmitter<Map<number, T>> {
     return this._selectedDataUpdate$;
   }
 
-  @Output('params') get order(): EventEmitter<DatatableQueryParams> {
+  @Output('queryParams') get queryParams(): EventEmitter<DatatableQueryParams> {
     return this._params$;
   }
 
@@ -139,7 +138,7 @@ export class DatatableComponent<T> {
         if(paginator instanceof DatatablePaginator) {
           this._paginator = paginator;
         }
-        else { // en fait on peut passer un simple observable content un tableau de données aussi...
+        else { // en fait on peut passer un simple observable contenant un tableau de données aussi...
           let data: T[] = paginator;
           this._paginator = new DatatablePaginator<T>(data.length);
           this._paginator.goToPage(1, data, data.length);
@@ -152,7 +151,7 @@ export class DatatableComponent<T> {
       () => { // complete (pas d'erreur)
         this.endLoading(sub);
       }
-      );
+    );
   }
 
   set loading(loading: boolean) {
@@ -164,7 +163,7 @@ export class DatatableComponent<T> {
   }
 
   get loaded(): boolean {
-    return !this._loading && !this._loadingError;
+    return ! this._loading && ! this._loadingError;
   }
 
   set loadingError(loadingError: boolean) {
@@ -221,63 +220,41 @@ export class DatatableComponent<T> {
     this._addButtonClick$.emit();
   }
 
-  resetSelections(): void {
-    this._selectedData = [];
+  resetSelectAllState(): void {
     this._selectAllTrue = false;
     this._selectAllFalse = false;
   }
 
-  setSelectAllState(event: MdCheckboxChange): void {
-    this._selectAllTrue = event.checked;
-    this._selectAllFalse = !event.checked;
+  resetSelections(): void {
+    this._selectedData.clear();
+    this.resetSelectAllState();
   }
 
-  getSelectionIndex(id: number): number {
-    for (let i = 0; i < this._selectedData.length; ++i) {
-      if (this._selectedData[i] && this._selectedData[i].id == id) {
-        return i;
-      }
-    }
-    return -1;
+  setSelectAllState(event: MdCheckboxChange): void {
+    this._selectAllTrue = event.checked;
+    this._selectAllFalse = ! event.checked;
   }
 
   isSelected(id: number): boolean {
-    return this.getSelectionIndex(id) >= 0;
+    return this._selectedData.has(id);
   }
 
-  checkSelect(event: MdCheckboxChange, id: number, item: T, last: boolean): void {
-    let index: number = this.getSelectionIndex(id); // récupère l'index de la sélection dans le tableau si elle existe
+  checkSelect(event: MdCheckboxChange, id: number, item: T): void {
+    let itemSelected: boolean = this.isSelected(id);  // cherche si l'item est déjà sélectionné
     let update: boolean = false;
-    if (!event.checked && index >= 0) { // suppression
-      this._selectAllTrue = false; // si on supprime, on ne sélectionne plus tout
-      this._selectedData[index] = undefined; // on marque l'élément à supprimer
+    if (! event.checked && itemSelected) {            // suppression :
+      this._selectAllTrue = false;                    // On supprime, donc on ne sélectionne plus tout
+      this._selectedData.delete(id);                  // suppression de l'élément
       update = true;
     }
-    else if (event.checked && index < 0) { // ajout
-      this._selectAllFalse = false; // si on ajoute, on ne déselectionne pas tout
-      this._selectedData.push(new DatatableSelection<T>(id, item));
+    else if (event.checked && ! itemSelected) {       // ajout :
+      this._selectAllFalse = false;                   // On ajoute, donc on ne déselectionne pas tout
+      this._selectedData.set(id, item);
       update = true;
+    } 
+    if(update) {
+      this._selectedDataUpdate$.emit(this._selectedData); // emet event
     }
-    // On emet un évènement si il y a eu mise à jour et qu'il n'y en a pas d'autres qui vont suivre
-    // (Sinon, on va attendre la dernière pour envoyer l'event. Pas de flood inutile...)
-    // on s'assure que l'event soit émit à tous les coups si c'est la dernière mise à jour, même en cas d'erreur
-    // this.selectAllState != undefined indique une sélection ou désélection globale et donc, d'autres mises à jour à attendre
-    if (update && this.selectAllState == undefined || last) {
-      this._delUndefinedSelect();
-      this._selectedDataUpdate$.emit(this._selectedData);
-      console.log(JSON.stringify(this._selectedData));
-    }
-  }
-
-  private _delUndefinedSelect(): void {
-    // effectue les suppressions avant d'emettre les données
-    let newSelectedData: DatatableSelection<T>[] = [];
-    for (let selection of this._selectedData) {
-      if (selection != undefined) {
-        newSelectedData.push(selection);
-      }
-    }
-    this._selectedData = newSelectedData;
   }
 
   emitParams(): void {
@@ -296,6 +273,7 @@ export class DatatableComponent<T> {
   }
 
   setSearchParam(columnParam: ColumnParam): void {
+    this.resetSelections(); // suppression des sélections
     this.paginator.goToIndex(0, [], 0);
     this.setParam(this._params.searchParams, columnParam);
   }
@@ -308,16 +286,13 @@ export class DatatableComponent<T> {
     return this._sanitizer.bypassSecurityTrustStyle(width ? width : '');
   }
 
-  setPageSize(pageSize: number): void {
-    this._paginator.pagesSize = pageSize;
-  }
-
   goToPage(pageNum: number): boolean {
-    let ret = this._paginator.goToPage(pageNum);
-    if(ret) {
+    if(this._paginator.goToPage(pageNum)) {
       this.emitParams();
+      this.resetSelectAllState(); // décoche la case 'tout sélectionner' en cas de changement de page
+      return true;
     }
-    return ret;
+    return false;
   }
 
   goToPrevPage(): boolean {

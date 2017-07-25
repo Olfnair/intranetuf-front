@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { MdCheckboxChange } from "@angular/material";
 import { User } from "entities/user";
 import { ProjectRight, Right } from "entities/project-right";
@@ -12,12 +12,11 @@ import { Observer } from "rxjs/Observer";
   templateUrl: './rightslist.component.html',
   styleUrls: ['./rightslist.component.css']
 })
-export class RightslistComponent implements OnDestroy {
+export class RightslistComponent {
 
   private _user: User = undefined;
   private _rights: ProjectRight[] = [];
   private _rightsObs: Observable<ProjectRight[]> = undefined;
-  private _rightsSub: Subscription = undefined;
 
   private _mapModifiedRights: Map<number, ProjectRight>;
   private _mapOriginalRights: Map<number, ProjectRight>;
@@ -25,16 +24,6 @@ export class RightslistComponent implements OnDestroy {
   private _done$: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private _restService: RestApiService) { }
-
-  ngOnDestroy() {
-    this._unsub();
-  }
-
-  private _unsub(): void {
-    if(this._rightsSub) {
-      this._rightsSub.unsubscribe
-    }
-  }
 
   updateRightsObs(): void {
     this._rightsObs = Observable.create((observer: Observer<ProjectRight[]>) => {
@@ -51,21 +40,21 @@ export class RightslistComponent implements OnDestroy {
     this._mapModifiedRights = new Map();
     this._mapOriginalRights = new Map();
     this._user = user;
-    this._unsub();
-    this._rightsSub = this._restService.getRights(this._user)
-      .finally(() => {
-        this._unsub();
-        this.updateRightsObs();
-      })
-      .subscribe(
-        (rights: ProjectRight[]) => {
-          this._rights = rights;
-          this._rights.forEach((originalRight: ProjectRight) => {
-            let copyRight: ProjectRight = new ProjectRight(originalRight.id, originalRight.rights, originalRight.project, originalRight.user);
-            this._mapOriginalRights.set(copyRight.project.id, copyRight);
-          });
-        }
-      )
+    let sub: Subscription = this._restService.getRights(this._user).finally(() => {
+      sub.unsubscribe();
+      this.updateRightsObs();
+    }).subscribe(
+      (rights: ProjectRight[]) => {
+        this._rights = rights;
+        this._rights.forEach((originalRight: ProjectRight) => {
+          let copyRight: ProjectRight = new ProjectRight(originalRight.id, originalRight.rights, originalRight.project, originalRight.user);
+          this._mapOriginalRights.set(copyRight.project.id, copyRight);
+        });
+      },
+      (error: Response) => {
+        // TODO : gestion d'erreur          
+      }
+    )
   }
 
   get user(): User {
@@ -90,18 +79,18 @@ export class RightslistComponent implements OnDestroy {
   }
 
   switchRight(event: MdCheckboxChange, projectRight: ProjectRight, right: number): void {
-    if(event.checked) { // droit positif
+    if (event.checked) { // droit positif
       projectRight.rights = projectRight.rights | right;
     }
     else { // droit negatif
       projectRight.rights = projectRight.rights & (0xffffffff - right);
     }
     // un droit a été modifié et n'est pas contenu dans la liste des modifications
-    if(! this.isSameAsOriginal(projectRight) && ! this._mapModifiedRights.has(projectRight.project.id)) {
+    if (!this.isSameAsOriginal(projectRight) && !this._mapModifiedRights.has(projectRight.project.id)) {
       this._mapModifiedRights.set(projectRight.project.id, projectRight);
     }
     // une modification sur un droit a été annulée et il faut le supprimer de la liste des modifications
-    else if(this.isSameAsOriginal(projectRight) && this._mapModifiedRights.has(projectRight.project.id)) {
+    else if (this.isSameAsOriginal(projectRight) && this._mapModifiedRights.has(projectRight.project.id)) {
       this._mapModifiedRights.delete(projectRight.project.id);
     }
   }
@@ -111,9 +100,9 @@ export class RightslistComponent implements OnDestroy {
     this._mapModifiedRights.forEach((right: ProjectRight) => {
       update.push(right);
     });
-    let updateSub: Subscription = this._restService.setRights(update)
-      .finally(() => updateSub.unsubscribe())
-      .subscribe((res: number) => this._done$.emit());
+    let updateSub: Subscription = this._restService.setRights(update).finally(() => {
+      updateSub.unsubscribe();
+    }).subscribe((res: number) => this._done$.emit());
   }
 
   cancel(): void {

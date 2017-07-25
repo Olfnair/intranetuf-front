@@ -8,7 +8,6 @@ import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { GuiForm } from "app/gui/gui-form";
 import { GuiProgressComponent } from "app/gui/gui-progress";
-import { DatatableSelection } from "app/gui/datatable";
 import { UserContainer } from "app/user/add-file/user-container";
 import { File as FileEntity } from "entities/file";
 import { Project } from "entities/project";
@@ -197,12 +196,12 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
     }
   }
 
-  updateUsersToAdd(container: UserContainer, selections: DatatableSelection<User>[]) {
-    let indexes: number[] = [];
-    selections.forEach((selection: DatatableSelection<User>) => {
-      indexes.push(selection.id);
+  updateUsersToAdd(container: UserContainer, selections: Map<number, User>) {
+    let identifiers: number[] = [];
+    selections.forEach((user: User, id: number) => {
+      identifiers.push(id);
     });
-    container.usersToAdd = indexes;
+    container.usersToAdd = identifiers;
   }
 
   switchContainerMode(container: UserContainer): void {

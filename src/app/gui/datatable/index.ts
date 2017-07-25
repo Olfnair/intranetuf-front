@@ -5,4 +5,3 @@ export { DatatablePage } from "./datatable-page";
 export { DatatablePaginator } from "./datatable-paginator";
 export { DatatableQueryOptions } from "./datatable-query-options";
 export { DatatableQueryParams } from "./datatable-query-params";
-export { DatatableSelection } from "./datatable-selection";

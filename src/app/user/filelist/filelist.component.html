@@ -22,7 +22,7 @@
       { label: '',                                                                       width:  '5%' }
     ]"
     (addButtonClick)="add()"
-    (params)="paramsChange($event)">
+    (queryParams)="paramsChange($event)">
   <datatable-title>
     <h2>Projet : {{project.name}} <span [class.hidden]="project.active" class="inactive">(Supprimé)</span></h2>
     <div class="projectActions">

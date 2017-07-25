@@ -30,6 +30,8 @@ export class FilelistComponent {
 
   private _startLoading: boolean = true;
 
+  private _firstLoading: boolean = true; // tout premier chargement (pas encore eu de rechargement suite à recherche/tri...)
+
   private _project: Project = undefined;
   private _filesPaginator: DatatablePaginator<File> = new DatatablePaginator<File>(FilelistComponent.PAGE_SIZE);
   private _filesObs: Observable<DatatablePaginator<File>> = undefined;
@@ -57,7 +59,7 @@ export class FilelistComponent {
 
   private _initFileList(): void {
     this._filesPaginator.goToIndex(0, [], 0);
-    this._filesPaginator.reloadBetweenPages = true;
+    this._firstLoading = true;
     this._params = undefined;
   }
 
@@ -102,30 +104,10 @@ export class FilelistComponent {
   private _loadFiles(): void {
     // teste s'il faut vraiment charger quelque chose
     if(! this._project || ! this._startLoading) { return; }
-    
-    let searchParams: string = this._params ? this._params.searchParams.toString() : 'default';
-    let orderparams: string = this._params ? this._params.orderParams.toString() : 'default';
-    let index: number = this._params ? this._params.index : 0;
-    let limit: number = this._params ? this._params.limit : this._filesPaginator.pagesSize;
 
-    this._filesObs = Observable.create((observer: Observer<DatatablePaginator<File>>) => {
-      let sub: Subscription = this._restService.fetchFilesByProject(
-        this._project, searchParams, orderparams, index, limit
-      ).finally(() => {
-        sub.unsubscribe(); // finally
-        this._filesPaginator.reloadBetweenPages = false;
-      }).subscribe(
-        (result: FlexQueryResult) => {
-          this._filesPaginator.goToIndex(index, result.list ? result.list : [], result.totalCount);
-          observer.next(this._filesPaginator);
-          observer.complete();
-          this._loadChecks();
-        },
-        (error: Response) => { // erreur
-          observer.error(error);
-          observer.complete();
-        },
-      );
+    this._filesObs = this._filesPaginator.update(this._restService, 'fetchFilesByProject', this._params, [this._project], this._firstLoading, () => {
+      this._loadChecks();
+      this._firstLoading = false;
     });
   }
 

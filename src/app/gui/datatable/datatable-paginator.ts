@@ -1,4 +1,7 @@
-import { DatatablePage } from ".";
+import { DatatablePage, DatatableQueryParams } from ".";
+import { Observer } from "rxjs/Observer";
+import { Observable } from "rxjs/Observable";
+import { FlexQueryResult } from "objects/flex-query-result";
 
 export class DatatablePaginator<T> {
   private _page: DatatablePage<T>;
@@ -80,5 +83,47 @@ export class DatatablePaginator<T> {
 
   public goToPage(pageNum: number, content: any[] = this.content, totalItemsCount: number = this._totalItemsCount): boolean { 
     return this.goToIndex(this.pageToIndex(pageNum), content, totalItemsCount);
+  }
+
+  public update(restService: any, methodName: string, params: DatatableQueryParams, otherArgs: any[] = undefined, reload: boolean = false, onResult?: () => void): Observable<DatatablePaginator<T>> {
+    if(! restService[methodName] || ! (restService[methodName] instanceof Function)) {
+      return Observable.create((observer: Observer<DatatablePaginator<T>>) => {
+        observer.error('invalid method');
+        observer.complete();
+      });
+    }
+
+    let args: any[] = [];
+    if(otherArgs) {
+      otherArgs.forEach((arg: any) => {
+        args.push(arg);
+      });
+    }
+
+    let index: number = params ? params.index : 0;
+    args.push(params ? params.searchParams.toString() : 'default');
+    args.push(params ? params.orderParams.toString() : 'default');
+    args.push(index);
+    args.push(params ? params.limit : this.pagesSize);
+
+    this.reloadBetweenPages = reload;
+
+    return Observable.create((observer: Observer<DatatablePaginator<T>>) => {
+      let sub = restService[methodName](...args).finally(() => {
+        observer.complete();
+        sub.unsubscribe();
+      }).subscribe(
+        (result: FlexQueryResult) => {
+          this.goToIndex(index, result.list ? result.list : [], result.totalCount);
+          observer.next(this);
+          if(onResult) {
+            onResult();
+          }
+        },
+        (error: Response) => {
+          observer.error(error);
+        }
+      );
+    });
   }
 }
