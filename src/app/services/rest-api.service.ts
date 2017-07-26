@@ -53,7 +53,7 @@ export class RestApiService {
    */
   fetchProjects(searchParams: string): Observable<Project[]> {
     return this._http.get(
-      this._backendURL.project + '/' + Base64.urlEncode(searchParams),
+      this._backendURL.project + '/query/' + Base64.urlEncode(searchParams),
       this.options()
     ).map((res: Response) => {
       return res.json().project;
@@ -62,7 +62,7 @@ export class RestApiService {
 
   fetchFilesByProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult> {
     return this._http.get(
-      this._backendURL.file + '/project/' + project.id.toString() + '/'
+      this._backendURL.file + '/project/' + project.id.toString() + '/query/'
       + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
       this.options()
     ).map((res: Response) => {
