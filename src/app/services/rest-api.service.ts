@@ -51,8 +51,11 @@ export class RestApiService {
    *
    * @returns {Observable<R>}
    */
-  fetchProjects(): Observable<Project[]> {
-    return this._http.get(this._backendURL.project, this.options()).map((res: Response) => {
+  fetchProjects(searchParams: string): Observable<Project[]> {
+    return this._http.get(
+      this._backendURL.project + '/' + Base64.urlEncode(searchParams),
+      this.options()
+    ).map((res: Response) => {
       return res.json().project;
     });
   }

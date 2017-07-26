@@ -24,5 +24,5 @@ export class DatePipe implements PipeTransform {
     }
     return day + '/' + month + '/' + year;
   }
-
+  
 }

@@ -12,9 +12,7 @@ export class CustomValidators {
     // email regex
     const regex = /^\w+\.\w+@gmail\.com$/;
     // returns control
-    return regex.test(control.value) ? null : {
-      googleEmail: true
-    }
+    return regex.test(control.value) ? null : { googleEmail: true }
   }
 
   /**
@@ -31,8 +29,13 @@ export class CustomValidators {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     // returns control
-    return regex.test(control.value) ? null : {
-      email: true
-    }
+    return regex.test(control.value) ? null : { email: true }
+  }
+
+  static login(control: FormControl) {
+    const regex = /^[a-z0-9]+$/i;
+
+    // returns control
+    return regex.test(control.value) ? null : { login: true }
   }
 }

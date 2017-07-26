@@ -1,5 +1,6 @@
 import { Input, EventEmitter, Output } from '@angular/core';
 import { NavListSelection } from "app/gui/nav-list";
+import { DomSanitizer } from "@angular/platform-browser";
 
 export class NavList {
   private _title: string = undefined;
@@ -12,7 +13,7 @@ export class NavList {
   // ref sur la selection courante
   private _selected: NavListSelection = undefined;
 
-  constructor() { }
+  constructor(private _sanitizer: DomSanitizer) { }
 
   @Input() set title(title: string) {
     this._title = title;
@@ -62,5 +63,9 @@ export class NavList {
 
   @Output('loaded') get loaded$(): EventEmitter<void> {
     return this._loaded$;
+  }
+
+  getTextColor(textColor: string, defaultColor: string = '#000000') {
+    return this._sanitizer.bypassSecurityTrustStyle(textColor ? textColor : defaultColor);
   }
 }

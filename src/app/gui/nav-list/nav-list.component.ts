@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DomSanitizer } from "@angular/platform-browser";
 import { NavList } from "./nav-list";
 
 @Component({
@@ -8,6 +9,6 @@ import { NavList } from "./nav-list";
 })
 export class NavListComponent extends NavList {
 
-  constructor() { super(); }
+  constructor(sanitizer: DomSanitizer) { super(sanitizer); }
 
 }

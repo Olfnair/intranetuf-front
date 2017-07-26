@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { DomSanitizer } from "@angular/platform-browser";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
@@ -23,12 +24,15 @@ export class ProjectlistComponent extends NavList implements OnInit {
 
   private _roleChecker: DefaultRoleChecker;
 
+  private _searchParams: string;
+
   constructor(
+    sanitizer: DomSanitizer,
     private _restService: RestApiService,
     private _session: SessionService,
     private _modal: ModalService
   ) {
-    super();
+    super(sanitizer);
     this._roleChecker = new DefaultRoleChecker(this._session);
   }
 
@@ -36,19 +40,33 @@ export class ProjectlistComponent extends NavList implements OnInit {
     this._loadProjects();
   }
 
+  toSearchParams(searchValue: string = undefined): string {
+    if(searchValue == undefined || searchValue == '') {
+      return 'default';
+    }
+    return "[{col: 'name', param: '" + searchValue + "'}]";
+  }
+
   get roleChecker(): DefaultRoleChecker {
     return this._roleChecker;
   }
 
-  private _loadProjects(): void {
-    let sub: Subscription = this._restService.fetchProjects().finally(() => {
+  private _loadProjects(searchValue: string = undefined): void {
+    let sub: Subscription = this._restService.fetchProjects(this.toSearchParams(searchValue)).finally(() => {
       sub.unsubscribe();
     }).subscribe(
       (projects: Project[]) => {
         this.selectables = [];
         this._projects = projects;
         for(let i = 0; i < this._projects.length; ++i) {
-          this.selectables.push(new NavListSelection(i, this._projects[i].name));
+          this.selectables.push(
+            new NavListSelection(
+              i,
+              this._projects[i].name,
+              this._projects[i].active ? '#000000' : '#ff0000',
+              this._projects[i].active ? '#ffffff' : '#ff0000'
+            )
+          );
         }
         this.selectedProject = this._selectedProject; // tordu mais nécessaire (on appelle la propriété qui fait des trucs en plus)
       },
@@ -118,8 +136,12 @@ export class ProjectlistComponent extends NavList implements OnInit {
     );
   }
 
-  select(selection: NavListSelection) {
+  select(selection: NavListSelection): void {
     this.selectedProject = this._projects[selection.id];
+  }
+
+  projectSearch(searchValue: string): void {
+    this._loadProjects(searchValue);
   }
   
 }

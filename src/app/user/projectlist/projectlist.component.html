@@ -6,4 +6,7 @@
   <button *ngIf="roleChecker.userIsAdmin()" md-mini-fab class="add" (click)="add()" mdTooltip="Nouveau projet" mdTooltipPosition="after">
     <md-icon>create_new_folder</md-icon>
   </button>
+  <md-input-container *ngIf="selectables && selectables.length > 0" class="searchBox">
+    <input #search mdInput placeholder="Recherche de projet" (change)="projectSearch(search.value)">
+  </md-input-container>
 </nav-list>

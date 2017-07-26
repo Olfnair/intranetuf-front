@@ -7,10 +7,10 @@
     <md-nav-list *ngIf="selectables" dense>
       <ng-container *ngFor="let selectable of selectables">
         <md-list-item *ngIf="isSelected(selectable)" class="selected no-padding">
-          <span md-line>{{selectable.text}}</span>
+          <span md-line [style.color]="getTextColor(selectable.selectedTextColor)">{{selectable.text}}</span>
         </md-list-item>
         <md-list-item *ngIf="! isSelected(selectable)" (click)="select(selectable)" class="no-padding">
-          <span md-line>{{selectable.text}}</span>
+          <span md-line [style.color]="getTextColor(selectable.textColor)">{{selectable.text}}</span>
         </md-list-item>
       </ng-container>
     </md-nav-list>

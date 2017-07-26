@@ -26,8 +26,8 @@
     <td>{{user.name}}</td>
     <td>{{user.login}}</td>
     <td>{{user.email}}</td>
-    <td>{{user.active}}</td>
-    <td>{{user.pending}}</td>
+    <td>{{user.active | boolToString}}</td>
+    <td>{{user.pending | boolToString}}</td>
     <td>
       <button md-raised-button color="primary" type="button" (click)="rights(user)">Droits</button>
       <button *ngIf="roleChecker.userIsSuperAdmin()" md-raised-button color="primary" type="button" (click)="adminLoginAs(user.login)">Utiliser Compte</button>
