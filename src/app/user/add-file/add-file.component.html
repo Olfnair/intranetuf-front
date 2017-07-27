@@ -1,8 +1,4 @@
-<app-unauthorized *ngIf="! rightsChecker.rightsLoading() && ! rightsChecker.userCanAddFiles()
-    && ! roleChecker.roleLoading() && ! roleChecker.roleCheck()">
-</app-unauthorized>
-
-<section *ngIf="rightsChecker.userCanAddFiles() || roleChecker.roleCheck()" class="container">
+<section class="container">
   <gui-form
       [formGroup]="form"
       [title]="newVersionMode ? 'Ajouter une nouvelle version' : 'Ajouter un fichier'"
@@ -100,7 +96,7 @@
       Ajouter le fichier
     </button>
     <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button"
-        (click)=cancel()>
+        (click)="cancel()">
       Annuler
     </button>
 

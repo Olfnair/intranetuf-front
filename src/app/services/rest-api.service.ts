@@ -124,6 +124,13 @@ export class RestApiService {
     });
   }
 
+  // role de l'user courant
+  getUserRole(): Observable<RestLong> {
+    return this._http.get(this._backendURL.user + '/' + (this._authToken ? this._authToken.u : 0) + '/role', this.options()).map((res: Response) => {
+      return res.json().restLong;
+    });
+  }
+
   // le token de session doit être réglé pour récupérer le bon user (compte)
   getUserToActivate(): Observable<User> {
     return this._http.get(this._backendURL.activate, this.options()).map((res: Response) => {
@@ -185,7 +192,6 @@ export class RestApiService {
   }
 
   getRightsForProject(projectId: number) : Observable<ProjectRight[]> {
-    console.log('RestApi : getRightsForProject');
     return this._http.get(this._backendURL.projectRight + '/' + projectId, this.options()).map((res: Response) => {
       return res.json().projectRight;
     });

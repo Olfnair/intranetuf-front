@@ -22,7 +22,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
   // ref sur le projet sélectionné
   private _selectedProject: Project = undefined;
 
-  private _roleChecker: RoleChecker;
+  private _roleChecker: RoleChecker = this._session.adminRoleChecker;
 
   private _searchParam: string = 'default';
 
@@ -31,11 +31,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
     private _restService: RestApiService,
     private _session: SessionService,
     private _modal: ModalService
-  ) {
-    super(sanitizer);
-    this._roleChecker = new DefaultRoleChecker(this._session);
-    console.log('constructor projectlist');
-  }
+  ) { super(sanitizer); }
 
   ngOnInit() {
     this._loadProjects();

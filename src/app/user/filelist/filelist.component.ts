@@ -12,7 +12,7 @@ import { ModalService } from "app/gui/modal.service";
 import { FlexQueryResult } from "objects/flex-query-result";
 import { DatatableQueryParams, DatatablePaginator } from "app/gui/datatable";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
-import { RightsChecker } from "app/services/rights-checker";
+import { RightsChecker, DefaultRightsChecker } from "app/services/rights-checker";
 import { RoleChecker, DefaultRoleChecker } from "app/services/role-checker";
 import { Base64 } from "app/shared/base64";
 import { File } from "entities/file";
@@ -45,8 +45,8 @@ export class FilelistComponent {
 
   private _params: DatatableQueryParams = undefined;
 
-  private _rightsChecker: RightsChecker = new RightsChecker(this._session);
-  private _roleChecker: RoleChecker = new DefaultRoleChecker(this._session);
+  private _rightsChecker: RightsChecker = new DefaultRightsChecker(this._restService);
+  private _roleChecker: RoleChecker = this._session.adminRoleChecker;
   
   constructor(
     private _session: SessionService,
@@ -54,13 +54,17 @@ export class FilelistComponent {
     private _router: Router,
     private _modal: ModalService
   ) {
-    this._initFileList();
+    this._resetFileList();
   }
 
-  private _initFileList(): void {
+  private _resetFileList(): void {
     this._filesPaginator.goToIndex(0, [], 0);
     this._firstLoading = true;
     this._params = undefined;
+    // rechargement des droits du projet
+    if(this._project) {
+      this._rightsChecker.loadRights(this._project.id);
+    }
   }
 
   private _resetChecksMap(): void {
@@ -102,7 +106,6 @@ export class FilelistComponent {
   }
 
   private _loadFiles(): void {
-    console.log('_loadFiles()');
     // teste s'il faut vraiment charger quelque chose
     if(! this._project || ! this._startLoading) { return; }
 
@@ -122,9 +125,8 @@ export class FilelistComponent {
 
   @Input() set project(project: Project) {
     if(project) {
-      console.log('setproject');
       this._project = project;
-      this._initFileList();
+      this._resetFileList();
       this._loadFiles();
     }
   }

@@ -1,7 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 
 // Service droits d'accès
-import { RouteRightsCheckerService } from "app/services/route-rights-checker.service";
+import { AdminRouteAccessChecker } from "app/services/route-access-checker.service";
 
 // APP COMPONENTS
 import { HomeComponent } from "./user/home/home.component";
@@ -16,13 +16,13 @@ import { VersionDetailsComponent } from "app/user/version-details/version-detail
 const ROUTES: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'projectlist', component: ProjectlistComponent, canActivate: [RouteRightsCheckerService] },
-  { path: 'activate/:token', component: ActivateAccountComponent, canActivate: [RouteRightsCheckerService] },
-  { path: 'add_file/:projectId', component: AddFileComponent, canActivate: [RouteRightsCheckerService] },
-  { path: 'add_file/:projectId/:fileId', component: AddFileComponent, canActivate: [RouteRightsCheckerService] },
-  { path: 'admin', component: AdminPanelComponent, canActivate: [RouteRightsCheckerService] },
-  { path: 'check/:check', component: CheckVersionComponent, canActivate: [RouteRightsCheckerService] },
-  { path: 'version_details/:file', component: VersionDetailsComponent, canActivate: [RouteRightsCheckerService] }
+  { path: 'projectlist', component: ProjectlistComponent, canActivate: [AdminRouteAccessChecker] },
+  { path: 'activate/:token', component: ActivateAccountComponent, canActivate: [AdminRouteAccessChecker] },
+  { path: 'add_file/:projectId', component: AddFileComponent, canActivate: [AdminRouteAccessChecker] },
+  { path: 'add_file/:projectId/:fileId', component: AddFileComponent, canActivate: [AdminRouteAccessChecker] },
+  { path: 'admin', component: AdminPanelComponent, canActivate: [AdminRouteAccessChecker] },
+  { path: 'check/:check', component: CheckVersionComponent, canActivate: [AdminRouteAccessChecker] },
+  { path: 'version_details/:file', component: VersionDetailsComponent, canActivate: [AdminRouteAccessChecker] }
 ];
 
 export const APP_ROUTES = RouterModule.forRoot(ROUTES, { useHash: true });

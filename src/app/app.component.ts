@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, NavigationEnd } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { SessionService } from "app/services/session.service";
@@ -9,29 +9,11 @@ import { Project } from "entities/project";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
   private _sidenavShowOnLarge: boolean = true;
   private _sidenavShowOnSmall: boolean = false;
 
-  private _routerEventsSub: Subscription = undefined;
-
-  constructor(private _router: Router, private _session: SessionService) { }
-
-  ngOnInit() {
-    /*this._routerEventsSub = this._router.events.subscribe((event) => {
-      if(event instanceof NavigationEnd && this.showProjectList()) {
-        this._session.readyForContent = false;
-        this._session.updateProjectList = true;
-        console.log('readyForContent false');
-      }
-    });*/
-  }
-
-  ngOnDestroy() {
-    if(this._routerEventsSub) {
-      this._routerEventsSub.unsubscribe();
-    }
-  }
+  constructor(private _session: SessionService, private _router: Router) { }
 
   get showSidenav(): boolean {
     return this._sidenavShowOnLarge || this._sidenavShowOnSmall;
@@ -43,10 +25,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   get sidenavShowOnSmall(): boolean {
     return this._sidenavShowOnSmall;
-  }
-
-  get route(): string {
-    return this._router.url;
   }
 
   get logged(): boolean {
@@ -70,7 +48,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   showProjectList(): boolean {
-    return this.route == '/home' && this.logged;
+    return this._router.url == '/home' && this.logged;
   }
 
   loaded(): void {

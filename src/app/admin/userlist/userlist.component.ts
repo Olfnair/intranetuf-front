@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
-import { DefaultRoleChecker } from "app/services/role-checker";
+import { RoleChecker } from "app/services/role-checker";
 import { DatatablePaginator, DatatableQueryParams } from "app/gui/datatable";
 import { User } from "entities/user";
 import { FlexQueryResult } from "objects/flex-query-result";
@@ -33,15 +33,13 @@ export class UserlistComponent {
 
   private _params: DatatableQueryParams = undefined;
 
-  private _roleChecker: DefaultRoleChecker;
+  private _roleChecker: RoleChecker = this._session.adminRoleChecker;
 
   constructor(
     private _session: SessionService,
     private _restService: RestApiService,
     private _router: Router
-  ) {
-    this._roleChecker = new DefaultRoleChecker(this._session);
-  }
+  ) { }
 
   updateUsers(): void {
     this._usersPaginatorObs = this._usersPaginator.update(this._restService, 'fetchUsers', this._params);
@@ -96,7 +94,7 @@ export class UserlistComponent {
     return this._selectedUser;
   }
 
-  get roleChecker(): DefaultRoleChecker {
+  get roleChecker(): RoleChecker {
     return this._roleChecker;
   }
 

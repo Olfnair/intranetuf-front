@@ -1,6 +1,4 @@
-<app-unauthorized *ngIf="! roleChecker.roleLoading() && ! roleChecker.roleCheck()"></app-unauthorized>
-
-<section *ngIf="roleChecker.roleCheck()">
+<section>
   <h2>Panneau d'Administration {{selectedTab}}</h2>
   <md-tab-group [selectedIndex]="selectedTab" (selectChange)="setSelectedTab($event)">
     <md-tab label="Utilisateurs" class="padding">

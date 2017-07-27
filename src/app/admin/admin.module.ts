@@ -10,7 +10,6 @@ import { MaterialModule } from '@angular/material';
 import { GuiModule } from "app/gui/gui.module";
 import { PipesModule } from "app/pipes/pipes.module";
 import { ServicesModule } from "app/services/services.module";
-import { SharedModule } from "app/shared/shared.module";
 
 // Admin
 import { UserFormComponent } from "./user-form/user-form.component";
@@ -33,8 +32,7 @@ import { RightslistComponent } from "./rightslist/rightslist.component";
     ReactiveFormsModule,
     GuiModule,
     PipesModule,
-    ServicesModule,
-    SharedModule
+    ServicesModule
   ],
   exports: [ // tous les composants, pipes, directives pour un module qui importe celui-ci
     UserFormComponent,

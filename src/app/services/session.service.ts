@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Response } from "@angular/http";
 import { Router, NavigationEnd } from "@angular/router";
 import { environment } from "environments/environment";
@@ -10,9 +10,10 @@ import { Credentials } from "entities/credentials";
 import { Project } from "entities/project";
 import { ProjectRight } from "entities/project-right";
 import { User, Roles } from "entities/user";
+import { RoleChecker, AdminRoleChecker } from "app/services/role-checker";
 
 @Injectable()
-export class SessionService implements OnDestroy {
+export class SessionService {
 
   // apps
   private _readyForContent: boolean = true;
@@ -21,7 +22,6 @@ export class SessionService implements OnDestroy {
 
   private _updateProjectList = false;
 
-  private _routerEventsSub: Subscription = undefined;
   private _currentRoute: string = undefined;
 
   // utilisateur
@@ -30,99 +30,9 @@ export class SessionService implements OnDestroy {
   private _base64AuthToken: string = undefined;
   private _logged: boolean = false;
 
-  private _userRole: number = undefined;
-  private _userRights: number = undefined;
-  private _roleLoading: boolean = false;
-  private _rightsLoading: boolean = false;
+  private _adminRoleChecker: RoleChecker = new AdminRoleChecker(this._restService);
 
-  constructor(
-    private _router: Router,
-    private _restService: RestApiService
-  ) {
-    /*this._routerEventsSub = this._router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        console.log('route reconnue: ' + this.route);
-        this.loadRole();
-        this.loadRights();
-      }
-    });*/
-  }
-
-  loadRole(): Observable<boolean> {
-    return Observable.create((observer: Observer<boolean>) => {
-      if (this._logged) {
-        this._userRole = undefined;
-        this._roleLoading = true;
-        // TODO : subscribe pour récupérer le role
-        // pour l'instant on le récupère du token :
-        this._userRole = this._authToken.r;
-        this._roleLoading = false;
-        observer.next(true);
-        observer.complete();
-      }
-    });
-  }
-
-  loadRights(forceLoad: boolean = false): Observable<boolean> {
-    if(this.route == this._currentRoute && ! forceLoad) { return; }
-    
-    this._currentRoute = this.route;
-    console.log('Session: loadRights');
-    let index = -1;
-    if (this.route == '/home' && this._logged && this._selectedProject != undefined) { // seul endroit où l'user peut voir les projets
-      console.log('--> home');
-      return this.loadRightsForProject(this._selectedProject.id);
-    }
-    if((index = this.route.indexOf('/add_file/')) >= 0) {
-      console.log('--> add_file');
-      let projectIdStr: string = '';
-      for(let i: number = index + '/add_file/'.length; i < this.route.length && this.route.charAt(i) != '/'; ++i) {
-        projectIdStr = projectIdStr.concat(this.route.charAt(i));
-      }
-      if(projectIdStr.length > 0) {
-        return this.loadRightsForProject(parseInt(projectIdStr));
-      }
-    }
-    return Observable.create((observer: Observer<boolean>) => {
-      observer.next(false);
-      observer.complete();
-    });
-  }
-
-  loadRightsForProject(projectId: number): Observable<boolean> {
-    return Observable.create((observer: Observer<boolean>) => {
-      this._userRights = undefined;
-      this._rightsLoading = true;
-      let sub: Subscription = this._restService.getRightsForProject(projectId).finally(() => {
-        this._rightsLoading = false;
-        sub.unsubscribe();
-        observer.complete();
-      }).subscribe(
-        (projectRights: ProjectRight[]) => {
-          if (projectRights.length > 0) {
-            this._userRights = projectRights[0].rights;
-            observer.next(true);
-          }
-          else {
-            observer.error(false);
-          }
-        },
-        (error: Response) => {
-          observer.error(false);
-        }
-      );
-    });
-  }
-
-  ngOnDestroy() {
-    if (this._routerEventsSub) {
-      this._routerEventsSub.unsubscribe();
-    }
-  }
-
-  get route(): string {
-    return this._router.url;
-  }
+  constructor(private _restService: RestApiService) { }
 
   get readyForContent(): boolean {
     return this._readyForContent;
@@ -141,7 +51,6 @@ export class SessionService implements OnDestroy {
       return;
     }
     this._selectedProject = project;
-    this.loadRights(true); // force le rechargement des droits
   }
 
   get updateProjectList(): boolean {
@@ -166,38 +75,6 @@ export class SessionService implements OnDestroy {
     return this._authToken ? this._authToken.u : undefined;
   }
 
-  get userRole(): number {
-    return this._userRole;
-  }
-
-  set userRole(role: number) {
-    this._userRole = role;
-  }
-
-  get userIsAdmin(): boolean {
-    return User.hasRole(this._userRole, Roles.ADMIN) || User.hasRole(this._userRole, Roles.SUPERADMIN);
-  }
-
-  get userIsSuperAdmin(): boolean {
-    return User.hasRole(this._userRole, Roles.SUPERADMIN);
-  }
-
-  get userRights(): number {
-    return this._userRights;
-  }
-
-  set userRights(rights: number) {
-    this._userRights = rights;
-  }
-
-  get roleLoading(): boolean {
-    return this._roleLoading;
-  }
-
-  get rightsLoading(): boolean {
-    return this._rightsLoading;
-  }
-
   get userLogin(): string {
     return this._userLogin;
   }
@@ -220,12 +97,16 @@ export class SessionService implements OnDestroy {
     return this._logged;
   }
 
+  get adminRoleChecker(): RoleChecker {
+    return this._adminRoleChecker;
+  }
+
   private _login(login: string, res: Response): Response {
     this.logout();
     this._userLogin = login;
     this.authToken = res.json();
-    this._userRole = this._authToken.r;
     this._logged = true;
+    this._adminRoleChecker.directLoad(this.authToken.r);
     return res;
   }
 
@@ -251,8 +132,8 @@ export class SessionService implements OnDestroy {
     this._authToken = undefined;
     this._base64AuthToken = undefined;
     this._restService.authToken = undefined;
-    this._userRole = undefined;
     this._logged = false;
+    this._adminRoleChecker.reset();
     this._selectedProject = undefined;
   }
 

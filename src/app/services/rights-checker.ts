@@ -1,51 +1,89 @@
-import { SessionService } from "app/services/session.service";
+import { RestApiService } from "app/services/rest-api.service";
 import { Observable } from "rxjs/Observable";
+import { Observer } from "rxjs/Observer";
+import { AuthorizationChecker } from "app/services/authorization-checker";
 import { ProjectRight, Right } from "entities/project-right";
+import { Subscription } from "rxjs/Subscription";
 
-export class RightsChecker {
-  constructor(private _session: SessionService) { }
+export abstract class RightsChecker implements AuthorizationChecker {
+  private _projectId: number = undefined;
+  private _loading: boolean = true;
+  private _rights: number = 0;
 
-  public loadRights(projectId: number): Observable<boolean> {
-    return this._session.loadRightsForProject(projectId);
+  constructor(private _restService: RestApiService) { }
+
+  public abstract check(): boolean;
+
+  public load(): Observable<boolean> {
+    if(this._projectId == undefined) {
+      return Observable.create((observer: Observer<boolean>) => {
+        observer.next(false);
+        observer.complete();
+      });
+    }
+    this._loading = true;
+    return Observable.create((observer: Observer<boolean>) => {
+      let sub: Subscription = this._restService.getRightsForProject(this._projectId).finally(() => {
+        sub.unsubscribe();
+        observer.complete();
+      }).subscribe(
+        (projectRights: ProjectRight[]) => {
+          projectRights.length > 0 ? this._rights = projectRights[0].rights : this._rights = 0;
+          this._loading = false;
+          observer.next(true);
+        },
+        (error: Response) => {
+          this._rights = 0;
+          observer.next(false);
+        }
+      );
+    });
   }
 
-  public get session(): SessionService {
-    return this._session;
+  public loadRights(projectId: number): void {
+    this._projectId = projectId;
+    let sub: Subscription = this.load().finally(() => sub.unsubscribe()).subscribe();
   }
 
-  public get userRights(): number {
-    return this._session.userRights;
+  public set projectId(projectId: number) {
+    this._projectId = projectId;
   }
 
-  public rightsLoading(): boolean {
-    return this._session.rightsLoading;
+  public loading(): boolean {
+    return this._loading;
   }
 
   public userCanView(): boolean {
-    return ! this.rightsLoading() && ProjectRight.hasRight(this.userRights, Right.VIEWPROJECT);
+    return ! this.loading() && ProjectRight.hasRight(this._rights, Right.VIEWPROJECT);
   }
 
   public userCanAddFiles(): boolean {
-    return ! this.rightsLoading() && ProjectRight.hasRight(this.userRights, Right.ADDFILES);
+    return ! this.loading() && ProjectRight.hasRight(this._rights, Right.ADDFILES);
   }
 
   public userCanDeleteFiles(): boolean {
-    return ! this.rightsLoading() && ProjectRight.hasRight(this.userRights, Right.DELETEFILES);
+    return ! this.loading() && ProjectRight.hasRight(this._rights, Right.DELETEFILES);
   }
 
   public userCanEditProject(): boolean {
-    return ! this.rightsLoading() && ProjectRight.hasRight(this.userRights, Right.EDITPROJECT);
+    return ! this.loading() && ProjectRight.hasRight(this._rights, Right.EDITPROJECT);
   }
 
   public userCanDeleteProject(): boolean {
-    return ! this.rightsLoading() && ProjectRight.hasRight(this.userRights, Right.DELETEPROJECT);
+    return ! this.loading() && ProjectRight.hasRight(this._rights, Right.DELETEPROJECT);
   }
 
   public userIsController(): boolean {
-    return ! this.rightsLoading() && ProjectRight.hasRight(this.userRights, Right.CONTROLFILE);
+    return ! this.loading() && ProjectRight.hasRight(this._rights, Right.CONTROLFILE);
   }
 
   public userIsValidator(): boolean {
-    return ! this.rightsLoading() && ProjectRight.hasRight(this.userRights, Right.VALIDATEFILE);
+    return ! this.loading() && ProjectRight.hasRight(this._rights, Right.VALIDATEFILE);
+  }
+}
+
+export class DefaultRightsChecker extends RightsChecker {
+  public check(): boolean {
+    return false;
   }
 }

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { MdTabChangeEvent } from "@angular/material";
 import { SessionService } from "app/services/session.service";
-import { RoleChecker, AdminRoleChecker } from "app/services/role-checker";
 
 @Component({
   selector: 'app-admin-panel',
@@ -9,15 +8,8 @@ import { RoleChecker, AdminRoleChecker } from "app/services/role-checker";
   styleUrls: ['./admin-panel.component.css']
 })
 export class AdminPanelComponent {
-  private _roleChecker: RoleChecker;
   
-  constructor(private _session: SessionService) {
-    this._roleChecker = new AdminRoleChecker(this._session);
-  }
-
-  get roleChecker(): RoleChecker {
-    return this._roleChecker;
-  }
+  constructor(private _session: SessionService) { }
 
   get selectedTab(): number {
     return this._session.selectedAdminTab;
