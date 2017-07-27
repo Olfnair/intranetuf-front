@@ -17,7 +17,7 @@ export class WorkflowCheck {
   id: number = undefined;
   status: number = undefined;
   date_init: number = undefined;
-  date_action: number = undefined;
+  date_checked: number = undefined;
   comment: string = undefined;
   order_num: number = undefined;
   type: CheckType = undefined;

@@ -6,6 +6,8 @@ import { Subscription } from "rxjs/Subscription";
 import { FileUploadService } from "app/services/file-upload.service";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { RightsChecker } from "app/services/rights-checker";
+import { RoleChecker, AdminRoleChecker } from "app/services/role-checker";
 import { GuiForm } from "app/gui/gui-form";
 import { GuiProgressComponent } from "app/gui/gui-progress";
 import { UserContainer } from "app/user/add-file/user-container";
@@ -33,6 +35,9 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
 
   private _userContainers: UserContainer[] = [];
 
+  private _rightsChecker: RightsChecker;
+  private _roleChecker: RoleChecker;
+
   constructor(
     private _uploadService: FileUploadService,
     private _restService: RestApiService,
@@ -40,12 +45,13 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _session: SessionService,
     private _dialog: MdDialog
-  ) { super(); }
+  ) {
+    super();
+    this._rightsChecker = new RightsChecker(this._session);
+    this._roleChecker = new AdminRoleChecker(this._session);
+  }
 
   ngOnInit() {
-    if (!this._session.logged) {
-      this._router.navigate(['/home']);
-    }
     this._paramsSub = this._route.params.subscribe(params => {
       this._project.id = +params['projectId'] || undefined;
       this._file.id = +params['fileId'] || undefined;
@@ -97,6 +103,15 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
 
   get userContainers(): UserContainer[] {
     return this._userContainers;
+  }
+
+  get rightsChecker(): RightsChecker {
+    console.log('user can add files : ' + this._rightsChecker.userCanAddFiles());
+    return this._rightsChecker;
+  }
+
+  get roleChecker(): RoleChecker {
+    return this._roleChecker;
   }
 
   fileSelect(file: File): void {

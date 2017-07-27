@@ -1,5 +1,8 @@
 import { RouterModule, Routes } from '@angular/router';
 
+// Service droits d'accès
+import { RouteRightsCheckerService } from "app/services/route-rights-checker.service";
+
 // APP COMPONENTS
 import { HomeComponent } from "./user/home/home.component";
 import { ProjectlistComponent } from "./user/projectlist/projectlist.component";
@@ -13,13 +16,13 @@ import { VersionDetailsComponent } from "app/user/version-details/version-detail
 const ROUTES: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'projectlist', component: ProjectlistComponent },
-  { path: 'activate/:token', component: ActivateAccountComponent },
-  { path: 'add_file/:projectId', component: AddFileComponent },
-  { path: 'add_file/:projectId/:fileId', component: AddFileComponent },
-  { path: 'admin', component: AdminPanelComponent },
-  { path: 'check/:check', component: CheckVersionComponent },
-  { path: 'version_details/:file', component: VersionDetailsComponent }
+  { path: 'projectlist', component: ProjectlistComponent, canActivate: [RouteRightsCheckerService] },
+  { path: 'activate/:token', component: ActivateAccountComponent, canActivate: [RouteRightsCheckerService] },
+  { path: 'add_file/:projectId', component: AddFileComponent, canActivate: [RouteRightsCheckerService] },
+  { path: 'add_file/:projectId/:fileId', component: AddFileComponent, canActivate: [RouteRightsCheckerService] },
+  { path: 'admin', component: AdminPanelComponent, canActivate: [RouteRightsCheckerService] },
+  { path: 'check/:check', component: CheckVersionComponent, canActivate: [RouteRightsCheckerService] },
+  { path: 'version_details/:file', component: VersionDetailsComponent, canActivate: [RouteRightsCheckerService] }
 ];
 
 export const APP_ROUTES = RouterModule.forRoot(ROUTES, { useHash: true });

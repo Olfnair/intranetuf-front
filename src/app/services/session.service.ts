@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy, Inject } from '@angular/core';
 import { Response } from "@angular/http";
-import { Router } from "@angular/router";
+import { Router, NavigationEnd } from "@angular/router";
 import { environment } from "environments/environment";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, Observer } from "rxjs";
 import 'rxjs/add/operator/map';
 import { RestApiService } from "app/services/rest-api.service";
 import { AuthToken } from "entities/auth-token";
@@ -22,6 +22,7 @@ export class SessionService implements OnDestroy {
   private _updateProjectList = false;
 
   private _routerEventsSub: Subscription = undefined;
+  private _currentRoute: string = undefined;
 
   // utilisateur
   private _userLogin: string = undefined;
@@ -38,44 +39,83 @@ export class SessionService implements OnDestroy {
     private _router: Router,
     private _restService: RestApiService
   ) {
-    this._routerEventsSub = this._router.events.subscribe((event) => {
-      this.loadRole();
+    /*this._routerEventsSub = this._router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        console.log('route reconnue: ' + this.route);
+        this.loadRole();
+        this.loadRights();
+      }
+    });*/
+  }
+
+  loadRole(): Observable<boolean> {
+    return Observable.create((observer: Observer<boolean>) => {
+      if (this._logged) {
+        this._userRole = undefined;
+        this._roleLoading = true;
+        // TODO : subscribe pour récupérer le role
+        // pour l'instant on le récupère du token :
+        this._userRole = this._authToken.r;
+        this._roleLoading = false;
+        observer.next(true);
+        observer.complete();
+      }
     });
   }
 
-  private loadRole(): void {
-    if(this._logged) {
-      this._userRole = undefined;
-      this._roleLoading = true;
-      // TODO : subscribe pour récupérer le role
-      // pour l'instant on le récupère du token :
-      this._userRole = this._authToken.r;
-      this._roleLoading = false;
+  loadRights(forceLoad: boolean = false): Observable<boolean> {
+    if(this.route == this._currentRoute && ! forceLoad) { return; }
+    
+    this._currentRoute = this.route;
+    console.log('Session: loadRights');
+    let index = -1;
+    if (this.route == '/home' && this._logged && this._selectedProject != undefined) { // seul endroit où l'user peut voir les projets
+      console.log('--> home');
+      return this.loadRightsForProject(this._selectedProject.id);
     }
+    if((index = this.route.indexOf('/add_file/')) >= 0) {
+      console.log('--> add_file');
+      let projectIdStr: string = '';
+      for(let i: number = index + '/add_file/'.length; i < this.route.length && this.route.charAt(i) != '/'; ++i) {
+        projectIdStr = projectIdStr.concat(this.route.charAt(i));
+      }
+      if(projectIdStr.length > 0) {
+        return this.loadRightsForProject(parseInt(projectIdStr));
+      }
+    }
+    return Observable.create((observer: Observer<boolean>) => {
+      observer.next(false);
+      observer.complete();
+    });
   }
 
-  private loadRights(): void {
-    if(this.route == '/home' && this._logged && this._selectedProject != undefined) { // seul endroit où l'user peut voir les projets
+  loadRightsForProject(projectId: number): Observable<boolean> {
+    return Observable.create((observer: Observer<boolean>) => {
       this._userRights = undefined;
       this._rightsLoading = true;
-      let sub: Subscription = this.getRightsForProject(this._selectedProject).finally(() => {
+      let sub: Subscription = this._restService.getRightsForProject(projectId).finally(() => {
         this._rightsLoading = false;
         sub.unsubscribe();
+        observer.complete();
       }).subscribe(
         (projectRights: ProjectRight[]) => {
-          if(projectRights.length > 0) {
+          if (projectRights.length > 0) {
             this._userRights = projectRights[0].rights;
+            observer.next(true);
+          }
+          else {
+            observer.error(false);
           }
         },
         (error: Response) => {
-          // gérer erreur ?
+          observer.error(false);
         }
       );
-    }
+    });
   }
 
   ngOnDestroy() {
-    if(this._routerEventsSub) {
+    if (this._routerEventsSub) {
       this._routerEventsSub.unsubscribe();
     }
   }
@@ -96,12 +136,12 @@ export class SessionService implements OnDestroy {
     return this._selectedProject;
   }
 
-  set selectedProject(project : Project) {
-    if(project == this._selectedProject) {
+  set selectedProject(project: Project) {
+    if (project == this._selectedProject) {
       return;
     }
     this._selectedProject = project;
-    this.loadRights();
+    this.loadRights(true); // force le rechargement des droits
   }
 
   get updateProjectList(): boolean {
@@ -118,7 +158,7 @@ export class SessionService implements OnDestroy {
     return this._selectedAdminTab;
   }
 
-  set selectedAdminTab(tab : number) {
+  set selectedAdminTab(tab: number) {
     this._selectedAdminTab = tab;
   }
 
@@ -160,7 +200,7 @@ export class SessionService implements OnDestroy {
 
   get userLogin(): string {
     return this._userLogin;
-  } 
+  }
 
   get authToken(): AuthToken {
     return this._authToken;
@@ -214,12 +254,6 @@ export class SessionService implements OnDestroy {
     this._userRole = undefined;
     this._logged = false;
     this._selectedProject = undefined;
-  }
-
-  getRightsForProject(project: Project) : Observable<ProjectRight[]> {
-    return this._restService.getRightsForProject(project).map((res: Response) => {
-      return res.json().projectRight;
-    });
   }
 
 }

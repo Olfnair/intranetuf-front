@@ -1,4 +1,8 @@
-<section class="container">
+<app-unauthorized *ngIf="! rightsChecker.rightsLoading() && ! rightsChecker.userCanAddFiles()
+    && ! roleChecker.roleLoading() && ! roleChecker.roleCheck()">
+</app-unauthorized>
+
+<section *ngIf="rightsChecker.userCanAddFiles() || roleChecker.roleCheck()" class="container">
   <gui-form
       [formGroup]="form"
       [title]="newVersionMode ? 'Ajouter une nouvelle version' : 'Ajouter un fichier'"

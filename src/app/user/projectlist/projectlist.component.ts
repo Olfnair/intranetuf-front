@@ -4,9 +4,9 @@ import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
+import { RoleChecker, DefaultRoleChecker } from "app/services/role-checker";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { NavList, NavListSelection } from "app/gui/nav-list";
-import { DefaultRoleChecker } from "app/shared/role-checker";
 import { Project } from "entities/project";
 
 @Component({
@@ -22,9 +22,9 @@ export class ProjectlistComponent extends NavList implements OnInit {
   // ref sur le projet sélectionné
   private _selectedProject: Project = undefined;
 
-  private _roleChecker: DefaultRoleChecker;
+  private _roleChecker: RoleChecker;
 
-  private _searchParams: string;
+  private _searchParam: string = 'default';
 
   constructor(
     sanitizer: DomSanitizer,
@@ -34,10 +34,20 @@ export class ProjectlistComponent extends NavList implements OnInit {
   ) {
     super(sanitizer);
     this._roleChecker = new DefaultRoleChecker(this._session);
+    console.log('constructor projectlist');
   }
 
   ngOnInit() {
     this._loadProjects();
+  }
+
+  set searchParam(searchParam: string) {
+    if(searchParam == undefined || searchParam == '') {
+      this._searchParam = 'default';
+    }
+    else {
+      this._searchParam = "[{col: 'name', param: '" + searchParam + "'}]";
+    }
   }
 
   toSearchParams(searchValue: string = undefined): string {
@@ -47,12 +57,12 @@ export class ProjectlistComponent extends NavList implements OnInit {
     return "[{col: 'name', param: '" + searchValue + "'}]";
   }
 
-  get roleChecker(): DefaultRoleChecker {
+  get roleChecker(): RoleChecker {
     return this._roleChecker;
   }
 
-  private _loadProjects(searchValue: string = undefined): void {
-    let sub: Subscription = this._restService.fetchProjects(this.toSearchParams(searchValue)).finally(() => {
+  private _loadProjects(): void {
+    let sub: Subscription = this._restService.fetchProjects(this._searchParam).finally(() => {
       sub.unsubscribe();
     }).subscribe(
       (projects: Project[]) => {
@@ -101,6 +111,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
 
   @Input() set update(update: boolean) {
     if(update) {
+      this.startReload();
       this._loadProjects();
       this._session.updateProjectList = false;
     }
@@ -141,7 +152,8 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   projectSearch(searchValue: string): void {
-    this._loadProjects(searchValue);
+    this.searchParam = searchValue;
+    this._loadProjects();
   }
   
 }

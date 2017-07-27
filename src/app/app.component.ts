@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, NavigationEnd } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { SessionService } from "app/services/session.service";
 import { Project } from "entities/project";
@@ -18,11 +18,13 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private _router: Router, private _session: SessionService) { }
 
   ngOnInit() {
-    this._routerEventsSub = this._router.events.subscribe((event) => {
-      if(this.showProjectList()) {
+    /*this._routerEventsSub = this._router.events.subscribe((event) => {
+      if(event instanceof NavigationEnd && this.showProjectList()) {
         this._session.readyForContent = false;
+        this._session.updateProjectList = true;
+        console.log('readyForContent false');
       }
-    });
+    });*/
   }
 
   ngOnDestroy() {

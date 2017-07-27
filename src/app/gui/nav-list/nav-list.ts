@@ -1,6 +1,6 @@
 import { Input, EventEmitter, Output } from '@angular/core';
 import { NavListSelection } from "app/gui/nav-list";
-import { DomSanitizer } from "@angular/platform-browser";
+import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 
 export class NavList {
   private _title: string = undefined;
@@ -61,11 +61,15 @@ export class NavList {
     this._select$.emit(this._selected);
   }
 
+  startReload(): void {
+    this._selectables = undefined;
+  }
+
   @Output('loaded') get loaded$(): EventEmitter<void> {
     return this._loaded$;
   }
 
-  getTextColor(textColor: string, defaultColor: string = '#000000') {
+  getTextColor(textColor: string, defaultColor: string = '#000000'): SafeStyle {
     return this._sanitizer.bypassSecurityTrustStyle(textColor ? textColor : defaultColor);
   }
 }

@@ -61,7 +61,7 @@
           </button>
         </form>
       </span>
-      <span *ngIf="file.author && file.author.id == userId">
+      <span *ngIf="file.author && file.author.id == userId && userCanAddFile()">
         <a md-raised-button class="smallButton" color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above"
             [routerLink]="['/add_file', project.id, file.id]">
           <md-icon>file_upload</md-icon>

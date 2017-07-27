@@ -184,8 +184,11 @@ export class RestApiService {
     return this._http.get(this._backendURL.auth + '/adminLoginAs/' + login, this.options('text/plain'));
   }
 
-  getRightsForProject(project: Project) : Observable<Response> {
-    return this._http.get(this._backendURL.projectRight + '/' + project.id, this.options());
+  getRightsForProject(projectId: number) : Observable<ProjectRight[]> {
+    console.log('RestApi : getRightsForProject');
+    return this._http.get(this._backendURL.projectRight + '/' + projectId, this.options()).map((res: Response) => {
+      return res.json().projectRight;
+    });
   }
 
   getWorkflowChecksForVersion(versionId: number): Observable<WorkflowCheck[]> {

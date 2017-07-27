@@ -1,13 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MdTabChangeEvent } from "@angular/material";
 import { SessionService } from "app/services/session.service";
-import { RoleChecker } from "app/shared/role-checker";
-
-class AdminRoleChecker extends RoleChecker { 
-  public roleCheck(): boolean {
-    return this.userIsAdmin() || this.userIsSuperAdmin();
-  }
-}
+import { RoleChecker, AdminRoleChecker } from "app/services/role-checker";
 
 @Component({
   selector: 'app-admin-panel',
@@ -15,13 +9,13 @@ class AdminRoleChecker extends RoleChecker {
   styleUrls: ['./admin-panel.component.css']
 })
 export class AdminPanelComponent {
-  private _roleChecker: AdminRoleChecker = undefined;
+  private _roleChecker: RoleChecker;
   
   constructor(private _session: SessionService) {
     this._roleChecker = new AdminRoleChecker(this._session);
   }
 
-  get roleChecker(): AdminRoleChecker {
+  get roleChecker(): RoleChecker {
     return this._roleChecker;
   }
 

@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
-import { DefaultRoleChecker } from "app/shared/role-checker";
+import { DefaultRoleChecker } from "app/services/role-checker";
 import { DatatablePaginator, DatatableQueryParams } from "app/gui/datatable";
 import { User } from "entities/user";
 import { FlexQueryResult } from "objects/flex-query-result";
