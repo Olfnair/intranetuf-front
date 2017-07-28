@@ -13,7 +13,7 @@ import { FlexQueryResult } from "objects/flex-query-result";
 import { DatatableQueryParams, DatatablePaginator } from "app/gui/datatable";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { RightsChecker, DefaultRightsChecker } from "app/services/rights-checker";
-import { RoleChecker, DefaultRoleChecker } from "app/services/role-checker";
+import { BasicRoleChecker, RoleCheckerService, RoleChecker, DefaultRoleChecker } from "app/services/role-checker";
 import { Base64 } from "app/shared/base64";
 import { File } from "entities/file";
 import { Project } from "entities/project";
@@ -46,16 +46,17 @@ export class FilelistComponent {
   private _params: DatatableQueryParams = undefined;
 
   private _rightsChecker: RightsChecker = new DefaultRightsChecker(this._restService);
-  private _roleChecker: RoleChecker = this._session.adminRoleChecker;
+
+  // charge les roles à chaque changement de projet et met à jour le servicede check de role
+  private _roleCheckerUpdater: RoleChecker = new DefaultRoleChecker(this._restService, this._roleCheckerService);
   
   constructor(
     private _session: SessionService,
     private _restService: RestApiService,
+    private _roleCheckerService: RoleCheckerService,
     private _router: Router,
     private _modal: ModalService
-  ) {
-    this._resetFileList();
-  }
+  ) { }
 
   private _resetFileList(): void {
     this._filesPaginator.goToIndex(0, [], 0);
@@ -63,6 +64,7 @@ export class FilelistComponent {
     this._params = undefined;
     // rechargement des droits du projet
     if(this._project) {
+      this._roleCheckerUpdater.loadRole();
       this._rightsChecker.loadRights(this._project.id);
     }
   }
@@ -144,23 +146,24 @@ export class FilelistComponent {
   }
 
   userCanAddFile(): boolean {
-    return this._roleChecker.userIsAdmin() || this._rightsChecker.userCanAddFiles();
+    return this._roleCheckerService.userIsAdmin() || this._rightsChecker.userCanAddFiles();
   }
 
   userCanDeleteFile(): boolean {
-    return this._roleChecker.userIsAdmin() || this._rightsChecker.userCanDeleteFiles();
+    return this._roleCheckerService.userIsAdmin() || this._rightsChecker.userCanDeleteFiles();
   }
 
   userCanEditProject(): boolean {
-    return this._roleChecker.userIsAdmin() || this._rightsChecker.userCanEditProject();
+    return this._roleCheckerService.userIsAdmin() || this._rightsChecker.userCanEditProject();
   }
 
   userCanDeleteProject(): boolean {
-    return this._project.active && (this._roleChecker.userIsAdmin() || this._rightsChecker.userCanDeleteProject());
+    return this._project.active
+        && (this._roleCheckerService.userIsAdmin() || this._rightsChecker.userCanDeleteProject());
   }
 
   userCanActivateProject(): boolean {
-    return ! this._project.active && this._roleChecker.userIsAdmin();
+    return ! this._project.active && this._roleCheckerService.userIsAdmin();
   }
 
   canDownload(file: File): boolean {
@@ -168,7 +171,7 @@ export class FilelistComponent {
         || file.author.id == this._session.userId
         || this.hasControl(file.version.id)
         || this.hasValidation(file.version.id)
-        || this._roleChecker.userIsAdmin();
+        || this._roleCheckerService.userIsAdmin();
   }
 
   add(): void {
@@ -281,7 +284,7 @@ export class FilelistComponent {
       (res: Response) => {
         this._session.updateProjectList = true;
         this._project.active = activate;
-        if(! activate && ! this._roleChecker.userIsAdmin()) {
+        if(! activate && ! this._roleCheckerService.userIsAdmin()) {
           this._project = undefined;
           this._session.selectedProject = undefined;
         }

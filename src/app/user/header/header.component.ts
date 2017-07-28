@@ -1,7 +1,7 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
-import { RoleChecker, AdminRoleChecker } from "app/services/role-checker";
+import { BasicRoleChecker, RoleCheckerService } from "app/services/role-checker";
 
 @Component({
   selector: 'app-header',
@@ -15,9 +15,10 @@ export class HeaderComponent {
   private _toggleOnLarge$: EventEmitter<void> = new EventEmitter<void>();
   private _toggleOnSmall$: EventEmitter<void> = new EventEmitter<void>();
 
-  private _roleChecker: RoleChecker = this._session.adminRoleChecker;
-
-  constructor(private _session: SessionService) { }
+  constructor(
+    private _session: SessionService,
+    private _roleCheckerService: RoleCheckerService
+  ) { }
 
   @Output('toggleOnLarge') get toggleOnLarge$(): EventEmitter<void> {
     return this._toggleOnLarge$;
@@ -40,7 +41,8 @@ export class HeaderComponent {
   }
 
   get isAdmin(): boolean {
-    return this._roleChecker.check();
+    return this._roleCheckerService.userIsAdmin()
+        || this._roleCheckerService.userIsSuperAdmin();
   }
 
   get userLogin(): string {

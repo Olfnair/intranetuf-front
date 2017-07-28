@@ -1,7 +1,12 @@
 import { RouterModule, Routes } from '@angular/router';
 
 // Service droits d'accès
-import { AdminRouteAccessChecker } from "app/services/route-access-checker.service";
+import {
+  AddFileRouteAccessChecker,
+  AdminRouteAccessChecker,
+  EmptyRouteAccessChecker,
+  UpdateFileVersionRouteAccessChecker
+} from "app/services/route-access-checker.service";
 
 // APP COMPONENTS
 import { HomeComponent } from "./user/home/home.component";
@@ -14,15 +19,15 @@ import { CheckVersionComponent } from "./user/check-version/check-version.compon
 import { VersionDetailsComponent } from "app/user/version-details/version-details.component";
 
 const ROUTES: Routes = [
+  // EmptyRouteAccessChecker : ne vérifie rien, recharge juste les roles entre chaque page, pour les garder à jour
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'projectlist', component: ProjectlistComponent, canActivate: [AdminRouteAccessChecker] },
-  { path: 'activate/:token', component: ActivateAccountComponent, canActivate: [AdminRouteAccessChecker] },
-  { path: 'add_file/:projectId', component: AddFileComponent, canActivate: [AdminRouteAccessChecker] },
-  { path: 'add_file/:projectId/:fileId', component: AddFileComponent, canActivate: [AdminRouteAccessChecker] },
+  { path: 'home', component: HomeComponent, canActivate: [EmptyRouteAccessChecker] },
+  { path: 'activate/:token', component: ActivateAccountComponent /* pas besoin de check d'accès à la route */ },
+  { path: 'add_file/:projectId', component: AddFileComponent, canActivate: [AddFileRouteAccessChecker] },
+  { path: 'add_file/:projectId/:fileId', component: AddFileComponent, canActivate: [UpdateFileVersionRouteAccessChecker] },
   { path: 'admin', component: AdminPanelComponent, canActivate: [AdminRouteAccessChecker] },
-  { path: 'check/:check', component: CheckVersionComponent, canActivate: [AdminRouteAccessChecker] },
-  { path: 'version_details/:file', component: VersionDetailsComponent, canActivate: [AdminRouteAccessChecker] }
+  { path: 'check/:check', component: CheckVersionComponent, canActivate: [EmptyRouteAccessChecker] },
+  { path: 'version_details/:file', component: VersionDetailsComponent, canActivate: [EmptyRouteAccessChecker] }
 ];
 
 export const APP_ROUTES = RouterModule.forRoot(ROUTES, { useHash: true });

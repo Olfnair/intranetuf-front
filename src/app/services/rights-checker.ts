@@ -10,7 +10,9 @@ export abstract class RightsChecker implements AuthorizationChecker {
   private _loading: boolean = true;
   private _rights: number = 0;
 
-  constructor(private _restService: RestApiService) { }
+  constructor(private _restService: RestApiService, projectId: number = undefined) {
+    this._projectId = projectId;
+  }
 
   public abstract check(): boolean;
 

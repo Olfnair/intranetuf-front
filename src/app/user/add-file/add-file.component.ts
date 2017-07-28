@@ -6,7 +6,6 @@ import { Subscription } from "rxjs/Subscription";
 import { FileUploadService } from "app/services/file-upload.service";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
-import { RoleChecker, AdminRoleChecker } from "app/services/role-checker";
 import { GuiForm } from "app/gui/gui-form";
 import { GuiProgressComponent } from "app/gui/gui-progress";
 import { UserContainer } from "app/user/add-file/user-container";

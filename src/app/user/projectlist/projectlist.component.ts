@@ -4,7 +4,7 @@ import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
-import { RoleChecker, DefaultRoleChecker } from "app/services/role-checker";
+import { BasicRoleChecker, RoleCheckerService } from "app/services/role-checker";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { NavList, NavListSelection } from "app/gui/nav-list";
 import { Project } from "entities/project";
@@ -22,14 +22,13 @@ export class ProjectlistComponent extends NavList implements OnInit {
   // ref sur le projet sélectionné
   private _selectedProject: Project = undefined;
 
-  private _roleChecker: RoleChecker = this._session.adminRoleChecker;
-
   private _searchParam: string = 'default';
 
   constructor(
     sanitizer: DomSanitizer,
     private _restService: RestApiService,
     private _session: SessionService,
+    private _roleCheckerService: RoleCheckerService,
     private _modal: ModalService
   ) { super(sanitizer); }
 
@@ -53,8 +52,8 @@ export class ProjectlistComponent extends NavList implements OnInit {
     return "[{col: 'name', param: '" + searchValue + "'}]";
   }
 
-  get roleChecker(): RoleChecker {
-    return this._roleChecker;
+  get roleChecker(): BasicRoleChecker {
+    return this._roleCheckerService;
   }
 
   private _loadProjects(): void {

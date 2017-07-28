@@ -83,6 +83,12 @@ export class RestApiService {
     });
   }
 
+  userIsFileAuthor(fileId: number): Observable<RestLong> {
+    return this._http.get(this._backendURL.file + '/' + fileId + '/isauthor/' + this._authToken.u, this.options()).map((res: Response) => {
+      return res.json().restLong;
+    });
+  }
+
   /**
    * Function to create project
    *

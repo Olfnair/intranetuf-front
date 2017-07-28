@@ -10,7 +10,7 @@ import { Credentials } from "entities/credentials";
 import { Project } from "entities/project";
 import { ProjectRight } from "entities/project-right";
 import { User, Roles } from "entities/user";
-import { RoleChecker, AdminRoleChecker } from "app/services/role-checker";
+import { RoleCheckerService } from "app/services/role-checker";
 
 @Injectable()
 export class SessionService {
@@ -30,9 +30,10 @@ export class SessionService {
   private _base64AuthToken: string = undefined;
   private _logged: boolean = false;
 
-  private _adminRoleChecker: RoleChecker = new AdminRoleChecker(this._restService);
-
-  constructor(private _restService: RestApiService) { }
+  constructor(
+    private _restService: RestApiService,
+    private _roleCheckerService: RoleCheckerService
+  ) { }
 
   get readyForContent(): boolean {
     return this._readyForContent;
@@ -97,16 +98,12 @@ export class SessionService {
     return this._logged;
   }
 
-  get adminRoleChecker(): RoleChecker {
-    return this._adminRoleChecker;
-  }
-
   private _login(login: string, res: Response): Response {
     this.logout();
     this._userLogin = login;
     this.authToken = res.json();
     this._logged = true;
-    this._adminRoleChecker.directLoad(this.authToken.r);
+    this._roleCheckerService.directLoad(this.authToken.r);
     return res;
   }
 
@@ -133,7 +130,7 @@ export class SessionService {
     this._base64AuthToken = undefined;
     this._restService.authToken = undefined;
     this._logged = false;
-    this._adminRoleChecker.reset();
+    this._roleCheckerService.reset();
     this._selectedProject = undefined;
   }
 
