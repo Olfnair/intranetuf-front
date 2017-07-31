@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
+import { ModalService } from "app/gui/modal.service";
 import { GuiForm } from "app/gui/gui-form";
 import { Base64 } from "app/shared/base64";
 import { WorkflowCheck, CheckType, Status } from "entities/workflow-check";
@@ -16,9 +17,12 @@ export class CheckVersionComponent extends GuiForm implements OnInit, OnDestroy 
   private _paramsSub: Subscription = undefined;
   private _check: WorkflowCheck = undefined;
 
-  constructor(private _route: ActivatedRoute, private _router: Router, private _restService: RestApiService) {
-    super();
-  }
+  constructor(
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _restService: RestApiService,
+    private _modalService: ModalService
+  ) { super(); }
 
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
@@ -45,6 +49,20 @@ export class CheckVersionComponent extends GuiForm implements OnInit, OnDestroy 
 
   get filename(): string {
     return this._check.version.filename;
+  }
+
+  confirm(validated: boolean) {
+    let sub: Subscription = this._modalService.yesno(
+      'Confirmation',
+      'Etes-vous sûr de vouloir ' + (validated ? 'VALIDER' : 'REFUSER') + ' ce fichier ?',
+      validated || false
+    ).finally(() => {
+      sub.unsubscribe();
+    }).subscribe((yes: boolean) => {
+      if(yes) {
+        this.submit(validated);
+      }
+    });
   }
 
   submit(validated: boolean): void {

@@ -4,6 +4,7 @@
     <ng-content></ng-content>
     <md-spinner *ngIf="!selectables && !error" class="spinner" mode="indeterminate"></md-spinner>
     <p *ngIf="error" class="errors">{{error}}</p>
+    <p *ngIf="emptyMessage && selectables && selectables.length <= 0">{{emptyMessage}}</p>
     <md-nav-list *ngIf="selectables" dense>
       <ng-container *ngFor="let selectable of selectables">
         <md-list-item *ngIf="isSelected(selectable)" class="selected no-padding">

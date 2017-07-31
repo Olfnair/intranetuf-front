@@ -183,7 +183,7 @@ export class DatatableComponent<T> {
   }
 
   @Input() set options(options: DatatableOptions) {
-    this._options = options;
+    this._options.copy(options);
   }
 
   get options(): DatatableOptions {

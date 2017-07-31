@@ -23,6 +23,10 @@ export class GuiModalComponent {
     return this._data.success;
   }
 
+  get yesno(): boolean {
+    return this._data.yesno || false;
+  }
+
   get buttonColor(): string {
     return this._data.success ? 'primary' : 'warn';
   }

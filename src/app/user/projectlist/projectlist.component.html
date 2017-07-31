@@ -1,12 +1,22 @@
 <nav-list title="Projets"
     [error]="error"
+    [emptyMessage]="emptyMessage"
     [selectables]="selectables"
     [selected]="selected"
     (select)="select($event)">
+  <md-tab-group *ngIf="roleChecker.userIsAdmin()"
+      class="projectListTabs"
+      [selectedIndex]="getSelectedTab()"
+      (selectChange)="setSelectedTab($event)">
+    <md-tab label="Actifs">
+    </md-tab>
+    <md-tab label="Supprimés">
+    </md-tab>
+  </md-tab-group>
   <button *ngIf="roleChecker.userIsAdmin()" md-mini-fab class="add" (click)="add()" mdTooltip="Nouveau projet" mdTooltipPosition="after">
     <md-icon>create_new_folder</md-icon>
   </button>
-  <md-input-container *ngIf="selectables && selectables.length > 0" class="searchBox">
+  <md-input-container *ngIf="selectables" class="searchBox">
     <input #search mdInput placeholder="Recherche de projet" (change)="projectSearch(search.value)">
   </md-input-container>
 </nav-list>

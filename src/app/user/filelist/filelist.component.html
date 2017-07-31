@@ -16,9 +16,9 @@
       { label: 'Fichier',        query: 'version.filename',    sort: true, search: true, width: '30%' },
       { label: 'Auteur',         query: 'author',              sort: true, search: true, width: '20%' },
       { label: 'Version',        query: 'version.num',         sort: true, search: true, width:  '8%' },
-      { label: 'Date d\'upload', query: 'version.date_upload', sort: true,               width: '14%' },
-      { label: 'Statut',         query: 'version.status',      sort: true, search: true, width: '12%' },
-      { label: '',                                                                       width: '11%' },
+      { label: 'Date d\'upload', query: 'version.date_upload', sort: true,               width: '12%' },
+      { label: 'Statut',         query: 'version.status',      sort: true, search: true, width: '10%' },
+      { label: '',                                                                       width: '15%' },
       { label: '',                                                                       width:  '5%' }
     ]"
     (addButtonClick)="add()"
@@ -68,15 +68,15 @@
         </a>
       </span>
       <span *ngIf="hasControl(file.version.id)">
-        <a md-raised-button color="warn" mdTooltip="Contrôler" mdTooltipPosition="above"
+        <a md-raised-button class="smallButton" color="accent" mdTooltip="Contrôler" mdTooltipPosition="above"
             [routerLink]="['/check', getControlAsParameter(file.version.id)]">
-          Contrôler
+          <md-icon>find_in_page</md-icon>
         </a>
       </span>
       <span *ngIf="hasValidation(file.version.id)">
-        <a md-raised-button color="warn" mdTooltip="Valider" mdTooltipPosition="above"
+        <a md-raised-button class="smallButton" color="warn" mdTooltip="Valider" mdTooltipPosition="above"
             [routerLink]="['/check', getValidationAsParameter(file.version.id)]">
-          Valider
+          <md-icon>find_in_page</md-icon>
         </a>
       </span>
     </td>

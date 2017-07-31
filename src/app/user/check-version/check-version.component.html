@@ -18,12 +18,12 @@
 
     <button md-raised-button gui-form-action
         class="submitButton" color="primary" type="submit"
-        (click)="submit(true)" [disabled]="!form.valid">
+        (click)="confirm(true)" [disabled]="!form.valid">
       Valider
     </button>
     <button md-raised-button gui-form-action
         class="submitButton" color="warn" type="submit"
-        (click)=submit(false) [disabled]="!form.valid">
+        (click)=confirm(false) [disabled]="!form.valid">
       Refuser
     </button>
   </gui-form>

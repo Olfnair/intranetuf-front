@@ -1,6 +1,6 @@
 import { MdDialogRef, MdDialog, ComponentType } from "@angular/material";
 import { Injectable, TemplateRef } from '@angular/core';
-import { GuiModalComponent } from "app/gui/gui-modal";
+import { GuiModalComponent, GuiModalData } from "app/gui/gui-modal";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
@@ -15,12 +15,10 @@ export class ModalService {
   popup(comp: ComponentType<any> | TemplateRef<any>, data: any = {}): Observable<any> {
     this._dialogRef = this._dialog.open(comp, {data: data});
     return Observable.create((observer: Observer<boolean>) => {
-      let modalSub: Subscription = this._dialogRef.afterClosed()
-      .finally(() => {
+      let modalSub: Subscription = this._dialogRef.afterClosed().finally(() => {
         modalSub.unsubscribe();
         this._dialogRef = undefined;
-      })
-      .subscribe(
+      }).subscribe(
         (data: any) => {
           observer.next(data);
           observer.complete();
@@ -33,7 +31,11 @@ export class ModalService {
   }
    
   info(title: string, text: string, success: boolean = false): Observable<boolean> {
-    return this.popup(GuiModalComponent, {title: title, text: text, success: success});
+    return this.popup(GuiModalComponent, new GuiModalData(title, text, success));
+  }
+
+  yesno(title: string, text: string, success: boolean = true): Observable<boolean> {
+    return this.popup(GuiModalComponent, new GuiModalData(title, text, success, true));
   }
 
   close(dialogResult?: any) {

@@ -5,6 +5,7 @@ import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 export class NavList {
   private _title: string = undefined;
   private _error: string = undefined;
+  private _emptyMessage: string = undefined;
 
   private _selectables: NavListSelection[] = undefined;
   private _select$: EventEmitter<NavListSelection> = new EventEmitter<NavListSelection>();
@@ -29,6 +30,14 @@ export class NavList {
 
   get error(): string {
     return this._error;
+  }
+
+  @Input() set emptyMessage(emptyMessage: string) {
+    this._emptyMessage = emptyMessage;
+  }
+
+  get emptyMessage(): string {
+    return this._emptyMessage;
   }
 
   @Input() set selectables(selectables: NavListSelection[]) {

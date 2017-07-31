@@ -8,7 +8,5 @@ import { NavList } from "./nav-list";
   styleUrls: ['./nav-list.component.css']
 })
 export class NavListComponent extends NavList {
-
   constructor(sanitizer: DomSanitizer) { super(sanitizer); }
-
 }

@@ -5,7 +5,11 @@
       {{text}}
     </p>
   </md-dialog-content>
-  <md-dialog-actions>
+  <md-dialog-actions *ngIf="! yesno">
     <button md-raised-button class="submitButton" [color]="buttonColor" type="button" [md-dialog-close]="success">OK</button>
+  </md-dialog-actions>
+  <md-dialog-actions *ngIf="yesno">
+    <button md-raised-button class="submit" color="primary" type="button" [md-dialog-close]="true">Oui</button>
+    <button md-raised-button class="cancel" color="warn" type="button" [md-dialog-close]="false">Non</button>
   </md-dialog-actions>
 </section>

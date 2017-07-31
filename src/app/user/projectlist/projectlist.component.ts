@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { DomSanitizer } from "@angular/platform-browser";
+import { MdCheckboxChange, MdTabChangeEvent } from "@angular/material";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
@@ -22,7 +23,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
   // ref sur le projet sélectionné
   private _selectedProject: Project = undefined;
 
-  private _searchParam: string = 'default';
+  private _searchName: string = '';
 
   constructor(
     sanitizer: DomSanitizer,
@@ -36,20 +37,22 @@ export class ProjectlistComponent extends NavList implements OnInit {
     this._loadProjects();
   }
 
-  set searchParam(searchParam: string) {
-    if(searchParam == undefined || searchParam == '') {
-      this._searchParam = 'default';
-    }
-    else {
-      this._searchParam = "[{col: 'name', param: '" + searchParam + "'}]";
-    }
+  get fetchActive(): boolean {
+    return this._session.fetchActiveProjects;
   }
 
-  toSearchParams(searchValue: string = undefined): string {
-    if(searchValue == undefined || searchValue == '') {
-      return 'default';
+  buildSearchParams(): string {
+    let params: string = '';
+    if(this._searchName && this._searchName.length > 0) {
+      params = params.concat("col:'name'param:'" + this._searchName + "'");
     }
-    return "[{col: 'name', param: '" + searchValue + "'}]";
+    if(this._roleCheckerService.userIsAdmin) {
+      params = params.concat("col:'active'param:'" + this.fetchActive + "'");
+    }
+    if(params.length <= 0) {
+      params = 'default';
+    }
+    return params;
   }
 
   get roleChecker(): BasicRoleChecker {
@@ -57,12 +60,17 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   private _loadProjects(): void {
-    let sub: Subscription = this._restService.fetchProjects(this._searchParam).finally(() => {
+    let sub: Subscription = this._restService.fetchProjects(this.buildSearchParams()).finally(() => {
       sub.unsubscribe();
     }).subscribe(
       (projects: Project[]) => {
-        this.selectables = [];
         this._projects = projects;
+        if(this._projects.length <= 0) {
+          this.emptyMessage = this._searchName && this._searchName != '' ?
+          "Aucun projet ne correspond à votre recherche." :
+          "Aucun projet";
+        }
+        this.selectables = [];
         for(let i = 0; i < this._projects.length; ++i) {
           this.selectables.push(
             new NavListSelection(
@@ -147,8 +155,17 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   projectSearch(searchValue: string): void {
-    this.searchParam = searchValue;
+    this._searchName = searchValue;
     this._loadProjects();
+  }
+
+  setSelectedTab(event: MdTabChangeEvent): void {
+    this._session.fetchActiveProjects = event.index === 0 ? true : false;
+    this._loadProjects();
+  }
+
+  getSelectedTab(): number {
+    return this.fetchActive ? 0 : 1;
   }
   
 }

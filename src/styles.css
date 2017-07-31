@@ -11,8 +11,19 @@ datatable .mat-card {
 }
 
 .mat-tab-labels {
-  background-color: #ccc;
+  background-color: #ddd;
 }
+
+.projectListTabs .mat-tab-label[_ngcontent-c14] {
+  min-width: 0px !important;
+  width: 50%;
+}
+
+.projectListTabs .mat-ink-bar {
+  min-width: 0px !important;
+  width: 50% !important;
+}
+
 
 /* dataTable */
 table.dataTable thead tr th:first-child,

@@ -22,6 +22,9 @@ export class SessionService {
 
   private _updateProjectList = false;
 
+  // indique si l'admin veut la liste des projets actifs ou inactifs (supprimés)
+  private _fetchActiveProjects = true;
+
   private _currentRoute: string = undefined;
 
   // utilisateur
@@ -62,6 +65,14 @@ export class SessionService {
     setTimeout(() => {
       this._updateProjectList = update;
     }, 0);
+  }
+
+  get fetchActiveProjects(): boolean {
+    return this._fetchActiveProjects;
+  }
+
+  set fetchActiveProjects(fetchActiveProjects: boolean) {
+    this._fetchActiveProjects = fetchActiveProjects;
   }
 
   get selectedAdminTab(): number {
@@ -132,6 +143,7 @@ export class SessionService {
     this._logged = false;
     this._roleCheckerService.reset();
     this._selectedProject = undefined;
+    this._fetchActiveProjects = true;
   }
 
 }
