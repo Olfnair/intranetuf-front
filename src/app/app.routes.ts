@@ -10,8 +10,6 @@ import {
 
 // APP COMPONENTS
 import { HomeComponent } from "./user/home/home.component";
-import { ProjectlistComponent } from "./user/projectlist/projectlist.component";
-import { UserFormComponent } from "./admin/user-form/user-form.component";
 import { ActivateAccountComponent } from "./user/activate-account/activate-account.component";
 import { AddFileComponent } from "./user/add-file/add-file.component";
 import { AdminPanelComponent } from "./admin/admin-panel/admin-panel.component";
