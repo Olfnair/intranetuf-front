@@ -14,7 +14,7 @@ export class GuiCheckboxComponent {
 
   constructor() { }
 
-  @Output() get change$(): EventEmitter<MdCheckboxChange> {
+  @Output('change') get change$(): EventEmitter<MdCheckboxChange> {
     return this._change$;
   }
 

@@ -16,6 +16,7 @@ export class RightslistComponent {
 
   private _user: User = undefined;
   private _rights: ProjectRight[] = [];
+  private _selectedProjectRights: Map<number, ProjectRight> = new Map<number, ProjectRight>();
   private _rightsObs: Observable<ProjectRight[]> = undefined;
 
   private _mapModifiedRights: Map<number, ProjectRight>;
@@ -23,7 +24,22 @@ export class RightslistComponent {
 
   private _done$: EventEmitter<void> = new EventEmitter<void>();
 
-  private _selectedColRights: number = 0;
+  private _rightsMustBeChecked: number = 0;
+  private _rightsMustBeUnchecked: number = 0;
+
+  private _updatingRights: Map<number, boolean> = new Map<number, boolean>();
+
+  private static addRight(rights: number, rightToAdd: number): number {
+    return rights |= rightToAdd;
+  }
+
+  private static removeRight(rights: number, rightToRemove: number): number {
+    return rights &= (0xffffffff - rightToRemove);
+  }
+
+  private static setRight(rights: number, rightToSet: number, add: boolean = true): number {
+    return add ? RightslistComponent.addRight(rights, rightToSet) : RightslistComponent.removeRight(rights, rightToSet);
+  }
 
   constructor(private _restService: RestApiService) { }
 
@@ -71,6 +87,11 @@ export class RightslistComponent {
     return this._mapModifiedRights.size > 0;
   }
 
+  updateSelection(selection: Map<number, ProjectRight>): void {
+    this._selectedProjectRights = selection;
+    this.reEvaluateRights();
+  }
+
   hasRight(projectRight: ProjectRight, right: Right): boolean {
     return ProjectRight.hasRight(projectRight.rights, right);
   }
@@ -80,15 +101,63 @@ export class RightslistComponent {
       this._mapOriginalRights.get(projectRight.project.id).rights === projectRight.rights;
   }
 
-  switchRight(event: MdCheckboxChange, projectRight: ProjectRight, right: number): void {
+  setRight(event: MdCheckboxChange, projectRight: ProjectRight, right: number, itemChecked: boolean): void {
     if (event.checked) { // droit positif
       projectRight.rights |= right;
+      if(itemChecked) {
+        this._rightsMustBeUnchecked = RightslistComponent.removeRight(this._rightsMustBeUnchecked, right);
+      }
     }
     else { // droit negatif
       projectRight.rights &= 0xffffffff - right;
+      if(itemChecked) {
+        this._rightsMustBeChecked = RightslistComponent.removeRight(this._rightsMustBeChecked, right);
+      }
     }
-    // un droit a été modifié et n'est pas contenu dans la liste des modifications
-    if (!this.isSameAsOriginal(projectRight) && !this._mapModifiedRights.has(projectRight.project.id)) {
+    this.updateRight(projectRight);
+  }
+
+  setSelectedColRight(event: MdCheckboxChange, right: number): void {
+    if(event.checked) {
+      this._rightsMustBeChecked = RightslistComponent.addRight(this._rightsMustBeChecked, right);
+      this._rightsMustBeUnchecked = RightslistComponent.removeRight(this._rightsMustBeUnchecked, right);
+    }
+    else {
+      this._rightsMustBeUnchecked = RightslistComponent.addRight(this._rightsMustBeUnchecked, right);
+      this._rightsMustBeChecked = RightslistComponent.removeRight(this._rightsMustBeChecked, right);
+    }
+    this.reEvaluateRights();
+  }
+
+  rightsColMustBeChecked(right: number): boolean {
+    return ProjectRight.hasRight(this._rightsMustBeChecked, right);
+  }
+
+  rightsColMustBeUnchecked(right: number): boolean {
+    return ProjectRight.hasRight(this._rightsMustBeUnchecked, right);
+  }
+
+  // utilisé pour faire les mises à jour
+  rightsColChecked(right: number): boolean {
+    let check: boolean = this.rightsColMustBeChecked(right);
+    let uncheck: boolean = this.rightsColMustBeUnchecked(right);
+    if(! check && ! uncheck) {
+      return undefined;
+    }
+    return check ? true : false;
+  }
+
+  // utlisé pour afficher la case
+  isRightsColChecked(right: number): boolean {
+    if(this.rightsColChecked(right) === true) {
+      return true;
+    }
+    return false;
+  }
+
+  updateRight(projectRight: ProjectRight): void {
+     // un droit a été modifié et n'est pas contenu dans la liste des modifications
+    if (! this.isSameAsOriginal(projectRight) && ! this._mapModifiedRights.has(projectRight.project.id)) {
       this._mapModifiedRights.set(projectRight.project.id, projectRight);
     }
     // une modification sur un droit a été annulée et il faut le supprimer de la liste des modifications
@@ -97,25 +166,29 @@ export class RightslistComponent {
     }
   }
 
-  switchSelectedColRight(event: MdCheckboxChange, right: number) {
-    return this.setSelectedColRight(right, event.checked ? true : false);
-  }
-
-  setSelectedColRight(right: number, add: boolean = true) {
-    if(add) {
-      this._selectedColRights |= right;
+  reEvaluateRight(projectRight: ProjectRight, right: Right): void {
+    let colChecked: boolean = this.rightsColChecked(right);
+    if (colChecked != undefined) {
+      projectRight.rights = RightslistComponent.setRight(projectRight.rights, right, colChecked ? true : false);
     }
-    else {
-      this._selectedColRights &= 0xffffffff - right;
-    }
+    this.updateRight(projectRight);
   }
 
-  getSelectedColRight(right: number) {
-    return (this._selectedColRights & right) === right;
+  reEvaluateRights(): void {
+    setTimeout(() => {
+      this._selectedProjectRights.forEach((projectRight: ProjectRight, id: number) => {
+        for(let right: number = 64; right >= 1; right >>= 1) {
+          this.reEvaluateRight(projectRight, right);
+        }
+        this.reEvaluateRight(projectRight, 64 * 2 - 1);
+      });
+      // on a déselectionné ce qu'il fallait et il ne faudra plus déselectionner à l'avenir :
+      this._rightsMustBeUnchecked = 0;
+    }, 0);
   }
 
-  isRightBoxChecked(itemChecked: boolean, projectRight: ProjectRight, right: Right): boolean {
-    return itemChecked && this.getSelectedColRight(right) || this.hasRight(projectRight, right);
+  isRightBoxChecked(projectRight: ProjectRight, right: Right): boolean {
+    return ProjectRight.hasRight(projectRight.rights, right);
   }
 
   submit(): void {
