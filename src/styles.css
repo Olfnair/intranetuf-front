@@ -14,7 +14,7 @@ datatable .mat-card {
   background-color: #ddd;
 }
 
-.projectListTabs .mat-tab-label[_ngcontent-c14] {
+.projectListTabs .mat-tab-label {
   min-width: 0px !important;
   width: 50%;
 }
@@ -23,7 +23,6 @@ datatable .mat-card {
   min-width: 0px !important;
   width: 50% !important;
 }
-
 
 /* dataTable */
 table.dataTable thead tr th:first-child,

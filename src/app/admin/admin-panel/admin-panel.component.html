@@ -1,16 +1,17 @@
-<section>
-  <h2>Panneau d'Administration {{selectedTab}}</h2>
-  <md-tab-group [selectedIndex]="selectedTab" (selectChange)="setSelectedTab($event)">
+<!-- utilisateurs (0) -->
+<section *ngIf="selectedItem == 0">
+  <md-tab-group [selectedIndex]="0">
     <md-tab label="Utilisateurs" class="padding">
-      <app-userlist [selected]="selectedTab == 0"></app-userlist>
+      <app-userlist></app-userlist>
     </md-tab>
+  </md-tab-group>
+</section>
+
+<!-- projets (1) -->
+<section *ngIf="selectedItem == 1">
+  <md-tab-group [selectedIndex]="0">
     <md-tab label="Projets" class="padding">
-      <h1>Some more tab content</h1>
-      <p>...</p>
-    </md-tab>
-    <md-tab label="test" class="padding">
-      <h1>Some more tab content</h1>
-      <p>...</p>
+      Projets
     </md-tab>
   </md-tab-group>
 </section>

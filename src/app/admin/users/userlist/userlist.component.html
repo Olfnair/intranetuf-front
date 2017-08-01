@@ -11,11 +11,11 @@
     [columns]="[
       { label: 'Prénom',      query: 'firstname', sort: true, search: true, width: '15%' },
       { label: 'Nom',         query: 'name',      sort: true, search: true, width: '15%' },
-      { label: 'Identifiant', query: 'login',     sort: true, search: true, width: '15%' },
+      { label: 'Identifiant', query: 'login',     sort: true, search: true, width: '10%' },
       { label: 'Email',       query: 'email',     sort: true, search: true, width: '15%' },
       { label: 'Actif',       query: 'active',    sort: true,               width: '8%' },
       { label: 'En Attente',  query: 'pending',   sort: true,               width: '8%' },
-      { label: '',                                                          width: '20%' }
+      { label: '',                                                          width: '25%' }
     ]"
     (addButtonClick)="add()"
     (queryParams)="paramsChange($event)">
@@ -30,8 +30,15 @@
     <td>{{user.active | boolToString}}</td>
     <td>{{user.pending | boolToString}}</td>
     <td>
-      <button md-raised-button color="primary" type="button" (click)="rights(user)">Droits</button>
-      <button *ngIf="roleChecker.userIsSuperAdmin()" md-raised-button color="primary" type="button" (click)="adminLoginAs(user.login)">Utiliser Compte</button>
+      <button md-raised-button class="smallButton" color="primary" type="button"
+          mdTooltip="Droits" mdTooltipPosition="above" (click)="rights(user)">
+        <md-icon>lock_open</md-icon>
+      </button>
+      <button *ngIf="roleChecker.userIsSuperAdmin()" class="smallButton"
+          mdTooltip="Utiliser Compte" mdTooltipPosition="above"
+          md-raised-button color="warn" type="button" (click)="adminLoginAs(user.login)">
+        <md-icon>exit_to_app</md-icon>
+      </button>
     </td>
   </ng-template>
 </datatable>

@@ -39,6 +39,14 @@ export class AppComponent {
     return this._session.updateProjectList;
   }
 
+  get selectedAdminItem(): number {
+    return this._session.selectedAdminItem;
+  }
+
+  get route(): string {
+    return this._router.url;
+  }
+
   toggleSidenavOnSmall(): void {
     this._sidenavShowOnSmall = ! this._sidenavShowOnSmall;
   }
@@ -48,7 +56,11 @@ export class AppComponent {
   }
 
   showProjectList(): boolean {
-    return this._router.url == '/home' && this.logged;
+    return this.route == '/home' && this.logged;
+  }
+
+  showAdminNavList(): boolean {
+    return this.route == '/admin';
   }
 
   loaded(): void {

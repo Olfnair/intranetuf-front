@@ -18,7 +18,7 @@ export class SessionService {
   // apps
   private _readyForContent: boolean = true;
   private _selectedProject: Project = undefined;
-  private _selectedAdminTab: number = 0;
+  private _selectedAdminItem: number = 0;
 
   private _updateProjectList = false;
 
@@ -75,12 +75,12 @@ export class SessionService {
     this._fetchActiveProjects = fetchActiveProjects;
   }
 
-  get selectedAdminTab(): number {
-    return this._selectedAdminTab;
+  get selectedAdminItem(): number {
+    return this._selectedAdminItem;
   }
 
-  set selectedAdminTab(tab: number) {
-    this._selectedAdminTab = tab;
+  set selectedAdminItem(tab: number) {
+    this._selectedAdminItem = tab;
   }
 
   get userId(): number {

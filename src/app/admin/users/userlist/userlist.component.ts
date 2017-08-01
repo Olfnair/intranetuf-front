@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
@@ -23,7 +23,7 @@ export enum ComponentState {
   templateUrl: './userlist.component.html',
   styleUrls: ['./userlist.component.css']
 })
-export class UserlistComponent {
+export class UserlistComponent implements OnInit {
   private _usersPaginator: DatatablePaginator<User> = new DatatablePaginator<User>(2);
   private _usersPaginatorObs: Observable<DatatablePaginator<User>> = undefined;
   private _state: number = ComponentState.LIST;
@@ -40,6 +40,10 @@ export class UserlistComponent {
     private _router: Router
   ) { }
 
+  ngOnInit() {
+    this.updateUsers();
+  }
+
   updateUsers(): void {
     this._usersPaginatorObs = this._usersPaginator.update(this._restService, 'fetchUsers', this._params);
   }
@@ -47,12 +51,6 @@ export class UserlistComponent {
   paramsChange(params: DatatableQueryParams): void {
     this._params = params;
     this.updateUsers();
-  }
-
-  @Input() set selected(selected: boolean) {
-    if (selected) {
-      this.updateUsers();
-    }
   }
 
   get users(): Observable<DatatablePaginator<User>> {

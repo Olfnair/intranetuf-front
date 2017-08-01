@@ -14,6 +14,9 @@ export class NavList {
   // ref sur la selection courante
   private _selected: NavListSelection = undefined;
 
+  // liste dense ou pas
+  private _dense: boolean = false;
+
   constructor(private _sanitizer: DomSanitizer) { }
 
   @Input() set title(title: string) {
@@ -57,6 +60,14 @@ export class NavList {
     return this._selected;
   }
 
+  @Input() set dense(dense: boolean) {
+    this._dense = dense;
+  }
+
+  get dense(): boolean {
+    return this._dense;
+  }
+
   isSelected(selectable: NavListSelection): boolean {
     return this._selected && this._selected == selectable;
   }
@@ -68,6 +79,13 @@ export class NavList {
   select(selection: NavListSelection): void {
     this._selected = selection;
     this._select$.emit(this._selected);
+  }
+
+  isDense(): string {
+    if(! this.dense) {
+      return null;
+    }
+    return '';
   }
 
   startReload(): void {

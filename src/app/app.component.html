@@ -1,11 +1,16 @@
 <app-header
-    [displayListButton]="showProjectList()"
+    [displayListButton]="showProjectList() || showAdminNavList()"
     (toggleOnSmall)="toggleSidenavOnSmall()"
     (toggleOnLarge)="toggleSidenavOnLarge()">
 </app-header>
 <sidenav-layout [openSidenavOnSmall]="sidenavShowOnSmall" [openSidenavOnLarge]="sidenavShowOnLarge">
   <sl-sidenav *ngIf="showProjectList()">
-    <app-projectlist [selectedProject]="selectedProject" [update]="updateProjectList" (loaded)="loaded()" sidenav></app-projectlist>
+    <app-projectlist
+        [selectedProject]="selectedProject" [update]="updateProjectList" (loaded)="loaded()" sidenav>
+    </app-projectlist>
+  </sl-sidenav>
+  <sl-sidenav *ngIf="showAdminNavList()">
+    <app-admin-nav-list [selectedAdminItem]="selectedAdminItem" sidenav></app-admin-nav-list>
   </sl-sidenav>
   <sl-content>
     <router-outlet></router-outlet>
