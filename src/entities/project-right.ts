@@ -30,6 +30,6 @@ export class ProjectRight {
   }
 
   public static hasRight(projectRights: number, rightToCheck: Right): boolean {
-    return (projectRights & rightToCheck) > 0;
+    return (projectRights & rightToCheck) === rightToCheck;
   }
 }

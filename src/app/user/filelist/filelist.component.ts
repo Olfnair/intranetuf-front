@@ -47,7 +47,7 @@ export class FilelistComponent {
 
   private _rightsChecker: RightsChecker = new DefaultRightsChecker(this._restService);
 
-  // charge les roles à chaque changement de projet et met à jour le servicede check de role
+  // charge les roles à chaque changement de projet et met à jour le service de check de role
   private _roleCheckerUpdater: RoleChecker = new DefaultRoleChecker(this._restService, this._roleCheckerService);
   
   constructor(

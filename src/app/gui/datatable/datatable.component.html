@@ -54,21 +54,23 @@
         <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="content" let-index="index" let-event="even" let-odd="odd" let-last="last">
           <tr [class.oddRow]="odd">
             <td *ngIf="options.selectionCol" class="selectionCol">
-              <gui-checkbox *ngIf="item.id != undefined"
-                  [checked]="selectAllState || selectAllState == undefined && isSelected(item.id)"
-                  (change)="checkSelect($event, item.id, item)">
-              </gui-checkbox>
-              <gui-checkbox *ngIf="item.id == undefined"
-                  [checked]="selectAllState || selectAllState == undefined &&
-                    isSelected(index + paginator.pageToIndex(paginator.currentPageNum))"
-                  (change)="checkSelect($event, index + paginator.pageToIndex(paginator.currentPageNum), item)">
+              <gui-checkbox
+                  [checked]="isItemChecked(item, index)"
+                  (change)="checkSelect($event, item, index)">
               </gui-checkbox>
             </td>
-            <ng-container *ngTemplateOutlet="_content;
-                context: {item: item, index: index, even: even, odd: odd, last: last}">
+            <ng-container *ngTemplateOutlet="_content; context: {
+              item: item,
+              checked: isItemChecked(item, index),
+              index: index,
+              even: even,
+              odd: odd,
+              last: last
+            }">
             </ng-container>
           </tr>
         </ng-template>
+        <ng-content select="datatable-final-row"></ng-content>
         <tr *ngIf="loaded && (options.displayFooter || (paginator.hasPrevPage() || paginator.hasNextPage()))" class="footer">
           <td [colSpan]="nbCols">
             <table class="footerTable">
@@ -101,6 +103,6 @@
           </td>
         </tr>
       </tbody>
-      </table>
+    </table>
   </md-card-content>
 </md-card>

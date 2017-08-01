@@ -39,6 +39,13 @@ table.dataTable tbody tr td:last-child {
   padding-right: 5px;
 }
 
+table.dataTable datatable-final-row { 
+  display: table-row;
+  height: 3.5em;
+  background-color: #d1d1d1;
+  vertical-align: middle;
+}
+
 /* form */
 [gui-form-input] {
   width: 100%;

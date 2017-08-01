@@ -2,29 +2,42 @@
     [options]="{pagination: true, selectionCol: true, displayFooter: true}"
     [data]="rightsObs"
     [columns]="[
-      { label: 'Projet', width: '19%' },
-      { label: 'Voir', width: '11%' },
-      { label: 'Editer', width: '11%' },
-      { label: 'Supprimer', width: '11%' },
-      { label: 'Ajout fichier', width: '11%' },
-      { label: 'Supprimer fichier', width: '11%' },
-      { label: 'Contrôleur', width: '11%' },
-      { label: 'Valideur', width: '11%' }
+      { label: 'Projet',            width: '19%' },
+      { label: 'Voir',              width: '10%' },
+      { label: 'Editer',            width: '10%' },
+      { label: 'Supprimer',         width: '10%' },
+      { label: 'Ajout fichier',     width: '10%' },
+      { label: 'Supprimer fichier', width: '10%' },
+      { label: 'Contrôleur',        width: '10%' },
+      { label: 'Valideur',          width: '10%' },
+      { label: 'Tous',              width:  '7%' }
     ]">
   <!-- total width: 96% : 4% de width pour la colonne de selection -->
   <datatable-title>
     <h2>Droits de {{user.firstname}} {{user.name}}</h2>
   </datatable-title>
-  <ng-template let-right="item">
+  <ng-template let-right="item" let-checked="checked">
     <td>{{right.project.name | truncate:30}}</td>
-    <td><gui-checkbox [checked]="hasRight(right, 1)" (change)="switchRight($event, right, 1)"></gui-checkbox></td>
-    <td><gui-checkbox [checked]="hasRight(right, 2)" (change)="switchRight($event, right, 2)"></gui-checkbox></td>
-    <td><gui-checkbox [checked]="hasRight(right, 4)" (change)="switchRight($event, right, 4)"></gui-checkbox></td>
-    <td><gui-checkbox [checked]="hasRight(right, 8)" (change)="switchRight($event, right, 8)"></gui-checkbox></td>
-    <td><gui-checkbox [checked]="hasRight(right, 16)" (change)="switchRight($event, right, 16)"></gui-checkbox></td>
-    <td><gui-checkbox [checked]="hasRight(right, 32)" (change)="switchRight($event, right, 32)"></gui-checkbox></td>
-    <td><gui-checkbox [checked]="hasRight(right, 64)" (change)="switchRight($event, right, 64)"></gui-checkbox></td>
+    <td><gui-checkbox [checked]="isRightBoxChecked(checked, right, 1)" (change)="switchRight($event, right, 1)"></gui-checkbox></td>
+    <td><gui-checkbox [checked]="isRightBoxChecked(checked, right, 2)" (change)="switchRight($event, right, 2)"></gui-checkbox></td>
+    <td><gui-checkbox [checked]="isRightBoxChecked(checked, right, 4)" (change)="switchRight($event, right, 4)"></gui-checkbox></td>
+    <td><gui-checkbox [checked]="isRightBoxChecked(checked, right, 8)" (change)="switchRight($event, right, 8)"></gui-checkbox></td>
+    <td><gui-checkbox [checked]="isRightBoxChecked(checked, right, 16)" (change)="switchRight($event, right, 16)"></gui-checkbox></td>
+    <td><gui-checkbox [checked]="isRightBoxChecked(checked, right, 32)" (change)="switchRight($event, right, 32)"></gui-checkbox></td>
+    <td><gui-checkbox [checked]="isRightBoxChecked(checked, right, 64)" (change)="switchRight($event, right, 64)"></gui-checkbox></td>
+    <td><md-checkbox [checked]="hasRight(right, 64 + 63)" (change)="switchRight($event, right, 64 + 63)"></md-checkbox></td>
   </ng-template>
+  <datatable-final-row>
+    <td colSpan="2" class="selectInfo">Sélectionner colonne :</td>
+    <td><gui-checkbox color="warn" [checked]="getSelectedColRight(1)" (change)="switchSelectedColRight($event, 1)"></gui-checkbox></td>
+    <td><gui-checkbox color="warn" [checked]="getSelectedColRight(2)" (change)="switchSelectedColRight($event, 2)"></gui-checkbox></td>
+    <td><gui-checkbox color="warn" [checked]="getSelectedColRight(4)" (change)="switchSelectedColRight($event, 4)"></gui-checkbox></td>
+    <td><gui-checkbox color="warn" [checked]="getSelectedColRight(8)" (change)="switchSelectedColRight($event, 8)"></gui-checkbox></td>
+    <td><gui-checkbox color="warn" [checked]="getSelectedColRight(16)" (change)="switchSelectedColRight($event, 16)"></gui-checkbox></td>
+    <td><gui-checkbox color="warn" [checked]="getSelectedColRight(32)" (change)="switchSelectedColRight($event, 32)"></gui-checkbox></td>
+    <td><gui-checkbox color="warn" [checked]="getSelectedColRight(64)" (change)="switchSelectedColRight($event, 64)"></gui-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="getSelectedColRight(64 + 63)" (change)="switchSelectedColRight($event, 64 + 63)"></md-checkbox></td>
+  </datatable-final-row>
   <datatable-footer>
     <button md-raised-button color="primary" type="button"
         (click)="submit()" [disabled]="! modified">

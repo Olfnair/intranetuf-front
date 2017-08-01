@@ -32,7 +32,9 @@
       
       <datatable *ngIf="! newVersionMode && container.isListMode()"
         [options]="{
-          addButton: container.availableSize > 0, addButtonTooltip: 'Ajouter',
+          addButton: container.availableSize > 0,
+          addButtonTooltip: 'Ajouter',
+          addButtonIconName: 'person_add',
           emptyMessage: container.availableSize > 0 ? 'Veuillez ajouter au moins un ' +
               container.name + '.' : 'Pas encore de ' + container.name + ' affecté à ce projet.'
         }"
@@ -57,8 +59,8 @@
           <td>{{user.name}}</td>
           <td>{{user.firstname}}</td>
           <td class="alignRight">
-            <button md-raised-button class="smallButton" color="warn" type="button" (click)="container.delete(index)" mdTooltip="Supprimer"
-              mdTooltipPosition="above">
+            <button md-raised-button class="smallButton" color="warn" type="button"
+              (click)="container.delete(index)" mdTooltip="Supprimer" mdTooltipPosition="above">
               <md-icon>clear</md-icon>
             </button>
           </td>
@@ -66,7 +68,11 @@
       </datatable>
 
       <datatable *ngIf="! newVersionMode && container.isAddMode()"
-        [options]="{selectionCol: true, displayFooter: true, emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'}"
+        [options]="{
+          selectionCol: true,
+          displayFooter: true,
+          emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'
+        }"
         [data]="container.availableUsers"
         [columns]="['Nom', 'Prénom', '']"
         (selectedDataUpdate)="updateUsersToAdd(container, $event)">

@@ -11,7 +11,13 @@ import { ModalService } from "app/gui/modal.service";
 
 // Gui
 import { ColumnHeaderComponent } from "./column-header";
-import { DatatableComponent, DatatableHeader, DatatableTitle, DatatableFooter } from './datatable';
+import {
+  DatatableComponent,
+  DatatableHeader,
+  DatatableTitle,
+  DatatableFinalRow,
+  DatatableFooter
+} from './datatable';
 import { GuiCheckboxComponent } from "./gui-checkbox";
 import { GuiFormComponent } from './gui-form';
 import { GuiModalComponent } from "./gui-modal";
@@ -25,7 +31,7 @@ import { UpDownComponent } from "./up-down";
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
     ColumnHeaderComponent,
-    DatatableComponent, DatatableHeader, DatatableTitle, DatatableFooter,
+    DatatableComponent, DatatableHeader, DatatableTitle, DatatableFinalRow, DatatableFooter,
     GuiCheckboxComponent,
     GuiFormComponent,
     GuiModalComponent,
@@ -50,7 +56,7 @@ import { UpDownComponent } from "./up-down";
   ],
   exports: [ // tous les composants, pipes, directives pour un module qui importe celui-ci
     ColumnHeaderComponent,
-    DatatableComponent, DatatableHeader, DatatableTitle, DatatableFooter,
+    DatatableComponent, DatatableHeader, DatatableTitle, DatatableFinalRow, DatatableFooter,
     GuiCheckboxComponent,
     GuiFormComponent,
     GuiModalComponent,

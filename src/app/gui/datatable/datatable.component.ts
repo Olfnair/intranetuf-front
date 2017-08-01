@@ -31,6 +31,11 @@ export class DatatableTitle { }
 export class DatatableHeader { }
 
 @Directive({
+  selector: 'datatable-final-row'
+})
+export class DatatableFinalRow { }
+
+@Directive({
   selector: 'datatable-footer'
 })
 export class DatatableFooter { }
@@ -235,12 +240,25 @@ export class DatatableComponent<T> {
     this._selectAllFalse = ! event.checked;
   }
 
-  isSelected(id: number): boolean {
+  getId(item: T, index: number = 0) {
+    return item['id'] ? item['id'] : index + this._paginator.pageToIndex(this._paginator.currentPageNum);
+  }
+
+  isIdSelected(id: number) {
     return this._selectedData.has(id);
   }
 
-  checkSelect(event: MdCheckboxChange, id: number, item: T): void {
-    let itemSelected: boolean = this.isSelected(id);  // cherche si l'item est déjà sélectionné
+  isItemSelected(item: T, index: number = 0): boolean {
+    return this.isIdSelected(this.getId(item, index));
+  }
+
+  isItemChecked(item: T, index: number = 0): boolean {
+    return this.selectAllState || this.selectAllState == undefined && this.isItemSelected(item, index);
+  }
+
+  checkSelect(event: MdCheckboxChange, item: T, index: number): void {
+    let id: number = this.getId(item, index);
+    let itemSelected: boolean = this.isIdSelected(id);  // cherche si l'item est déjà sélectionné
     let update: boolean = false;
     if (! event.checked && itemSelected) {            // suppression :
       this._selectAllTrue = false;                    // On supprime, donc on ne sélectionne plus tout

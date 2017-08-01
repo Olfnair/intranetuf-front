@@ -23,6 +23,8 @@ export class RightslistComponent {
 
   private _done$: EventEmitter<void> = new EventEmitter<void>();
 
+  private _selectedColRights: number = 0;
+
   constructor(private _restService: RestApiService) { }
 
   updateRightsObs(): void {
@@ -80,10 +82,10 @@ export class RightslistComponent {
 
   switchRight(event: MdCheckboxChange, projectRight: ProjectRight, right: number): void {
     if (event.checked) { // droit positif
-      projectRight.rights = projectRight.rights | right;
+      projectRight.rights |= right;
     }
     else { // droit negatif
-      projectRight.rights = projectRight.rights & (0xffffffff - right);
+      projectRight.rights &= 0xffffffff - right;
     }
     // un droit a été modifié et n'est pas contenu dans la liste des modifications
     if (!this.isSameAsOriginal(projectRight) && !this._mapModifiedRights.has(projectRight.project.id)) {
@@ -93,6 +95,27 @@ export class RightslistComponent {
     else if (this.isSameAsOriginal(projectRight) && this._mapModifiedRights.has(projectRight.project.id)) {
       this._mapModifiedRights.delete(projectRight.project.id);
     }
+  }
+
+  switchSelectedColRight(event: MdCheckboxChange, right: number) {
+    return this.setSelectedColRight(right, event.checked ? true : false);
+  }
+
+  setSelectedColRight(right: number, add: boolean = true) {
+    if(add) {
+      this._selectedColRights |= right;
+    }
+    else {
+      this._selectedColRights &= 0xffffffff - right;
+    }
+  }
+
+  getSelectedColRight(right: number) {
+    return (this._selectedColRights & right) === right;
+  }
+
+  isRightBoxChecked(itemChecked: boolean, projectRight: ProjectRight, right: Right): boolean {
+    return itemChecked && this.getSelectedColRight(right) || this.hasRight(projectRight, right);
   }
 
   submit(): void {
