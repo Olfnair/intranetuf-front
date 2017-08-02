@@ -1,18 +1,19 @@
 <datatable
     [options]="{pagination: true, selectionCol: true, displayFooter: true}"
-    [data]="rightsObs"
+    [data]="dataObs"
     [columns]="[
-      { label: 'Projet',            width: '19%' },
-      { label: 'Voir',              width: '10%' },
-      { label: 'Editer',            width: '10%' },
-      { label: 'Supprimer',         width: '10%' },
-      { label: 'Ajout fichier',     width: '10%' },
-      { label: 'Supprimer fichier', width: '10%' },
-      { label: 'Contrôleur',        width: '10%' },
-      { label: 'Valideur',          width: '10%' },
-      { label: 'Tous',              width:  '7%' }
+      { label: 'Projet', query: name, search: true, sort: true, width: '19%' },
+      { label: 'Voir',                                          width: '10%' },
+      { label: 'Editer',                                        width: '10%' },
+      { label: 'Supprimer',                                     width: '10%' },
+      { label: 'Ajout fichier',                                 width: '10%' },
+      { label: 'Supprimer fichier',                             width: '10%' },
+      { label: 'Contrôleur',                                    width: '10%' },
+      { label: 'Valideur',                                      width: '10%' },
+      { label: 'Tous',                                          width:  '7%' }
     ]"
-    (selectedDataUpdate)="updateSelection($event)">
+    (selectedDataUpdate)="updateSelection($event)"
+    (queryParams)="update($event, [user])">
   <!-- total width: 96% : 4% de width pour la colonne de selection -->
   <datatable-title>
     <h2>Droits de {{user.firstname}} {{user.name}}</h2>

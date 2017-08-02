@@ -1,7 +1,6 @@
 import { DatatablePage, DatatableQueryParams } from ".";
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
-import { FlexQueryResult } from "objects/flex-query-result";
 
 export class DatatablePaginator<T> {
   private _page: DatatablePage<T>;
@@ -113,8 +112,13 @@ export class DatatablePaginator<T> {
         observer.complete();
         sub.unsubscribe();
       }).subscribe(
-        (result: FlexQueryResult) => {
-          this.goToIndex(index, result.list ? result.list : [], result.totalCount);
+        (result: any) => {
+          this.goToIndex(
+            index,
+            // result.list => FlexQueryResult / sinon => Array classique
+            result.list ? result.list : result,
+            result.list ? result.totalCount : result.length
+          );
           observer.next(this);
           if(onResult) {
             onResult();

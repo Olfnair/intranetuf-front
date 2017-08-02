@@ -6,6 +6,7 @@ export {
   DatatableFooter
 } from "./datatable.component";
 export { DatatableColumn } from "./datatable-column";
+export { DatatableContentManager } from "./datatable-content-manager";
 export { DatatableOptions } from "./datatable-options";
 export { DatatablePage } from "./datatable-page";
 export { DatatablePaginator } from "./datatable-paginator";

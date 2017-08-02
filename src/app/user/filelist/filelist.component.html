@@ -12,7 +12,7 @@
       emptyMessage: 'Ce projet ne contient pas encore de fichier.',
       emptySearchMessage: 'Aucun fichier ne correspond à votre recherche.'
     }"
-    [data]="filesObs"
+    [data]="dataObs"
     [columns]="[
       { label: 'Fichier',        query: 'version.filename',    sort: true, search: true, width: '30%' },
       { label: 'Auteur',         query: 'author',              sort: true, search: true, width: '20%' },
@@ -23,7 +23,7 @@
       { label: '',                                                                       width:  '5%' }
     ]"
     (addButtonClick)="add()"
-    (queryParams)="paramsChange($event)">
+    (queryParams)="update($event, [project])">
   <datatable-title>
     <h2>Projet : {{project.name}} <span [class.hidden]="project.active" class="inactive">(Supprimé)</span></h2>
     <div class="projectActions">

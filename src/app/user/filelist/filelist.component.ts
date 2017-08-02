@@ -10,7 +10,7 @@ import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
 import { FlexQueryResult } from "objects/flex-query-result";
-import { DatatableQueryParams, DatatablePaginator } from "app/gui/datatable";
+import { DatatableContentManager } from "app/gui/datatable";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { RightsChecker, DefaultRightsChecker } from "app/services/rights-checker";
 import { BasicRoleChecker, RoleCheckerService, RoleChecker, DefaultRoleChecker } from "app/services/role-checker";
@@ -25,16 +25,12 @@ import { Status as VersionStatus, Version } from "entities/version";
   templateUrl: './filelist.component.html',
   styleUrls: ['./filelist.component.css']
 })
-export class FilelistComponent {
-  private static readonly PAGE_SIZE = 2; // nombre d'éléments par page
-
+export class FilelistComponent extends DatatableContentManager<File> {
   private _startLoading: boolean = false;
 
   private _firstLoading: boolean = true; // tout premier chargement (pas encore eu de rechargement suite à recherche/tri...)
 
   private _project: Project = undefined;
-  private _filesPaginator: DatatablePaginator<File> = new DatatablePaginator<File>(FilelistComponent.PAGE_SIZE);
-  private _filesObs: Observable<DatatablePaginator<File>> = undefined;
   
   private _controls: Map<number, WorkflowCheck> = undefined;
   private _validations: Map<number, WorkflowCheck> = undefined;
@@ -43,25 +39,26 @@ export class FilelistComponent {
                + environment.backend.port
                + environment.backend.endpoints.download;
 
-  private _params: DatatableQueryParams = undefined;
-
   private _rightsChecker: RightsChecker = new DefaultRightsChecker(this._restService);
 
   // charge les roles à chaque changement de projet et met à jour le service de check de role
   private _roleCheckerUpdater: RoleChecker = new DefaultRoleChecker(this._restService, this._roleCheckerService);
   
   constructor(
+    restService: RestApiService,
     private _session: SessionService,
-    private _restService: RestApiService,
     private _roleCheckerService: RoleCheckerService,
     private _router: Router,
     private _modal: ModalService
-  ) { }
+  ) {
+    super(restService, 'fetchFilesByProject', true, () => {
+      this._loadChecks();
+      this.reload = false;
+    });
+  }
 
   private _resetFileList(): void {
-    this._filesPaginator.goToIndex(0, [], 0);
-    this._firstLoading = true;
-    this._params = undefined;
+    this.reset(true);
     // rechargement des droits du projet
     if(this._project) {
       this._roleCheckerUpdater.loadRole();
@@ -85,10 +82,10 @@ export class FilelistComponent {
   }
 
   private _loadChecks(): void {
-    if(! this._filesPaginator.content || this._filesPaginator.content.length <= 0) { return; }
+    if(! this.paginator.content || this.paginator.content.length <= 0) { return; }
 
     let sub: Subscription = this._restService.fetchWorkflowCheckByStatusUserVersions(
-      Status.TO_CHECK, this._session.userId, this._filesPaginator.content
+      Status.TO_CHECK, this._session.userId, this.paginator.content
     ).finally(() => {
       sub.unsubscribe();
     }).subscribe(
@@ -107,21 +104,11 @@ export class FilelistComponent {
     );
   }
 
-  private _loadFiles(): void {
-    // teste s'il faut vraiment charger quelque chose
-    if(! this._project || ! this._startLoading) { return; }
-
-    this._filesObs = this._filesPaginator.update(this._restService, 'fetchFilesByProject', this._params, [this._project], this._firstLoading, () => {
-      this._loadChecks();
-      this._firstLoading = false;
-    });
-  }
-
   @Input() set startLoading(startLoading: boolean) {
     let old: boolean = this._startLoading;
     this._startLoading = startLoading;
-    if(! old && this._startLoading) {
-      this._loadFiles();
+    if(this._project != undefined && ! old && this._startLoading) {
+      this.load([this._project]);
     }
   }
 
@@ -129,16 +116,14 @@ export class FilelistComponent {
     if(project) {
       this._project = project;
       this._resetFileList();
-      this._loadFiles();
+      if(this._project != undefined && this._startLoading) {
+        this.load([this._project]);
+      }
     }
   }
 
   get project(): Project {
     return this._project;
-  }
-
-  get filesObs(): Observable<DatatablePaginator<File>> {
-    return this._filesObs;
   }
 
   get userId(): number {
@@ -176,11 +161,6 @@ export class FilelistComponent {
 
   add(): void {
     this._router.navigate(['/add_file', this._project.id]);
-  }
-
-  paramsChange(params: DatatableQueryParams): void {
-    this._params = params;
-    this._loadFiles();
   }
 
   downloadLink(versionId: number): string {
@@ -230,7 +210,7 @@ export class FilelistComponent {
       sub.unsubscribe();
     }).subscribe(
       (status: number) => {
-        this._loadFiles();
+        this.load([this._project]);
       },
       (error: Response) => {
         this._modal.info('Erreur', 'Erreur lors de la tentative de suppression du fichier', false);
@@ -305,5 +285,4 @@ export class FilelistComponent {
       }
     );
   }
-
 }

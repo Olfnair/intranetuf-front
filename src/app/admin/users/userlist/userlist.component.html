@@ -7,7 +7,7 @@
       emptyMessage: 'Il n\'y a pas encore d\'utilisateur.',
       emptySearchMessage: 'Aucun utilisateur ne correspond à votre recherche.'
     }"
-    [data]="users"
+    [data]="dataObs"
     [columns]="[
       { label: 'Prénom',      query: 'firstname', sort: true, search: true, width: '14%' },
       { label: 'Nom',         query: 'name',      sort: true, search: true, width: '14%' },
@@ -18,7 +18,7 @@
       { label: '',                                                          width: '26%' }
     ]"
     (addButtonClick)="add()"
-    (queryParams)="paramsChange($event)">
+    (queryParams)="update($event)">
   <datatable-title>
     <h2>Liste des utilisateurs</h2>
   </datatable-title>
