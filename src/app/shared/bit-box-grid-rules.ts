@@ -16,7 +16,7 @@ export class BitBoxGridRules<T> {
   private _bitsMustBeChecked: number = 0;
   private _bitsMustBeUnchecked: number = 0;
 
-  constructor(private _bitsContainerType, private readonly _MAXBITS: number) { }
+  constructor(private _ContainerType, private readonly _MAXBITS: number) { }
 
   private static addBits(bits: number, bitsToAdd: number): number {
     return bits |= bitsToAdd;
@@ -54,7 +54,7 @@ export class BitBoxGridRules<T> {
   updateSelection(selection: Map<number, T>): void {
     this._selectedBitsContainer.clear();
     selection.forEach((bitsContent: T, id: number) => {
-      this._selectedBitsContainer.set(id, new this._bitsContainerType(bitsContent));
+      this._selectedBitsContainer.set(id, new this._ContainerType(bitsContent));
     });
     this.reEvaluateBits();
   }
@@ -65,7 +65,7 @@ export class BitBoxGridRules<T> {
   }
 
   setBit(event: MdCheckboxChange, bitsContent: T, bit: number, itemChecked: boolean): void {
-    let bitsContainer: BitsContainer = new this._bitsContainerType(bitsContent);
+    let bitsContainer: BitsContainer = new this._ContainerType(bitsContent);
     if (event.checked) { // droit positif
       bitsContainer.setBits(bitsContainer.getBits() | bit)
       if(itemChecked) {
@@ -152,6 +152,6 @@ export class BitBoxGridRules<T> {
   }
 
   isBitBoxChecked(bitsContent: T, bits: number): boolean {
-    return BitBoxGridRules.hasBits(new this._bitsContainerType(bitsContent).getBits(), bits);
+    return BitBoxGridRules.hasBits(new this._ContainerType(bitsContent).getBits(), bits);
   }
 }
