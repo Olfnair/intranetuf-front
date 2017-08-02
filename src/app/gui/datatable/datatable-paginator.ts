@@ -113,12 +113,12 @@ export class DatatablePaginator<T> {
         sub.unsubscribe();
       }).subscribe(
         (result: any) => {
-          this.goToIndex(
-            index,
-            // result.list => FlexQueryResult / sinon => Array classique
-            result.list ? result.list : result,
-            result.list ? result.totalCount : result.length
-          );
+          if(result.list != undefined || result.totalCount != undefined) {
+            this.goToIndex(index, result.list ? result.list : [], result.totalCount ? result.totalCount : 0);
+          }
+          else {
+            this.goToIndex(index, result, result.length);
+          }
           observer.next(this);
           if(onResult) {
             onResult();
