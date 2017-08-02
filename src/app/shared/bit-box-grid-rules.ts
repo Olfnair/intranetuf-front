@@ -16,7 +16,7 @@ export class BitBoxGridRules<T> {
   private _bitsMustBeChecked: number = 0;
   private _bitsMustBeUnchecked: number = 0;
 
-  constructor(private _ContainerType, private readonly _MAXBITS: number) { }
+  constructor(private readonly _ContainerType, private readonly _MAXBITS: number) { }
 
   private static addBits(bits: number, bitsToAdd: number): number {
     return bits |= bitsToAdd;

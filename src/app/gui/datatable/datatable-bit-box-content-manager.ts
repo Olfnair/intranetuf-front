@@ -5,10 +5,10 @@ export class DatatableBitBoxContentManager extends DatatableContentManager<any> 
   private _rightsGridRules: BitBoxGridRules<any>;
 
   constructor(
-    restService: any,
-    methodName: string,
-    MAXBIT: number,
-    private _ContainerType
+    readonly restService: any,
+    readonly methodName: string,
+    readonly MAXBIT: number,
+    private readonly _ContainerType
   ) {
     super(restService, methodName, undefined, () => {
       this.paginator.content.forEach((originalRight: any) => {
