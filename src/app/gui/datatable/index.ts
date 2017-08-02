@@ -7,6 +7,7 @@ export {
 } from "./datatable.component";
 export { DatatableColumn } from "./datatable-column";
 export { DatatableContentManager } from "./datatable-content-manager";
+export { DatatableBitBoxContentManager } from "./datatable-bit-box-content-manager"; // après DatatableContentManager
 export { DatatableOptions } from "./datatable-options";
 export { DatatablePage } from "./datatable-page";
 export { DatatablePaginator } from "./datatable-paginator";

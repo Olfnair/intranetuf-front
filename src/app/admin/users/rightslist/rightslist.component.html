@@ -12,7 +12,7 @@
       { label: 'Valideur',                                      width: '10%' },
       { label: 'Tous',                                          width:  '7%' }
     ]"
-    (selectedDataUpdate)="updateSelection($event)"
+    (selectedDataUpdate)="grid.updateSelection($event)"
     (queryParams)="update($event, [user])">
   <!-- total width: 96% : 4% de width pour la colonne de selection -->
   <datatable-title>
@@ -20,29 +20,29 @@
   </datatable-title>
   <ng-template let-right="item" let-checked="checked">
     <td>{{right.project.name | truncate:30}}</td>
-    <td><md-checkbox color="primary" [checked]="isRightBoxChecked(right, 1)" (change)="setRight($event, right, 1, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="isRightBoxChecked(right, 2)" (change)="setRight($event, right, 2, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="isRightBoxChecked(right, 4)" (change)="setRight($event, right, 4, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="isRightBoxChecked(right, 8)" (change)="setRight($event, right, 8, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="isRightBoxChecked(right, 16)" (change)="setRight($event, right, 16, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="isRightBoxChecked(right, 32)" (change)="setRight($event, right, 32, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="isRightBoxChecked(right, 64)" (change)="setRight($event, right, 64, checked)"></md-checkbox></td>
-    <td><md-checkbox color="accent" [checked]="hasRight(right, 64 + 63)" (change)="setRight($event, right, 64 + 63, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event, right, 1, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 2)" (change)="grid.setBit($event, right, 2, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 4)" (change)="grid.setBit($event, right, 4, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 8)" (change)="grid.setBit($event, right, 8, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 16)" (change)="grid.setBit($event, right, 16, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 32)" (change)="grid.setBit($event, right, 32, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 64)" (change)="grid.setBit($event, right, 64, checked)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitBoxChecked(right, 64 + 63)" (change)="grid.setBit($event, right, 64 + 63, checked)"></md-checkbox></td>
   </ng-template>
   <datatable-final-row>
     <td colSpan="2" class="selectInfo">Sélectionner colonne :</td>
-    <td><md-checkbox color="warn" [checked]="isRightsColChecked(1)" (change)="setSelectedColRight($event, 1)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="isRightsColChecked(2)" (change)="setSelectedColRight($event, 2)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="isRightsColChecked(4)" (change)="setSelectedColRight($event, 4)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="isRightsColChecked(8)" (change)="setSelectedColRight($event, 8)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="isRightsColChecked(16)" (change)="setSelectedColRight($event, 16)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="isRightsColChecked(32)" (change)="setSelectedColRight($event, 32)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="isRightsColChecked(64)" (change)="setSelectedColRight($event, 64)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="isRightsColChecked(64 + 63)" (change)="setSelectedColRight($event, 64 + 63)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event, 1)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event, 2)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(4)" (change)="grid.setSelectedColBit($event, 4)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(8)" (change)="grid.setSelectedColBit($event, 8)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(16)" (change)="grid.setSelectedColBit($event, 16)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(32)" (change)="grid.setSelectedColBit($event, 32)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(64)" (change)="grid.setSelectedColBit($event, 64)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(64 + 63)" (change)="grid.setSelectedColBit($event, 64 + 63)"></md-checkbox></td>
   </datatable-final-row>
   <datatable-footer>
     <button md-raised-button color="primary" type="button"
-        (click)="submit()" [disabled]="! modified">
+        (click)="submit()" [disabled]="! grid.modified">
       Enregistrer les modifications
     </button>
     <button md-raised-button color="warn" type="button"
