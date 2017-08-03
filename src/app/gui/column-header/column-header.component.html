@@ -7,7 +7,7 @@
     </span>
   </ng-container>
   <ng-container *ngIf="! column.search && column.label != undefined">
-    <span class="td" (click)="toggleSortOrder()">
+    <span class="td" (click)="switchSortOrder()">
       <label>{{column.label}}</label>
     </span>
   </ng-container>
