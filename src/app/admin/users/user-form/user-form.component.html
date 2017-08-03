@@ -1,17 +1,17 @@
 <section class="container margin">
   <gui-form [formGroup]="form" title="Créer un compte" submitOnEnter="true" (formSubmit)="submit()">
     <md-input-container gui-form-input>
-      <input mdInput type="text" placeholder="Nom" formControlName="name" required/>
-      <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer votre nom</md-error>
-      <md-error *ngIf="form.controls.name.errors?.minlength">Au moins 2 caractères</md-error>
-    </md-input-container>
-
-    <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Prénom" formControlName="firstname" required/>
       <md-error *ngIf="form.controls.firstname.errors?.required">Veuillez indiquer votre prénom</md-error>
       <md-error *ngIf="form.controls.firstname.errors?.minlength">Au moins 2 caractères</md-error>
     </md-input-container>
-
+    
+    <md-input-container gui-form-input>
+      <input mdInput type="text" placeholder="Nom" formControlName="name" required/>
+      <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer votre nom</md-error>
+      <md-error *ngIf="form.controls.name.errors?.minlength">Au moins 2 caractères</md-error>
+    </md-input-container>
+    
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Identifiant (Login)" formControlName="login" required/>
       <md-error *ngIf="form.controls.login.errors?.required">Veuillez choisir un identifiant</md-error>
