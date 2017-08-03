@@ -8,7 +8,6 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class FileUploadService {
-  //private _progressValue: number
   private _progress: Observable<number>;
   private _progressObserver: Observer<number>;
   private _urlFile: string;
