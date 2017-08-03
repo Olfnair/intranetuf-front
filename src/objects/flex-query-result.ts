@@ -1,5 +1,5 @@
-export class FlexQueryResult {
-  public list: any[] = undefined;
+export class FlexQueryResult<T> {
+  public list: T[] = undefined;
   public totalCount: number = undefined;
 
   constructor() { }

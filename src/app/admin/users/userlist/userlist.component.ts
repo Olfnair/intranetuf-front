@@ -8,7 +8,7 @@ import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { BasicRoleChecker, RoleCheckerService } from "app/services/role-checker";
 import { DatatableContentManager } from "app/gui/datatable";
-import { User } from "entities/user";
+import { User, Roles } from "entities/user";
 import { FlexQueryResult } from "objects/flex-query-result";
 
 export enum ComponentState {
@@ -25,7 +25,7 @@ export enum ComponentState {
 })
 export class UserlistComponent extends DatatableContentManager<User> implements OnInit {
   private _state: number = ComponentState.LIST;
-  private _checkedUsers: User[] = [];
+  //private _checkedUsers: User[] = [];
 
   private _selectedUser: User = undefined;
 
@@ -97,5 +97,9 @@ export class UserlistComponent extends DatatableContentManager<User> implements 
         // TODO : afficher un beau message d'erreur (hints : utiliser le composant InfoModal)
       }
     );
+  }
+
+  isSuperAdmin(user: User): boolean {
+    return User.hasRole(user.role, Roles.SUPERADMIN);
   }
 }

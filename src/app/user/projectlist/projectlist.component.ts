@@ -9,6 +9,7 @@ import { BasicRoleChecker, RoleCheckerService } from "app/services/role-checker"
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { NavList, NavListSelection } from "app/gui/nav-list";
 import { Project } from "entities/project";
+import { FlexQueryResult } from "objects/flex-query-result";
 
 @Component({
   selector: 'app-projectlist',
@@ -60,11 +61,18 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   private _loadProjects(): void {
-    let sub: Subscription = this._restService.fetchProjects(this.buildSearchParams()).finally(() => {
+    let sub: Subscription = this._restService.fetchProjects(this.buildSearchParams(), "default", 0, 0).finally(() => {
       sub.unsubscribe();
     }).subscribe(
-      (projects: Project[]) => {
-        this._projects = projects;
+      (result: FlexQueryResult<Project>) => {
+        this._projects = [];
+        if(result.list && result.list instanceof Array) {
+          this._projects = result.list;
+        }
+        else if(result.list) {
+          let projects: any[] = [result.list]; // cast
+          this._projects = projects;
+        }
         if(this._projects.length <= 0) {
           this.emptyMessage = this._searchName && this._searchName != '' ?
           "Aucun projet ne correspond à votre recherche." :

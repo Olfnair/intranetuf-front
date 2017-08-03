@@ -1,0 +1,31 @@
+<datatable
+    [options]="{
+      selectionCol: true,
+      addButton: true,
+      addButtonTooltip: 'Ajouter un Projet',
+      addButtonIconName: 'create_new_folder',
+      emptyMessage: 'Il n\'y a pas encore de projet',
+      emptySearchMessage: 'Aucun projet ne correspond à votre recherche.'
+    }"
+    [data]="dataObs"
+    [columns]="[
+      { label: 'Nom',   query: 'name',   sort: true, search: true, width: '36%' },
+      { label: 'Actif', query: 'active', sort: true,               width: '8%' },
+      { label: '',                                                 width: '52%' }
+    ]"
+    (addButtonClick)="add()"
+    (queryParams)="update($event)">
+  <datatable-title>
+    <h2>Liste des projets</h2>
+  </datatable-title>
+  <ng-template let-project="item">
+    <td>{{project.name | truncate:30}}</td>
+    <td>{{project.active | boolToString}}</td>
+    <td>
+      <button md-raised-button class="smallButton" color="primary" type="button"
+          mdTooltip="Gestion des Droits" mdTooltipPosition="above" (click)="rights(project)">
+        <md-icon>lock_open</md-icon>
+      </button>
+    </td>
+  </ng-template>
+</datatable>

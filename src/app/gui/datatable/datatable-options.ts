@@ -6,6 +6,9 @@ export class DatatableOptions {
   public addButton: boolean = false;
   public addButtonTooltip: string = undefined
   public addButtonIconName: string = 'add';
+
+  // annule les sélections quand on change de page
+  public resetSelectionOnPageChange: boolean = false;
   
   // afficher ou non le footer
   public displayFooter: boolean = false;

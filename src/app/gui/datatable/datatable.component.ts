@@ -305,12 +305,20 @@ export class DatatableComponent<T> {
   }
 
   goToPage(pageNum: number): boolean {
-    if(this._paginator.goToPage(pageNum)) {
-      this.emitParams();
-      this.resetSelectAllState(); // décoche la case 'tout sélectionner' en cas de changement de page
-      return true;
+    if(! this._paginator.goToPage(pageNum)) {
+      // garde
+      return false;
     }
-    return false;
+    this.emitParams();
+    this.resetSelectAllState(); // décoche la case 'tout sélectionner' en cas de changement de page
+
+    if(this.options.resetSelectionOnPageChange) {
+      // suppression des sélections
+      this._selectedData.clear();
+      this._selectedDataUpdate$.emit(this._selectedData); // emet event
+    }
+    
+    return true;
   }
 
   goToPrevPage(): boolean {

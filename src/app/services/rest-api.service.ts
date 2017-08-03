@@ -51,16 +51,17 @@ export class RestApiService {
    *
    * @returns {Observable<R>}
    */
-  fetchProjects(searchParams: string): Observable<Project[]> {
+  fetchProjects(searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<Project>> {
     return this._http.get(
-      this._backendURL.project + '/query/' + Base64.urlEncode(searchParams),
+      this._backendURL.project + '/query/'
+        + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
       this.options()
     ).map((res: Response) => {
-      return res.json().project;
+      return res.json().flexQueryResult;
     });
   }
 
-  fetchFilesByProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult> {
+  fetchFilesByProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<File>> {
     return this._http.get(
       this._backendURL.file + '/project/' + project.id.toString() + '/query/'
       + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
@@ -115,7 +116,7 @@ export class RestApiService {
    *
    * @returns {Observable<R>}
    */
-  fetchUsers(searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult> {
+  fetchUsers(searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<User>> {
     return this._http.get(
       this._backendURL.user + '/' + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
       this.options()
@@ -150,9 +151,12 @@ export class RestApiService {
     });
   }
 
-  getRights(user: User): Observable<ProjectRight[]> {
-    return this._http.get(this._backendURL.projectRight + '/user/' + user.id, this.options()).map((res: Response) => {
-      return res.json().projectRight;
+  getRights(user: User, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<ProjectRight>> {
+    return this._http.get(
+      this._backendURL.projectRight + '/user/' + user.id + '/'
+        + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      this.options()).map((res: Response) => {
+      return res.json().flexQueryResult;
     });
   }
 

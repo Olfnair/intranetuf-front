@@ -34,7 +34,7 @@
           mdTooltip="Gestion des Droits" mdTooltipPosition="above" (click)="rights(user)">
         <md-icon>lock_open</md-icon>
       </button>
-      <button *ngIf="roleChecker.userIsSuperAdmin()" class="smallButton"
+      <button *ngIf="roleChecker.userIsSuperAdmin() && ! isSuperAdmin(user)" class="smallButton"
           mdTooltip="Utiliser ce Compte" mdTooltipPosition="above"
           md-raised-button color="warn" type="button" (click)="adminLoginAs(user.login)">
         <md-icon>exit_to_app</md-icon>

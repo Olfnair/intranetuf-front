@@ -120,11 +120,11 @@ export class BitBoxGridRules<T> {
   }
 
   updateBits(bitsContainer: BitsContainer): void {
-    // un droit a été modifié et n'est pas contenu dans la liste des modifications
-    if (! this.isSameAsOriginal(bitsContainer) && ! this._mapModifiedBits.has(bitsContainer.getId())) {
+    // un droit a été modifié : ajouter l'état actuel aux modifiés
+    if (! this.isSameAsOriginal(bitsContainer)) {
       this._mapModifiedBits.set(bitsContainer.getId(), bitsContainer);
     }
-    // une modification sur un droit a été annulée et il faut le supprimer de la liste des modifications
+    // un doit est revenu à son état original : le supprimer de la liste des modifiés
     else if (this.isSameAsOriginal(bitsContainer) && this._mapModifiedBits.has(bitsContainer.getId())) {
       this._mapModifiedBits.delete(bitsContainer.getId());
     }

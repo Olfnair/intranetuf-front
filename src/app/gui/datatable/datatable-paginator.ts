@@ -113,6 +113,10 @@ export class DatatablePaginator<T> {
         sub.unsubscribe();
       }).subscribe(
         (result: any) => {
+          if(result == undefined) {
+            observer.error(result);
+            return;
+          }
           if(result.list != undefined || result.totalCount != undefined) {
             this.goToIndex(index, result.list ? result.list : [], result.totalCount ? result.totalCount : 0);
           }

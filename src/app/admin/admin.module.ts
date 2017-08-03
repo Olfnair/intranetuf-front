@@ -17,14 +17,16 @@ import { AdminPanelComponent } from "./admin-panel/admin-panel.component";
 import { UserFormComponent } from "./users/user-form/user-form.component";
 import { UserlistComponent } from "./users/userlist/userlist.component";
 import { RightslistComponent } from "./users/rightslist/rightslist.component";
+import { ProjectlistComponent } from './projectlist/projectlist.component';
 
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
     AdminNavListComponent,
     AdminPanelComponent,
+    ProjectlistComponent,
+    RightslistComponent,
     UserFormComponent,
     UserlistComponent,
-    RightslistComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
   ],
@@ -39,9 +41,10 @@ import { RightslistComponent } from "./users/rightslist/rightslist.component";
   exports: [ // tous les composants, pipes, directives pour un module qui importe celui-ci
     AdminNavListComponent,
     AdminPanelComponent,
+    ProjectlistComponent,
+    RightslistComponent,
     UserFormComponent,
-    UserlistComponent,
-    RightslistComponent
+    UserlistComponent
   ]
 })
 export class AdminModule {}

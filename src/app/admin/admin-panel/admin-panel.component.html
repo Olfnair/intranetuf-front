@@ -1,17 +1,17 @@
 <!-- utilisateurs (0) -->
 <section *ngIf="selectedItem == 0">
-  <md-tab-group [selectedIndex]="0">
-    <md-tab label="Utilisateurs" class="padding">
-      <app-userlist></app-userlist>
+  <md-tab-group [(selectedIndex)]="usersTabIndex">
+    <md-tab label="Utilisateurs">
+      <app-userlist *ngIf="usersTabIndex === 0"></app-userlist>
     </md-tab>
   </md-tab-group>
 </section>
 
 <!-- projets (1) -->
 <section *ngIf="selectedItem == 1">
-  <md-tab-group [selectedIndex]="0">
-    <md-tab label="Projets" class="padding">
-      Projets
+  <md-tab-group [(selectedIndex)]="projectsTabIndex">
+    <md-tab label="Projets">
+      <admin-projectlist *ngIf="projectsTabIndex === 0"></admin-projectlist>
     </md-tab>
   </md-tab-group>
 </section>

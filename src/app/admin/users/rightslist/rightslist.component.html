@@ -1,16 +1,23 @@
 <datatable
-    [options]="{pagination: true, selectionCol: true, displayFooter: true}"
+    [options]="{
+      selectionCol: true,
+      resetSelectionOnPageChange: true,
+      emptyMessage: 'Il n\'y a pas encore de projet ni de droits à gérer',
+      emptySearchMessage: 'Aucun projet ne correspond à votre recherche.',
+      displayFooter: true
+    }"
     [data]="dataObs"
     [columns]="[
-      { label: 'Projet', query: name, search: true, sort: true, width: '19%' },
-      { label: 'Voir',                                          width: '10%' },
-      { label: 'Editer',                                        width: '10%' },
-      { label: 'Supprimer',                                     width: '10%' },
-      { label: 'Ajout fichier',                                 width: '10%' },
-      { label: 'Supprimer fichier',                             width: '10%' },
-      { label: 'Contrôleur',                                    width: '10%' },
-      { label: 'Valideur',                                      width: '10%' },
-      { label: 'Tous',                                          width:  '7%' }
+      { label: 'Projet',            query: 'name',   search: true, sort: true, width: '21%' },
+      { label: 'Actif',             query: 'active',               sort: true, width: '6%' },
+      { label: 'Voir',                                                         width: '9%' },
+      { label: 'Editer',                                                       width: '9%' },
+      { label: 'Supprimer',                                                    width: '9%' },
+      { label: 'Ajout fichier',                                                width: '9%' },
+      { label: 'Supprimer fichier',                                            width: '9%' },
+      { label: 'Contrôleur',                                                   width: '9%' },
+      { label: 'Valideur',                                                     width: '9%' },
+      { label: 'Tous',                                                         width:  '6%' }
     ]"
     (selectedDataUpdate)="grid.updateSelection($event)"
     (queryParams)="update($event, [user])">
@@ -20,6 +27,7 @@
   </datatable-title>
   <ng-template let-right="item" let-checked="checked">
     <td>{{right.project.name | truncate:30}}</td>
+    <td>{{right.project.active | boolToString}}</td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event, right, 1, checked)"></md-checkbox></td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 2)" (change)="grid.setBit($event, right, 2, checked)"></md-checkbox></td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 4)" (change)="grid.setBit($event, right, 4, checked)"></md-checkbox></td>
@@ -30,14 +38,14 @@
     <td><md-checkbox color="accent" [checked]="grid.isBitBoxChecked(right, 64 + 63)" (change)="grid.setBit($event, right, 64 + 63, checked)"></md-checkbox></td>
   </ng-template>
   <datatable-final-row>
-    <td colSpan="2" class="selectInfo">Sélectionner colonne :</td>
-    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event, 1)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event, 2)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(4)" (change)="grid.setSelectedColBit($event, 4)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(8)" (change)="grid.setSelectedColBit($event, 8)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(16)" (change)="grid.setSelectedColBit($event, 16)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(32)" (change)="grid.setSelectedColBit($event, 32)"></md-checkbox></td>
-    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(64)" (change)="grid.setSelectedColBit($event, 64)"></md-checkbox></td>
+    <td colSpan="3" class="selectInfo">Sélectionner colonne :</td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event, 1)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event, 2)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(4)" (change)="grid.setSelectedColBit($event, 4)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(8)" (change)="grid.setSelectedColBit($event, 8)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(16)" (change)="grid.setSelectedColBit($event, 16)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(32)" (change)="grid.setSelectedColBit($event, 32)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(64)" (change)="grid.setSelectedColBit($event, 64)"></md-checkbox></td>
     <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(64 + 63)" (change)="grid.setSelectedColBit($event, 64 + 63)"></md-checkbox></td>
   </datatable-final-row>
   <datatable-footer>
