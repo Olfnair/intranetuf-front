@@ -1,0 +1,10 @@
+<app-userlist *ngIf="state == State.List"
+    (add)="state = State.Add" (edit)="setStateAndEntity(State.Edit, $event)"
+    (rights)="setStateAndEntity(State.Rights, $event)">
+</app-userlist>
+
+<app-user-form *ngIf="state == State.Add" (close)="state = State.List"></app-user-form>
+
+<app-user-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List"></app-user-rightslist>
+
+<p *ngIf="state == State.Roles">Gestion des rôles par utilisateur (W.I.P)</p>

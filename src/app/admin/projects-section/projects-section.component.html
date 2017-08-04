@@ -1,0 +1,8 @@
+<admin-projectlist *ngIf="state == State.List"
+    (add)="state = State.Add" (edit)="setStateAndEntity(State.Edit, $event)"
+    (rights)="setStateAndEntity(State.Rights, $event)">
+</admin-projectlist>
+
+<app-user-form *ngIf="state == State.Add" (close)="state = State.List"></app-user-form>
+
+<app-project-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List"></app-project-rightslist>

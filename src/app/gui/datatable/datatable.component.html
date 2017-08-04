@@ -32,22 +32,22 @@
       </thead>
       <tbody>
         <tr *ngIf="loading">
-          <td [colSpan]="nbCols">
+          <td [colSpan]="tableSpan">
             <md-spinner class="spinner" mode="indeterminate"></md-spinner>
           </td>
         </tr>
         <tr *ngIf="loadingError">
-          <td [colSpan]="nbCols">
+          <td [colSpan]="tableSpan">
             <p class="errorMessage">Une erreur est survenue pendant le chargement des données de la table !</p>
           </td>
         </tr>
         <tr *ngIf="loaded && emptyData && options.emptyMessage && params.isEmpty()">
-          <td [colSpan]="nbCols">
+          <td [colSpan]="tableSpan">
             <p class="message">{{options.emptyMessage}}</p>
           </td>
         </tr>
         <tr *ngIf="loaded && emptyData && options.emptySearchMessage && ! params.isEmpty()">
-          <td [colSpan]="nbCols">
+          <td [colSpan]="tableSpan">
             <p class="message">{{options.emptySearchMessage}}</p>
           </td>
         </tr>
@@ -72,7 +72,7 @@
         </ng-template>
         <ng-content select="datatable-final-row"></ng-content>
         <tr *ngIf="loaded && (options.displayFooter || (paginator.hasPrevPage() || paginator.hasNextPage()))" class="footer">
-          <td [colSpan]="nbCols">
+          <td [colSpan]="tableSpan">
             <table class="footerTable">
               <tr>
                 <td *ngIf="(paginator.hasPrevPage() || paginator.hasNextPage())" class="pagination">

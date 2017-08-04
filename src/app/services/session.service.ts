@@ -19,6 +19,7 @@ export class SessionService {
   private _readyForContent: boolean = true;
   private _selectedProject: Project = undefined;
   private _selectedAdminItem: number = 0;
+  private _adminNavListItemToIdMap: Map<string, number> = new Map<string, number>();
 
   private _updateProjectList = false;
 
@@ -79,8 +80,20 @@ export class SessionService {
     return this._selectedAdminItem;
   }
 
-  set selectedAdminItem(tab: number) {
-    this._selectedAdminItem = tab;
+  set selectedAdminItem(id: number) {
+    this._selectedAdminItem = id;
+  }
+
+  mapAdminNavListItemToId(item: string, id: number): void {
+    this._adminNavListItemToIdMap.set(item.toLowerCase(), id);
+  }
+
+  clearAdminNavListItemToIdMap(): void {
+    this._adminNavListItemToIdMap.clear();
+  }
+
+  getAdminNavListItemId(item: string): number {
+    return this._adminNavListItemToIdMap.get(item.toLowerCase());
   }
 
   get userId(): number {

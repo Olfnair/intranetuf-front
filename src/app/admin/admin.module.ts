@@ -14,19 +14,25 @@ import { ServicesModule } from "app/services/services.module";
 // Admin
 import { AdminNavListComponent } from './admin-nav-list/admin-nav-list.component';
 import { AdminPanelComponent } from "./admin-panel/admin-panel.component";
-import { UserFormComponent } from "./users/user-form/user-form.component";
-import { UserlistComponent } from "./users/userlist/userlist.component";
-import { RightslistComponent } from "./users/rightslist/rightslist.component";
-import { ProjectlistComponent } from './projectlist/projectlist.component';
+import { ProjectlistComponent } from './projects-section/projectlist/projectlist.component';
+import { ProjectRightslistComponent } from './projects-section/project-rightslist/project-rightslist.component';
+import { ProjectsSectionComponent } from './projects-section/projects-section.component';
+import { UserFormComponent } from "./users-section/user-form/user-form.component";
+import { UserlistComponent } from "./users-section/userlist/userlist.component";
+import { UserRightslistComponent } from "./users-section/user-rightslist/user-rightslist.component";
+import { UsersSectionComponent } from './users-section/users-section.component';
 
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
     AdminNavListComponent,
     AdminPanelComponent,
     ProjectlistComponent,
-    RightslistComponent,
+    ProjectRightslistComponent,
+    ProjectsSectionComponent,
     UserFormComponent,
     UserlistComponent,
+    UserRightslistComponent,
+    UsersSectionComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
   ],
@@ -42,9 +48,12 @@ import { ProjectlistComponent } from './projectlist/projectlist.component';
     AdminNavListComponent,
     AdminPanelComponent,
     ProjectlistComponent,
-    RightslistComponent,
+    ProjectRightslistComponent,
+    ProjectsSectionComponent,
     UserFormComponent,
-    UserlistComponent
+    UserlistComponent,
+    UserRightslistComponent,
+    UsersSectionComponent
   ]
 })
 export class AdminModule {}

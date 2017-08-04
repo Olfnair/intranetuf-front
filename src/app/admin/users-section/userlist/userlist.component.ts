@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router } from "@angular/router";
 import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
@@ -11,23 +11,15 @@ import { DatatableContentManager } from "app/gui/datatable";
 import { User, Roles } from "entities/user";
 import { FlexQueryResult } from "objects/flex-query-result";
 
-export enum ComponentState {
-  LIST = 0,
-  ADD = 1,
-  EDIT = 2,
-  RIGHTS = 3
-}
-
 @Component({
   selector: 'app-userlist',
   templateUrl: './userlist.component.html',
   styleUrls: ['./userlist.component.css']
 })
 export class UserlistComponent extends DatatableContentManager<User> implements OnInit {
-  private _state: number = ComponentState.LIST;
-  //private _checkedUsers: User[] = [];
-
-  private _selectedUser: User = undefined;
+  private _add$: EventEmitter<void> = new EventEmitter<void>();
+  private _edit$: EventEmitter<User> = new EventEmitter<User>();
+  private _rights$: EventEmitter<User> = new EventEmitter<User>();
 
   constructor(
     restService: RestApiService,
@@ -42,48 +34,36 @@ export class UserlistComponent extends DatatableContentManager<User> implements 
     this.load();
   }
 
-  private _setState(state: number) {
-    this._state = state;
+  @Output('add') get add$(): EventEmitter<void> {
+    return this._add$;
+  }
+
+  @Output('edit') get edit$(): EventEmitter<User> {
+    return this._edit$;
+  }
+
+  @Output('rights') get rights$(): EventEmitter<User> {
+    return this._rights$;
   }
 
   add(): void {
-    this._setState(ComponentState.ADD);
+    this._add$.emit();
+  }
+
+  edit(user: User) {
+    this._edit$.emit(user);
   }
 
   rights(user: User): void {
-    this._selectedUser = user;
-    this._setState(ComponentState.RIGHTS);
+    this._rights$.emit(user);
   }
 
-  get isListMode(): boolean {
-    return this._state == ComponentState.LIST;
-  }
-
-  get isAddMode(): boolean {
-    return this._state == ComponentState.ADD;
-  }
-
-  get isEditMode(): boolean {
-    return this._state == ComponentState.EDIT;
-  }
-
-  get isRightsMode(): boolean {
-    return this._state == ComponentState.RIGHTS;
-  }
-
-  get selectedUser(): User {
-    return this._selectedUser;
+  delete(user: User): void {
+    
   }
 
   get roleChecker(): BasicRoleChecker {
     return this._roleCheckerService;
-  }
-
-  activateListMode(submited: boolean) {
-    if (submited) {
-      this.load();
-    }
-    this._state = ComponentState.LIST;
   }
 
   adminLoginAs(login: string): void {

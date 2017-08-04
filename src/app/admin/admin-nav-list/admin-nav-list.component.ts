@@ -15,14 +15,16 @@ export class AdminNavListComponent extends NavList {
   ) {
     super(sanitizer);
     let items: string[] = [
-      'Utilisateurs',
-      'Projets',
-      'Autres'
+      'Utilisateurs', // 0
+      'Projets',      // 1
+      'Logs'          // 2
     ];
     let i: number = 0;
     this.selectables = [];
+    this._session.clearAdminNavListItemToIdMap();
     items.forEach((item: string) => {
-      this.selectables.push(new NavListSelection(i++, item, '#000000', '#ffffff'));
+      this.selectables.push(new NavListSelection(i, item, '#000000', '#ffffff'));
+      this._session.mapAdminNavListItemToId(item, i++);
     });
   }
 

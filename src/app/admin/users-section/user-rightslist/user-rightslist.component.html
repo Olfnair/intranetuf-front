@@ -20,10 +20,10 @@
       { label: 'Tous',                                                         width:  '6%' }
     ]"
     (selectedDataUpdate)="grid.updateSelection($event)"
-    (queryParams)="update($event, [user])">
+    (queryParams)="update($event, [entity])">
   <!-- total width: 96% : 4% de width pour la colonne de selection -->
   <datatable-title>
-    <h2>Droits de {{user.firstname}} {{user.name}}</h2>
+    <h2>Droits de {{entity.firstname}} {{entity.name}}</h2>
   </datatable-title>
   <ng-template let-right="item" let-checked="checked">
     <td>{{right.project.name | truncate:30}}</td>

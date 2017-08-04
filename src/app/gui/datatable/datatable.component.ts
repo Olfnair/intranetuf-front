@@ -205,7 +205,7 @@ export class DatatableComponent<T> {
     return undefined;
   }
 
-  get nbCols(): number {
+  get tableSpan(): number {
     return this._columns.length + (this._options.selectionCol ? 1 : 0);
   }
 
@@ -317,7 +317,7 @@ export class DatatableComponent<T> {
       this._selectedData.clear();
       this._selectedDataUpdate$.emit(this._selectedData); // emet event
     }
-    
+
     return true;
   }
 

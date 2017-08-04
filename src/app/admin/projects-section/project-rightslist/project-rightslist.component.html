@@ -1,0 +1,60 @@
+<datatable
+    [options]="{
+      selectionCol: true,
+      resetSelectionOnPageChange: true,
+      emptyMessage: 'Il n\'y a pas encore d\'utilisateur ni de droits à gérer',
+      emptySearchMessage: 'Aucun utilisateur ne correspond à votre recherche.',
+      displayFooter: true
+    }"
+    [data]="dataObs"
+    [columns]="[
+      { label: 'Utilisateur',            query: 'login',   search: true, sort: true, width: '27%' },
+      { label: 'Voir',                                                                width: '9%' },
+      { label: 'Editer',                                                              width: '9%' },
+      { label: 'Supprimer',                                                           width: '9%' },
+      { label: 'Ajout fichier',                                                       width: '9%' },
+      { label: 'Supprimer fichier',                                                   width: '9%' },
+      { label: 'Contrôleur',                                                          width: '9%' },
+      { label: 'Valideur',                                                            width: '9%' },
+      { label: 'Tous',                                                                width:  '6%' }
+    ]"
+    (selectedDataUpdate)="grid.updateSelection($event)"
+    (queryParams)="update($event, [entity])">
+  <!-- total width: 96% : 4% de width pour la colonne de selection -->
+  <datatable-title>
+    <h2>Droits pour {{entity.name}}</h2>
+  </datatable-title>
+  <ng-template let-right="item" let-checked="checked">
+    <td>{{right.project.name | truncate:30}}</td>
+    <td>{{right.project.active | boolToString}}</td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event, right, 1, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 2)" (change)="grid.setBit($event, right, 2, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 4)" (change)="grid.setBit($event, right, 4, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 8)" (change)="grid.setBit($event, right, 8, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 16)" (change)="grid.setBit($event, right, 16, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 32)" (change)="grid.setBit($event, right, 32, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 64)" (change)="grid.setBit($event, right, 64, checked)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitBoxChecked(right, 64 + 63)" (change)="grid.setBit($event, right, 64 + 63, checked)"></md-checkbox></td>
+  </ng-template>
+  <datatable-final-row>
+    <td colSpan="3" class="selectInfo">Sélectionner colonne :</td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event, 1)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event, 2)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(4)" (change)="grid.setSelectedColBit($event, 4)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(8)" (change)="grid.setSelectedColBit($event, 8)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(16)" (change)="grid.setSelectedColBit($event, 16)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(32)" (change)="grid.setSelectedColBit($event, 32)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(64)" (change)="grid.setSelectedColBit($event, 64)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(64 + 63)" (change)="grid.setSelectedColBit($event, 64 + 63)"></md-checkbox></td>
+  </datatable-final-row>
+  <datatable-footer>
+    <button md-raised-button color="primary" type="button"
+        (click)="submit()" [disabled]="! grid.modified">
+      Enregistrer les modifications
+    </button>
+    <button md-raised-button color="warn" type="button"
+        (click)="cancel()">
+      Annuler
+    </button>
+  </datatable-footer>
+</datatable>

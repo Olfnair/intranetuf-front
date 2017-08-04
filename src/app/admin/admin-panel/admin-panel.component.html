@@ -1,17 +1,29 @@
-<!-- utilisateurs (0) -->
-<section *ngIf="selectedItem == 0">
+<!-- utilisateurs -->
+<section *ngIf="selectedItem === getItem('Utilisateurs')">
   <md-tab-group [(selectedIndex)]="usersTabIndex">
     <md-tab label="Utilisateurs">
-      <app-userlist *ngIf="usersTabIndex === 0"></app-userlist>
+      <app-users-section *ngIf="usersTabIndex === 0" [stateName]="'List'"></app-users-section>
+    </md-tab>
+    <md-tab label="Rôles">
+      <app-users-section *ngIf="usersTabIndex === 1" [stateName]="'Roles'"></app-users-section>
     </md-tab>
   </md-tab-group>
 </section>
 
-<!-- projets (1) -->
-<section *ngIf="selectedItem == 1">
+<!-- projets -->
+<section *ngIf="selectedItem === getItem('Projets')">
   <md-tab-group [(selectedIndex)]="projectsTabIndex">
     <md-tab label="Projets">
-      <admin-projectlist *ngIf="projectsTabIndex === 0"></admin-projectlist>
+      <app-projects-section *ngIf="projectsTabIndex === 0" [stateName]="'List'"></app-projects-section>
+    </md-tab>
+  </md-tab-group>
+</section>
+
+<!-- logs -->
+<section *ngIf="selectedItem === getItem('Logs')">
+  <md-tab-group [(selectedIndex)]="logsTabIndex">
+    <md-tab label="Logs">
+      <p *ngIf="logsTabIndex === 0">Affichage des logs (WIP)</p>
     </md-tab>
   </md-tab-group>
 </section>
