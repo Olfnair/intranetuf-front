@@ -10,6 +10,6 @@ import { Project } from "entities/project";
 })
 export class ProjectRightslistComponent extends RightsGridContentManager<Project> {
   constructor(restService: RestApiService) {
-    super(restService, '');
+    super(restService, 'getRightsForProject');
   }
 }

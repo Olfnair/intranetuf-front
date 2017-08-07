@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GenericAdminSection } from "../admin-section";
+import { GenericEntitySection } from "../generic-admin-section";
 import { User } from "entities/user";
 
 @Component({
@@ -7,7 +7,7 @@ import { User } from "entities/user";
   templateUrl: './users-section.component.html',
   styleUrls: ['./users-section.component.css']
 })
-export class UsersSectionComponent extends GenericAdminSection<User> {
+export class UsersSectionComponent extends GenericEntitySection<User> {
   constructor() {
     super({
       List:   0,

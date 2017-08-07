@@ -10,6 +10,7 @@ import { MaterialModule } from '@angular/material';
 import { GuiModule } from "app/gui/gui.module";
 import { PipesModule } from "app/pipes/pipes.module";
 import { ServicesModule } from "app/services/services.module";
+import { UserModule } from "app/user/user.module";
 
 // Admin
 import { AdminNavListComponent } from './admin-nav-list/admin-nav-list.component';
@@ -42,7 +43,8 @@ import { UsersSectionComponent } from './users-section/users-section.component';
     ReactiveFormsModule,
     GuiModule,
     PipesModule,
-    ServicesModule
+    ServicesModule,
+    UserModule
   ],
   exports: [ // tous les composants, pipes, directives pour un module qui importe celui-ci
     AdminNavListComponent,

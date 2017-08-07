@@ -12,6 +12,7 @@ export class ProjectlistComponent extends DatatableContentManager<Project> imple
   private _add$: EventEmitter<void> = new EventEmitter<void>();
   private _rights$: EventEmitter<Project> = new EventEmitter<Project>();
   private _edit$: EventEmitter<Project> = new EventEmitter<Project>();
+  private _filelist$: EventEmitter<Project> = new EventEmitter<Project>();
   
   constructor(restService: RestApiService) {
     super(restService, 'fetchProjects');
@@ -33,6 +34,10 @@ export class ProjectlistComponent extends DatatableContentManager<Project> imple
     return this._edit$;
   }
 
+  @Output('filelist') get filelist$(): EventEmitter<Project> {
+    return this._filelist$;
+  }
+
   add(): void {
     this._add$.emit();
   }
@@ -43,6 +48,10 @@ export class ProjectlistComponent extends DatatableContentManager<Project> imple
 
   edit(project: Project): void {
     this._edit$.emit(project);
+  }
+
+  filelist(project: Project): void {
+    this._filelist$.emit(project);
   }
 
   delete(project: Project): void {

@@ -21,7 +21,7 @@ import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [ // tous les composants (& pipes etc) accessibles dans l'appli
-    AppComponent
+    AppComponent,
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
   ],

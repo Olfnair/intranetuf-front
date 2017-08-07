@@ -64,25 +64,25 @@ body {
 }
 
 .container {
-  width: 50%;
+  width: 65%;
   margin: auto;
 }
 
 @media screen and (max-width: 1200px) {
   .container {
-    width: 65%;
+    width: 75%;
   }
 }
 
 @media screen and (max-width: 992px) {
   .container {
-    width: 80%;
+    width: 85%;
   }
 }
 
 @media screen and (max-width: 600px) {
   .container {
-    width: 92%;
+    width: 95%;
   }
 }
 

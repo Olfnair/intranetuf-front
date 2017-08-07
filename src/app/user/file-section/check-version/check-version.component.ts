@@ -1,6 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
 import { ModalService } from "app/gui/modal.service";
@@ -13,27 +12,22 @@ import { WorkflowCheck, CheckType, Status } from "entities/workflow-check";
   templateUrl: './check-version.component.html',
   styleUrls: ['./check-version.component.css']
 })
-export class CheckVersionComponent extends GuiForm implements OnInit, OnDestroy {
-  private _paramsSub: Subscription = undefined;
+export class CheckVersionComponent extends GuiForm {
   private _check: WorkflowCheck = undefined;
 
+  private _close$: EventEmitter<void> = new EventEmitter<void>();
+
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
     private _restService: RestApiService,
     private _modalService: ModalService
   ) { super(); }
 
-  ngOnInit() {
-    this._paramsSub = this._route.params.subscribe(params => {
-      this._check = JSON.parse(Base64.urlDecode(params['check']) || undefined);
-    });
+  @Input() set check(check: WorkflowCheck) {
+    this._check = check;
   }
 
-  ngOnDestroy() {
-    if(this._paramsSub) {
-      this._paramsSub
-    }
+  @Output('close') get close$(): EventEmitter<void> {
+    return this._close$;
   }
 
   get checkTypeName(): string {
@@ -70,7 +64,7 @@ export class CheckVersionComponent extends GuiForm implements OnInit, OnDestroy 
     this._check.status = validated ? Status.CHECK_OK : Status.CHECK_KO;
     let sub: Subscription = this._restService.updateWorkflowCheck(this._check).finally(() => {
       sub.unsubscribe();
-      this._router.navigate(['/home']);
+      this._close$.emit();
     }).subscribe(
       (status: number) => {
         // ok

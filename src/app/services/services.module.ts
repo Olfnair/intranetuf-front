@@ -6,10 +6,10 @@ import { RouterModule } from "@angular/router";
 
 // Services
 import {
-  AddFileRouteAccessChecker,
+  //AddFileRouteAccessChecker,
   AdminRouteAccessChecker,
   EmptyRouteAccessChecker,
-  UpdateFileVersionRouteAccessChecker
+  //UpdateFileVersionRouteAccessChecker
 } from "./route-access-checker.service";
 import { FileUploadService } from "./file-upload.service";
 import { RestApiService } from "./rest-api.service";
@@ -18,14 +18,14 @@ import { SessionService } from "./session.service";
 
 @NgModule({
   providers: [ // services providés et injectables directement depuis le module (singletons)
-    AddFileRouteAccessChecker,
+    //AddFileRouteAccessChecker,
     AdminRouteAccessChecker,
     EmptyRouteAccessChecker,
     FileUploadService,
     RestApiService,
     RoleCheckerService,
     SessionService,
-    UpdateFileVersionRouteAccessChecker
+    //UpdateFileVersionRouteAccessChecker
   ],
   imports: [ // modules importés
     CommonModule,

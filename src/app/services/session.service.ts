@@ -52,9 +52,6 @@ export class SessionService {
   }
 
   set selectedProject(project: Project) {
-    if (project == this._selectedProject) {
-      return;
-    }
     this._selectedProject = project;
   }
 

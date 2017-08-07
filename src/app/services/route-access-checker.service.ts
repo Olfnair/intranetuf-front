@@ -9,7 +9,7 @@ import { RoleChecker, AdminRoleChecker, RoleCheckerService, EmptyRoleChecker } f
 import { RightsChecker } from "app/services/rights-checker";
 import { RestLong } from "objects/rest-long";
 
-class UserIsAuthorChecker implements AuthorizationChecker {
+/*class UserIsAuthorChecker implements AuthorizationChecker {
   private _fileId = undefined;
   private _loading = true;
   private _check = false;
@@ -47,14 +47,13 @@ class UserIsAuthorChecker implements AuthorizationChecker {
       );
     });
   }
+}*/
 
-}
-
-class AddFileRightsChecker extends RightsChecker {
+/*class AddFileRightsChecker extends RightsChecker {
   public check(): boolean {
     return this.userCanAddFiles();
   }
-}
+}*/
 
 class RouteAccessChecker {
   private _authorizationCheckers: AuthorizationChecker[] = [];
@@ -227,7 +226,7 @@ export class AdminRouteAccessChecker extends ConjunctiveRouteAccessChecker {
   }
 }
 
-@Injectable()
+/*@Injectable()
 export class AddFileRouteAccessChecker extends AbstractDisjunctiveRouteAccessChecker {   
   constructor(
     router: Router,
@@ -243,9 +242,9 @@ export class AddFileRouteAccessChecker extends AbstractDisjunctiveRouteAccessChe
       new AddFileRightsChecker(this._restService, parseInt(route.params.projectId))
     ]);
   }
-}
+}*/
 
-class AdminOrAddFileRightChecker extends AbstractDisjunctiveRouteAccessChecker implements AuthorizationChecker {
+/*class AdminOrAddFileRightChecker extends AbstractDisjunctiveRouteAccessChecker implements AuthorizationChecker {
   private _loading = true;
   private _check = false;
 
@@ -288,9 +287,9 @@ class AdminOrAddFileRightChecker extends AbstractDisjunctiveRouteAccessChecker i
       );
     });
   }
-}
+}*/
 
-@Injectable()
+/*@Injectable()
 export class UpdateFileVersionRouteAccessChecker extends AbstractConjunctiveRouteAccessChecker {
   constructor(
     router: Router,
@@ -306,4 +305,4 @@ export class UpdateFileVersionRouteAccessChecker extends AbstractConjunctiveRout
       new UserIsAuthorChecker(this._restService, parseInt(route.params.fileId))
     ]);
   }
-}
+}*/

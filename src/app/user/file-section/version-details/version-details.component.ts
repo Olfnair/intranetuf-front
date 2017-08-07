@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
-import { ActivatedRoute } from "@angular/router";
 import { RestApiService } from "app/services/rest-api.service";
 import { File } from "entities/file";
 import { Version, Status as VersionStatus } from "entities/version";
@@ -22,7 +21,7 @@ class CheckContainer {
   }
 
   update(): void {
-    this._checksObs =  Observable.create((observer: Observer<WorkflowCheck[]>) => {
+    this._checksObs = Observable.create((observer: Observer<WorkflowCheck[]>) => {
       observer.next(this._checks);
       observer.complete();
     });
@@ -54,50 +53,38 @@ class CheckContainer {
   templateUrl: './version-details.component.html',
   styleUrls: ['./version-details.component.css']
 })
-export class VersionDetailsComponent implements OnInit, OnDestroy {
-
-  private _paramsSub: Subscription= undefined;
-  
-  private _checkContainers: CheckContainer[] = [];
+export class VersionDetailsComponent {
   private _file: File = undefined;
+  private _checkContainers: CheckContainer[] = [];
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _restService: RestApiService
-  ) {
+  private _close$: EventEmitter<void> = new EventEmitter<void>();
+
+  constructor(private _restService: RestApiService) {
     this._checkContainers.push(new CheckContainer(CheckType.CONTROL, 'Contrôles'));
     this._checkContainers.push(new CheckContainer(CheckType.VALIDATION, 'Validations'));
   }
 
-  ngOnInit() {
-    this._paramsSub = this._route.params.subscribe(params => {
-      this._file = JSON.parse(Base64.urlDecode(params['file']) || undefined);
-      let sub: Subscription = this._restService.getWorkflowChecksForVersion(this._file.version.id).finally(() => {
-        sub.unsubscribe();
-      }).subscribe(
-        (checks: WorkflowCheck[]) => {
-          checks.forEach((check: WorkflowCheck) => {
-            this._checkContainers.forEach((checkContainer: CheckContainer) => {
-              if(checkContainer.type == check.type) {
-                checkContainer.checks.push(check);
-              }
-            });
-          });
+  @Input() set file(file: File) {
+    this._file = file;
+    let sub: Subscription = this._restService.getWorkflowChecksForVersion(this._file.version.id).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (checks: WorkflowCheck[]) => {
+        checks.forEach((check: WorkflowCheck) => {
           this._checkContainers.forEach((checkContainer: CheckContainer) => {
-            checkContainer.update();
+            if(checkContainer.type == check.type) {
+              checkContainer.checks.push(check);
+            }
           });
-        },
-        (error: Response) => {
-          // gestion erreur
-        }
-      );
-    });
-  }
-
-  ngOnDestroy() {
-    if(this._paramsSub) {
-      this._paramsSub.unsubscribe();
-    }
+        });
+        this._checkContainers.forEach((checkContainer: CheckContainer) => {
+          checkContainer.update();
+        });
+      },
+      (error: Response) => {
+        // gestion erreur
+      }
+    );
   }
 
   get file(): File {
@@ -106,6 +93,10 @@ export class VersionDetailsComponent implements OnInit, OnDestroy {
 
   get checkContainers(): CheckContainer[] {
     return this._checkContainers;
+  }
+
+  @Output('close') get close$() : EventEmitter<void> {
+    return this._close$;
   }
 
   fileIconStatus(): string {
@@ -129,6 +120,10 @@ export class VersionDetailsComponent implements OnInit, OnDestroy {
       }
     });
     return ret;
+  }
+
+  close() {
+    this._close$.emit();
   }
 
 }

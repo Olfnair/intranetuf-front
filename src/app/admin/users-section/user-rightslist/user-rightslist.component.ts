@@ -10,6 +10,6 @@ import { User } from "entities/user";
 })
 export class UserRightslistComponent extends RightsGridContentManager<User> {
   constructor(restService: RestApiService) {
-    super(restService, 'getRights');
+    super(restService, 'getRightsForUser');
   }
 }

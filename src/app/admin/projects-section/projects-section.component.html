@@ -1,8 +1,10 @@
 <admin-projectlist *ngIf="state == State.List"
     (add)="state = State.Add" (edit)="setStateAndEntity(State.Edit, $event)"
-    (rights)="setStateAndEntity(State.Rights, $event)">
+    (rights)="setStateAndEntity(State.Rights, $event)" (filelist)="setStateAndEntity(State.Filelist, $event)">
 </admin-projectlist>
 
 <app-user-form *ngIf="state == State.Add" (close)="state = State.List"></app-user-form>
 
 <app-project-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List"></app-project-rightslist>
+
+<app-file-section *ngIf="state == State.Filelist" [project]="entity" [ignoreSessionProject]="true"></app-file-section>

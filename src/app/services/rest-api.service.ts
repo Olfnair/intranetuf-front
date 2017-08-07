@@ -151,9 +151,18 @@ export class RestApiService {
     });
   }
 
-  getRights(user: User, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<ProjectRight>> {
+  getRightsForUser(user: User, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<ProjectRight>> {
     return this._http.get(
       this._backendURL.projectRight + '/user/' + user.id + '/'
+        + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      this.options()).map((res: Response) => {
+      return res.json().flexQueryResult;
+    });
+  }
+
+  getRightsForProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<ProjectRight>> {
+    return this._http.get(
+      this._backendURL.projectRight + '/project/' + project.id + '/'
         + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
       this.options()).map((res: Response) => {
       return res.json().flexQueryResult;
@@ -201,7 +210,7 @@ export class RestApiService {
     return this._http.get(this._backendURL.auth + '/adminLoginAs/' + login, this.options('text/plain'));
   }
 
-  getRightsForProject(projectId: number) : Observable<ProjectRight[]> {
+  getRightsForUserByProject(projectId: number) : Observable<ProjectRight[]> {
     return this._http.get(this._backendURL.projectRight + '/project/' + projectId, this.options()).map((res: Response) => {
       return res.json().projectRight;
     });

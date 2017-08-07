@@ -1,0 +1,17 @@
+<app-filelist *ngIf="stateToActivate() == State.Filelist"
+    [project]="project" [startLoading]="readyForContent"
+    (addFile)="setStateAndFile(State.AddFile, $event)"
+    (versionDetails)="setStateAndFile(State.VersionDetails, $event)">
+</app-filelist>
+
+<app-add-file *ngIf="stateToActivate() == State.AddFile"
+    [data]="{project: project, file: file}" (close)="state = State.Filelist">
+</app-add-file>
+
+<app-version-details *ngIf="stateToActivate() == State.VersionDetails"
+    [file]="file" (close)="state = State.Filelist">
+</app-version-details>
+
+<app-check-version *ngIf="stateToActivate() == State.CheckVersion"
+    [check]="check" (close)="state = State.Filelist">
+</app-check-version>

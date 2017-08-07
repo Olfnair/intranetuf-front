@@ -1,14 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { Router, ActivatedRoute } from "@angular/router";
 import { MdDialogRef, MdDialog } from "@angular/material";
 import { Subscription } from "rxjs/Subscription";
 import { FileUploadService } from "app/services/file-upload.service";
 import { RestApiService } from "app/services/rest-api.service";
-import { SessionService } from "app/services/session.service";
 import { GuiForm } from "app/gui/gui-form";
 import { GuiProgressComponent } from "app/gui/gui-progress";
-import { UserContainer } from "app/user/add-file/user-container";
+import { UserContainer } from "./user-container";
 import { File as FileEntity } from "entities/file";
 import { Project } from "entities/project";
 import { Right } from "entities/project-right";
@@ -16,14 +14,20 @@ import { User } from "entities/user";
 import { Version } from "entities/version";
 import { WorkflowCheck, CheckType } from "entities/workflow-check";
 
+class InputData {
+  project: Project = undefined;
+  file: FileEntity = undefined;
+
+  constructor() { };
+}
+
 @Component({
   selector: 'app-add-file',
   templateUrl: './add-file.component.html',
   styleUrls: ['./add-file.component.css']
 })
-export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
+export class AddFileComponent extends GuiForm {
   private _uploadFile: File = undefined;
-  private _paramsSub: Subscription;
   private _project: Project = new Project();
   private _file: FileEntity = new FileEntity();
   private _newVersionMode: boolean = false;
@@ -33,56 +37,57 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
 
   private _userContainers: UserContainer[] = [];
 
+  private _close$: EventEmitter<void> = new EventEmitter<void>();
+
   constructor(
     private _uploadService: FileUploadService,
     private _restService: RestApiService,
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _session: SessionService,
     private _dialog: MdDialog
   ) {
     super();
   }
 
-  ngOnInit() {
-    this._paramsSub = this._route.params.subscribe(params => {
-      this._project.id = +params['projectId'] || undefined; 
-      this._file.id = +params['fileId'] || undefined;
-      this._newVersionMode = (this._file.id != undefined);
-      this._userContainers.push(new UserContainer('Contrôleurs', CheckType.CONTROL, this._project, Right.CONTROLFILE, this._restService));
-      this._userContainers.push(new UserContainer('Valideurs', CheckType.VALIDATION, this._project, Right.VALIDATEFILE, this._restService));
-      if(this._newVersionMode) {
-        let sub: Subscription = this._restService.getWorkflowChecksForFile(this._file.id).finally(() => {
-          sub.unsubscribe();
-        }).subscribe(
-          (checks: WorkflowCheck[]) => {
-            let old_order = 0;
-            let new_order = 0;
-            checks.forEach((check: WorkflowCheck) => { // on suppose triés ASC sur Type puis order
-              new_order = check.order_num;
-              this._userContainers.forEach((container: UserContainer) => {
-                if(container.type == check.type) {
-                  container.users.push(check.user);
-                  container.chained.push(new_order > old_order ? true : false);
-                }
-              });
-              old_order = new_order;
-            });
-            this._userContainers.forEach((container: UserContainer) => {
-              container.update();
-            });
-          },
-          (error: Response) => {
-            // gestion d'erreur
-          }
-        );
-      }
-    });
+  init(): void {
+    this._userContainers = [];
+    this._userContainers.push(new UserContainer('Contrôleurs', CheckType.CONTROL, this._project, Right.CONTROLFILE, this._restService));
+    this._userContainers.push(new UserContainer('Valideurs', CheckType.VALIDATION, this._project, Right.VALIDATEFILE, this._restService));
   }
 
-  ngOnDestroy() {
-    if(this._paramsSub) {
-      this._paramsSub.unsubscribe();
+  loadCurrentControllers(): void {
+    let sub: Subscription = this._restService.getWorkflowChecksForFile(this._file.id).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (checks: WorkflowCheck[]) => {
+        let old_order = 0;
+        let new_order = 0;
+        checks.forEach((check: WorkflowCheck) => { // on suppose triés ASC sur Type puis order
+          new_order = check.order_num;
+          this._userContainers.forEach((container: UserContainer) => {
+            if(container.type == check.type) {
+              container.users.push(check.user);
+              container.chained.push(new_order > old_order ? true : false);
+            }
+          });
+          old_order = new_order;
+        });
+        this._userContainers.forEach((container: UserContainer) => {
+          container.update();
+        });
+      },
+      (error: Response) => {
+        // gestion d'erreur
+      }
+    );
+  }
+
+  @Input() set data(inputData: InputData) {
+    console.log(inputData);
+    this._project = inputData.project;
+    this._file = inputData.file;
+    this._newVersionMode = (this._file != undefined);
+    this.init();
+    if(this._newVersionMode) {
+      this.loadCurrentControllers();
     }
   }
 
@@ -96,6 +101,10 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
 
   get userContainers(): UserContainer[] {
     return this._userContainers;
+  }
+
+  @Output('close') get close$(): EventEmitter<void> {
+    return this._close$;
   }
 
   fileSelect(file: File): void {
@@ -149,14 +158,14 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
         uploadSub.unsubscribe();
         if (!this._aborted) {
           this.closeProgressModal();
-          this._router.navigate(['/home']);
+          this.close();
         }
       }
     );
   }
 
-  cancel(): void {
-    this._router.navigate(['/home']);
+  close(): void {
+    this._close$.emit();
   }
 
   openProgressModal(): void {
@@ -214,8 +223,8 @@ export class AddFileComponent extends GuiForm implements OnInit, OnDestroy {
   }
 
   /**
-     * @override
-     */
+   * @override
+   */
   protected _buildForm(): FormGroup {
     return new FormGroup({
       filename: new FormControl({ value: '', disabled: true }, Validators.compose([

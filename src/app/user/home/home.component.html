@@ -5,4 +5,4 @@
   <app-login></app-login>
 </section>
 
-<app-filelist *ngIf="logged" [project]="selectedProject" [startLoading]="readyForContent"></app-filelist>
+<app-file-section *ngIf="logged"></app-file-section>

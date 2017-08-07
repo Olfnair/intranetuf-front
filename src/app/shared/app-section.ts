@@ -1,6 +1,6 @@
 import { Input } from "@angular/core";
 
-export class AdminSection {
+export class AppSection {
   private readonly _statesEnum: any = {};
 
   private _state: number;
@@ -26,26 +26,5 @@ export class AdminSection {
 
   public get state(): number {
     return this._state;
-  }
-}
-
-export class GenericAdminSection<T> extends AdminSection {
-  private _entity: T = undefined;
-  
-  constructor(states: any) {
-    super(states);
-  }
-
-  get entity(): T {
-    return this._entity;
-  }
-
-  set entity(entity: T) {
-    this._entity = entity;
-  }
-
-  setStateAndEntity(state: number, entity: T) {
-    this.state = state;
-    this._entity = entity;
   }
 }

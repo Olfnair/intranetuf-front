@@ -25,7 +25,7 @@ export abstract class RightsChecker implements AuthorizationChecker {
     }
     this._loading = true;
     return Observable.create((observer: Observer<boolean>) => {
-      let sub: Subscription = this._restService.getRightsForProject(this._projectId).finally(() => {
+      let sub: Subscription = this._restService.getRightsForUserByProject(this._projectId).finally(() => {
         sub.unsubscribe();
         observer.complete();
       }).subscribe(

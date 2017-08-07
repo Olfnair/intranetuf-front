@@ -1,5 +1,5 @@
 <md-card class="details">
-  <md-card-title>Fichier : {{file.version?.filename}}</md-card-title>
+  <md-card-title>Fichier : {{file?.version?.filename}}</md-card-title>
   
   <md-card-content>
     <md-card class="fileSummary">
@@ -8,19 +8,19 @@
           <h1 md-subheader>Sommaire</h1>
           <md-list-item>
             <span class="keyText">Auteur :</span>
-            <span class="valueText">&nbsp;{{file.author?.firstname}} {{file.author?.name}}</span>
+            <span class="valueText">&nbsp;{{file?.author?.firstname}} {{file?.author?.name}}</span>
           </md-list-item>
           <md-list-item>
             <span class="keyText">Version :</span>
-            <span class="valueText">&nbsp;{{file.version?.num}}</span>
+            <span class="valueText">&nbsp;{{file?.version?.num}}</span>
           </md-list-item>
           <md-list-item>
             <span class="keyText">Date d'upload :</span>
-            <span class="valueText">&nbsp;{{file.version?.date_upload | date}}</span>
+            <span class="valueText">&nbsp;{{file?.version?.date_upload | date}}</span>
           </md-list-item>
           <md-list-item>
             <span class="keyText">Statut :</span>
-            <span class="valueText">&nbsp;{{file.version?.status | versionStatus}}&nbsp;</span>
+            <span class="valueText">&nbsp;{{file?.version?.status | versionStatus}}&nbsp;</span>
             <status-icon [status]="fileIconStatus()"></status-icon>
           </md-list-item>
         </md-list>
@@ -49,7 +49,7 @@
   </md-card-content>
 
   <md-card-actions align="end">
-    <button md-raised-button class="submitButton" color="primary" type="button" [routerLink]="['/home']">
+    <button md-raised-button class="submitButton" color="primary" type="button" (click)="close()">
       Retour
     </button>
   </md-card-actions>

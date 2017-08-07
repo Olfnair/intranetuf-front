@@ -18,11 +18,12 @@ import { ProjectlistComponent } from "./projectlist/projectlist.component";
 import { LoginComponent } from "./login/login.component";
 import { HeaderComponent } from "./header/header.component";
 import { ActivateAccountComponent } from "./activate-account/activate-account.component";
-import { FilelistComponent } from "./filelist/filelist.component";
-import { AddFileComponent } from "./add-file/add-file.component";
+import { FilelistComponent } from "./file-section/filelist/filelist.component";
+import { AddFileComponent } from "./file-section/add-file/add-file.component";
 import { ChoseProjectNameComponent } from "./modals/chose-project-name/chose-project-name.component";
-import { CheckVersionComponent } from './check-version/check-version.component';
-import { VersionDetailsComponent } from './version-details/version-details.component';
+import { CheckVersionComponent } from './file-section/check-version/check-version.component';
+import { VersionDetailsComponent } from './file-section/version-details/version-details.component';
+import { FileSectionComponent } from './file-section/file-section.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { VersionDetailsComponent } from './version-details/version-details.compo
     AddFileComponent,
     ChoseProjectNameComponent,
     CheckVersionComponent,
-    VersionDetailsComponent
+    VersionDetailsComponent,
+    FileSectionComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     ChoseProjectNameComponent
@@ -60,7 +62,8 @@ import { VersionDetailsComponent } from './version-details/version-details.compo
     AddFileComponent,
     ChoseProjectNameComponent,
     CheckVersionComponent,
-    VersionDetailsComponent
+    VersionDetailsComponent,
+    FileSectionComponent
   ]
 })
 export class UserModule {}

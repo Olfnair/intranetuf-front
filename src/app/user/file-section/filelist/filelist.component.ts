@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { Router } from "@angular/router";
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
@@ -9,11 +8,10 @@ import { environment } from "environments/environment";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
-import { FlexQueryResult } from "objects/flex-query-result";
 import { DatatableContentManager } from "app/gui/datatable";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { RightsChecker, DefaultRightsChecker } from "app/services/rights-checker";
-import { BasicRoleChecker, RoleCheckerService, RoleChecker, DefaultRoleChecker } from "app/services/role-checker";
+import { RoleCheckerService, RoleChecker, DefaultRoleChecker } from "app/services/role-checker";
 import { Base64 } from "app/shared/base64";
 import { File } from "entities/file";
 import { Project } from "entities/project";
@@ -43,12 +41,15 @@ export class FilelistComponent extends DatatableContentManager<File> {
 
   // charge les roles à chaque changement de projet et met à jour le service de check de role
   private _roleCheckerUpdater: RoleChecker = new DefaultRoleChecker(this._restService, this._roleCheckerService);
+
+  private _addFile$: EventEmitter<File> = new EventEmitter<File>();
+  private _versionDetails$: EventEmitter<File> = new EventEmitter<File>();
+  private _checkVersion$: EventEmitter<WorkflowCheck> = new EventEmitter<WorkflowCheck>();
   
   constructor(
     restService: RestApiService,
     private _session: SessionService,
     private _roleCheckerService: RoleCheckerService,
-    private _router: Router,
     private _modal: ModalService
   ) {
     super(restService, 'fetchFilesByProject', true, () => {
@@ -130,6 +131,18 @@ export class FilelistComponent extends DatatableContentManager<File> {
     return this._session.userId;
   }
 
+  @Output('addFile') get addFile$(): EventEmitter<File> {
+    return this._addFile$;
+  }
+
+  @Output('versionDetails') get versionDetails$(): EventEmitter<File> {
+    return this._versionDetails$;
+  }
+
+  @Output('checkVersion') get checkVersion$(): EventEmitter<WorkflowCheck> {
+    return this._checkVersion$;
+  }
+
   userCanAddFile(): boolean {
     return this._roleCheckerService.userIsAdmin() || this._rightsChecker.userCanAddFiles();
   }
@@ -159,8 +172,16 @@ export class FilelistComponent extends DatatableContentManager<File> {
         || this._roleCheckerService.userIsAdmin();
   }
 
-  add(): void {
-    this._router.navigate(['/add_file', this._project.id]);
+  addFile(file: File): void {
+    this._addFile$.emit(file);
+  }
+
+  versionDetails(file: File): void {
+    this._versionDetails$.emit(file);
+  }
+
+  checkVersion(check: WorkflowCheck): void {
+    return this._checkVersion$.emit(check);
   }
 
   downloadLink(versionId: number): string {

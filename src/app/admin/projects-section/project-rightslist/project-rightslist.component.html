@@ -8,15 +8,16 @@
     }"
     [data]="dataObs"
     [columns]="[
-      { label: 'Utilisateur',            query: 'login',   search: true, sort: true, width: '27%' },
-      { label: 'Voir',                                                                width: '9%' },
-      { label: 'Editer',                                                              width: '9%' },
-      { label: 'Supprimer',                                                           width: '9%' },
-      { label: 'Ajout fichier',                                                       width: '9%' },
-      { label: 'Supprimer fichier',                                                   width: '9%' },
-      { label: 'Contrôleur',                                                          width: '9%' },
-      { label: 'Valideur',                                                            width: '9%' },
-      { label: 'Tous',                                                                width:  '6%' }
+      { label: 'Utilisateur',       query: 'login',   search: true, sort: true, width: '21%' },
+      { label: 'Actif',             query: 'active',               sort: true,  width:  '6%' },
+      { label: 'Voir',                                                          width:  '9%' },
+      { label: 'Editer',                                                        width:  '9%' },
+      { label: 'Supprimer',                                                     width:  '9%' },
+      { label: 'Ajout fichier',                                                 width:  '9%' },
+      { label: 'Supprimer fichier',                                             width:  '9%' },
+      { label: 'Contrôleur',                                                    width:  '9%' },
+      { label: 'Valideur',                                                      width:  '9%' },
+      { label: 'Tous',                                                          width:  '6%' }
     ]"
     (selectedDataUpdate)="grid.updateSelection($event)"
     (queryParams)="update($event, [entity])">
@@ -25,8 +26,8 @@
     <h2>Droits pour {{entity.name}}</h2>
   </datatable-title>
   <ng-template let-right="item" let-checked="checked">
-    <td>{{right.project.name | truncate:30}}</td>
-    <td>{{right.project.active | boolToString}}</td>
+    <td>{{right.user.login | truncate:30}}</td>
+    <td>{{right.user.active | boolToString}}</td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event, right, 1, checked)"></md-checkbox></td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 2)" (change)="grid.setBit($event, right, 2, checked)"></md-checkbox></td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 4)" (change)="grid.setBit($event, right, 4, checked)"></md-checkbox></td>

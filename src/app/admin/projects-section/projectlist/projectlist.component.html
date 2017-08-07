@@ -19,7 +19,7 @@
     <h2>Liste des projets</h2>
   </datatable-title>
   <ng-template let-project="item">
-    <td>{{project.name | truncate:30}}</td>
+    <td><a href="javascript:void(0)" (click)="filelist(project)">{{project.name | truncate:30}}</a></td>
     <td>{{project.active | boolToString}}</td>
     <td>
       <button md-raised-button class="smallButton" color="primary" type="button"
