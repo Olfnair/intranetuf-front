@@ -2,7 +2,7 @@ import { DatatablePage, DatatableQueryParams } from ".";
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
 
-export class DatatablePaginator<T> {
+export class DatatablePaginator<T, RestService> {
   private _page: DatatablePage<T>;
   private _totalItemsCount: number = 0;
   private _currentPageNum: number = 1;
@@ -72,7 +72,7 @@ export class DatatablePaginator<T> {
     return this.hasIndex(this.pageToIndex(pageNum));
   }
 
-  public goToIndex(index: number, content: any[] = this.content, totalItemsCount: number = this._totalItemsCount): boolean {
+  public goToIndex(index: number, content: T[] = this.content, totalItemsCount: number = this._totalItemsCount): boolean {
     if(! this.hasIndex(index)) { return false; }
     if(! this.setPageContent(content, totalItemsCount)) { return false; }
     this._currentPageNum = this.indexToPage(index);
@@ -80,13 +80,20 @@ export class DatatablePaginator<T> {
     return true;
   }
 
-  public goToPage(pageNum: number, content: any[] = this.content, totalItemsCount: number = this._totalItemsCount): boolean { 
+  public goToPage(pageNum: number, content: T[] = this.content, totalItemsCount: number = this._totalItemsCount): boolean { 
     return this.goToIndex(this.pageToIndex(pageNum), content, totalItemsCount);
   }
 
-  public update(restService: any, methodName: string, params: DatatableQueryParams, otherArgs: any[] = undefined, reload: boolean = false, onResult?: () => void): Observable<DatatablePaginator<T>> {
+  public update(
+    restService: RestService,
+    methodName: string,
+    params: DatatableQueryParams,
+    otherArgs: any[] = undefined,
+    reload: boolean = false,
+    onResult?: () => void
+  ): Observable<DatatablePaginator<T, RestService>> {
     if(! restService[methodName] || ! (restService[methodName] instanceof Function)) {
-      return Observable.create((observer: Observer<DatatablePaginator<T>>) => {
+      return Observable.create((observer: Observer<DatatablePaginator<T, RestService>>) => {
         observer.error('invalid method');
         observer.complete();
       });
@@ -107,7 +114,7 @@ export class DatatablePaginator<T> {
 
     this.reloadBetweenPages = reload;
 
-    return Observable.create((observer: Observer<DatatablePaginator<T>>) => {
+    return Observable.create((observer: Observer<DatatablePaginator<T, RestService>>) => {
       let sub = restService[methodName](...args).finally(() => {
         observer.complete();
         sub.unsubscribe();

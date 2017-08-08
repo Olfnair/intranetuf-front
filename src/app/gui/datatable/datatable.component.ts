@@ -45,7 +45,7 @@ export class DatatableFooter { }
   templateUrl: './datatable.component.html',
   styleUrls: ['./datatable.component.css']
 })
-export class DatatableComponent<T> {
+export class DatatableComponent<T, RestService> {
   @ContentChild(TemplateRef)
   private _content: TemplateRef<Element>;
 
@@ -58,7 +58,7 @@ export class DatatableComponent<T> {
 
   // titres colonnes et données
   private _columns: DatatableColumn[] = [];
-  private _paginator: DatatablePaginator<T> = new DatatablePaginator<T>();
+  private _paginator: DatatablePaginator<T, RestService> = new DatatablePaginator<T, RestService>();
   private _emptyData: boolean = true;
 
   // chargement
@@ -113,6 +113,19 @@ export class DatatableComponent<T> {
     return this._paginator.content;
   }
 
+  private updateSelection(): void {
+    let selectedIds: number[] = [];
+    
+    // on récupère les id qui sont sélectionnés et qui correspondent à du contenu qu'on a :
+    this.content.forEach((data: T, index: number) => {
+      index = data['id'] != undefined ? data['id'] : index;
+      if(this._selectedData.has(index)) {
+        // mise à jour du contenu
+        this._selectedData.set(index, data);
+      }
+    });
+  }
+
   private startLoading(reload?: boolean): void {
     if (reload) {
       this._params.reset();
@@ -129,7 +142,7 @@ export class DatatableComponent<T> {
     this.loading = false;
   }
 
-  @Input() set data(obs: Observable<DatatablePaginator<T>>) {
+  @Input() set data(obs: Observable<DatatablePaginator<T, RestService>>) {
     this.startLoading(this._paginator.reloadBetweenPages);
     if (obs == undefined || obs == null) {
       // Ici, je suppose que le chargement est en cours et que l'Observable sera mis à jour plus tard.
@@ -139,16 +152,17 @@ export class DatatableComponent<T> {
     let sub: Subscription = obs.finally(() => {
       this.endLoading(sub); // finalement
     }).subscribe(
-      (paginator: DatatablePaginator<T>) => { // ok
+      (paginator: DatatablePaginator<T, RestService>) => { // ok
         if(paginator instanceof DatatablePaginator) {
           this._paginator = paginator;
         }
         else { // en fait on peut passer un simple observable contenant un tableau de données aussi...
           let data: T[] = paginator;
-          this._paginator = new DatatablePaginator<T>(data.length);
+          this._paginator = new DatatablePaginator<T, RestService>(data.length);
           this._paginator.goToPage(1, data, data.length);
           this._paginator.reloadBetweenPages = true;
         }
+        this.updateSelection();
       },
       (error: any) => { // erreur
         this.loadingError = true;
@@ -217,7 +231,7 @@ export class DatatableComponent<T> {
     return this._params;
   }
 
-  get paginator(): DatatablePaginator<T> {
+  get paginator(): DatatablePaginator<T, RestService> {
     return this._paginator;
   }
 

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { RestApiService } from "app/services/rest-api.service";
-import { RightsGridContentManager } from "app/admin/rights-grid-content-manager";
+import { RightsGridContentManager, ProjectRightsBitsContainer } from "app/admin/rights-grid-content-manager";
 import { Project } from "entities/project";
 
 @Component({
@@ -10,6 +10,6 @@ import { Project } from "entities/project";
 })
 export class ProjectRightslistComponent extends RightsGridContentManager<Project> {
   constructor(restService: RestApiService) {
-    super(restService, 'getRightsForProject');
+    super(restService, 'getRightsForProject', ProjectRightsBitsContainer);
   }
 }

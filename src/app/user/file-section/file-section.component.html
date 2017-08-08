@@ -1,3 +1,9 @@
+<button *ngIf="canNavBack"
+    md-raised-button class="backButton" type="button" color="primary"
+    mdTooltip="Retour" mdTooltipPosition="above" (click)="navback()">
+  <md-icon>arrow_back</md-icon>&nbsp;Retour
+</button>
+
 <app-filelist *ngIf="stateToActivate() == State.Filelist"
     [project]="project" [startLoading]="readyForContent"
     (addFile)="setStateAndFile(State.AddFile, $event)"
@@ -7,6 +13,7 @@
 <app-add-file *ngIf="stateToActivate() == State.AddFile"
     [data]="{project: project, file: file}" (close)="state = State.Filelist">
 </app-add-file>
+
 
 <app-version-details *ngIf="stateToActivate() == State.VersionDetails"
     [file]="file" (close)="state = State.Filelist">

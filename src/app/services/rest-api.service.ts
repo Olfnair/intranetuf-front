@@ -111,6 +111,14 @@ export class RestApiService {
     return this._http.delete(this._backendURL.project + '/' + project.id, this.options());
   }
 
+  activateManyProjects(projects: Project[], activate: boolean): Observable<Response> {
+    let projectIds: RestLong[] = [];
+    projects.forEach((project: Project) => {
+      projectIds.push(new RestLong(project.id));
+    });
+    return this._http.put(this._backendURL.project + '/activateMany/' + (activate ? '1' : '0'), {restLong: projectIds}, this.options());
+  }
+
   /**
    * Function to return list of users
    *

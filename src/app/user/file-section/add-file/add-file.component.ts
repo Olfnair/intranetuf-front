@@ -81,7 +81,6 @@ export class AddFileComponent extends GuiForm {
   }
 
   @Input() set data(inputData: InputData) {
-    console.log(inputData);
     this._project = inputData.project;
     this._file = inputData.file;
     this._newVersionMode = (this._file != undefined);

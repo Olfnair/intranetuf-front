@@ -14,6 +14,7 @@
       { label: '',                                                 width: '52%' }
     ]"
     (addButtonClick)="add()"
+    (selectedDataUpdate)="selectedProjects = $event"
     (queryParams)="update($event)">
   <datatable-title>
     <h2>Liste des projets</h2>
@@ -30,10 +31,26 @@
           mdTooltip="Editer" mdTooltipPosition="above" (click)="edit(project)">
         <md-icon>edit</md-icon>
       </button>
-      <button md-raised-button class="smallButton" color="warn" type="button"
-          mdTooltip="Supprimer" mdTooltipPosition="above" (click)="delete(project)">
+      <button *ngIf="project.active" md-raised-button class="smallButton" color="warn" type="button"
+          mdTooltip="Supprimer" mdTooltipPosition="above" (click)="activate(project, false)">
         <md-icon>delete</md-icon>
+      </button>
+      <button *ngIf="! project.active" md-raised-button class="smallButton" color="warn" type="button"
+          mdTooltip="Restaurer" mdTooltipPosition="above" (click)="activate(project, true)">
+        <md-icon>replay</md-icon>
       </button>
     </td>
   </ng-template>
+  <datatable-footer>
+    <button md-raised-button class="smallButton" color="warn" type="button"
+        mdTooltip="Restaurer la Sélection" mdTooltipPosition="above" (click)="activateSelection(true)"
+        [disabled]="emptySelection">
+      <md-icon>replay</md-icon>
+    </button>
+    <button md-raised-button class="smallButton" color="warn" type="button"
+        mdTooltip="Supprimer la Sélection" mdTooltipPosition="above" (click)="activateSelection(false)"
+        [disabled]="emptySelection">
+      <md-icon>delete_forever</md-icon>
+    </button>
+  </datatable-footer>
 </datatable>

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { RestApiService } from "app/services/rest-api.service";
-import { RightsGridContentManager } from "app/admin/rights-grid-content-manager";
+import { RightsGridContentManager, UserRightsBitsContainer } from "app/admin/rights-grid-content-manager";
 import { User } from "entities/user";
 
 @Component({
@@ -10,6 +10,6 @@ import { User } from "entities/user";
 })
 export class UserRightslistComponent extends RightsGridContentManager<User> {
   constructor(restService: RestApiService) {
-    super(restService, 'getRightsForUser');
+    super(restService, 'getRightsForUser', UserRightsBitsContainer);
   }
 }

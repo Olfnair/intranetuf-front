@@ -124,7 +124,7 @@ export class BitBoxGridRules<T> {
     if (! this.isSameAsOriginal(bitsContainer)) {
       this._mapModifiedBits.set(bitsContainer.getId(), bitsContainer);
     }
-    // un doit est revenu à son état original : le supprimer de la liste des modifiés
+    // un droit est revenu à son état original : le supprimer de la liste des modifiés
     else if (this.isSameAsOriginal(bitsContainer) && this._mapModifiedBits.has(bitsContainer.getId())) {
       this._mapModifiedBits.delete(bitsContainer.getId());
     }

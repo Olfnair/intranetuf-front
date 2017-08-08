@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { SessionService } from "app/services/session.service";
 import { AppSection } from "app/shared/app-section";
 import { File } from "entities/file";
@@ -18,6 +18,9 @@ export class FileSectionComponent extends AppSection {
   private _check: WorkflowCheck = undefined;
 
   private _ignoreSessionProject: boolean = false;
+
+  private _canNavBack: boolean = false;
+  private _navback$: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private _session: SessionService) {
     super({
@@ -72,6 +75,18 @@ export class FileSectionComponent extends AppSection {
     this._check = check;
   }
 
+  @Input() set canNavBack(canNavBack: boolean) {
+    this._canNavBack = canNavBack;
+  }
+
+  get canNavBack(): boolean {
+    return this._canNavBack;
+  }
+
+  @Output('navback') get navback$(): EventEmitter<void> {
+    return this._navback$;
+  }
+
   get selectedProject(): Project {
     return this._session.selectedProject;
   }
@@ -83,5 +98,14 @@ export class FileSectionComponent extends AppSection {
   setStateAndFile(state: number, file: File) {
     this.state = state;
     this._file = file;
+  }
+
+  navback(): void {
+    if(this.state == this.State.Filelist) {
+      this._navback$.emit();
+      return;
+    }
+
+    this.state = this.State.Filelist;
   }
 }

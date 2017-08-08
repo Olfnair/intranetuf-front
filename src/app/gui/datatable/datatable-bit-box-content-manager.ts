@@ -1,17 +1,17 @@
 import { DatatableContentManager } from ".";
 import { BitBoxGridRules, BitsContainer } from "app/shared/bit-box-grid-rules";
 
-export class DatatableBitBoxContentManager extends DatatableContentManager<any> {
-  private _gridRules: BitBoxGridRules<any>;
+export class DatatableBitBoxContentManager<T, RestService> extends DatatableContentManager<T, RestService> {
+  private _gridRules: BitBoxGridRules<T>;
 
   constructor(
-    readonly restService: any,
+    readonly restService: RestService,
     readonly methodName: string,
     readonly MAXBIT: number,
     private readonly _ContainerType
   ) {
     super(restService, methodName, undefined, () => {
-      this.paginator.content.forEach((originalBits: any) => {
+      this.paginator.content.forEach((originalBits: T) => {
         let originalBitsContainer: BitsContainer = new this._ContainerType(originalBits);
         
         // update en fonction de ce qu'on a déjà modifié :
@@ -35,7 +35,7 @@ export class DatatableBitBoxContentManager extends DatatableContentManager<any> 
     this._gridRules = new BitBoxGridRules<any>(this._ContainerType, MAXBIT);
   }
 
-  get grid(): BitBoxGridRules<any> {
+  get grid(): BitBoxGridRules<T> {
     return this._gridRules;
   }
 }

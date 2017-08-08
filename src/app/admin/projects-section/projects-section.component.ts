@@ -12,9 +12,8 @@ export class ProjectsSectionComponent extends GenericEntitySection<Project> {
     super({
       List:     0,
       Add:      1,
-      Edit:     2,
-      Rights:   3,
-      Filelist: 4,
+      Rights:   2,
+      Filelist: 3,
     });
   }
 }

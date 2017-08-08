@@ -1,13 +1,14 @@
 import { EventEmitter, Output, Input } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
+import { RestApiService } from "app/services/rest-api.service";
 import { BitsContainer } from "app/shared/bit-box-grid-rules";
 import { DatatableBitBoxContentManager } from "app/gui/datatable";
 import { Project } from "entities/project";
 import { ProjectRight } from "entities/project-right";
 import { User } from "entities/user";
 
-class ProjectRightBitsContainer implements BitsContainer {
-  constructor(private _projectRight: ProjectRight) { }
+export class UserRightsBitsContainer implements BitsContainer {
+  constructor(protected _projectRight: ProjectRight) { }
   
   getId(): number {
     return this._projectRight.project.id;
@@ -26,13 +27,26 @@ class ProjectRightBitsContainer implements BitsContainer {
   }
 }
 
-export class RightsGridContentManager<T> extends DatatableBitBoxContentManager {
+export class ProjectRightsBitsContainer extends UserRightsBitsContainer {
+  constructor(projectRight: ProjectRight) {
+    super(projectRight)
+  }
+  
+  /**
+   * @override
+   */
+  getId(): number {
+    return this._projectRight.user.id;
+  }
+}
+
+export class RightsGridContentManager<T> extends DatatableBitBoxContentManager<T, RestApiService> {
   private _entity: T = undefined;
 
   private _close$: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(restService: any, rightsGetterMethod: string) {
-    super(restService, rightsGetterMethod, 64, ProjectRightBitsContainer);
+  constructor(restService: RestApiService, rightsGetterMethod: string, _ContainerType) {
+    super(restService, rightsGetterMethod, 64, _ContainerType);
   }
 
   @Input() set entity(entity: T) {
@@ -51,7 +65,7 @@ export class RightsGridContentManager<T> extends DatatableBitBoxContentManager {
 
   submit(): void {
     let update: ProjectRight[] = [];
-    this.grid.modifiedBits.forEach((bitsContainer: ProjectRightBitsContainer) => {
+    this.grid.modifiedBits.forEach((bitsContainer) => {
       update.push(bitsContainer.getContent());
     });
     let updateSub: Subscription = this._restService.setRights(update).finally(() => {

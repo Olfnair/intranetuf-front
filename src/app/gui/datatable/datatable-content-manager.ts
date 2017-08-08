@@ -1,16 +1,16 @@
 import { Observable } from "rxjs/Observable";
 import { DatatablePaginator, DatatableQueryParams } from ".";
 
-export class DatatableContentManager<T> {
+export class DatatableContentManager<T, RestService> {
   private static readonly PAGE_SIZE = 2; // nombre d'éléments par page
 
-  private _paginator: DatatablePaginator<T> = new DatatablePaginator<T>(DatatableContentManager.PAGE_SIZE);
-  private _dataObs: Observable<DatatablePaginator<T>> = undefined;
+  private _paginator: DatatablePaginator<T, RestService> = new DatatablePaginator<T, RestService>(DatatableContentManager.PAGE_SIZE);
+  private _dataObs: Observable<DatatablePaginator<T, RestService>> = undefined;
   private _params: DatatableQueryParams = undefined;
   private _args: any[] = undefined;
 
   constructor(
-    protected _restService: any,
+    protected _restService: RestService,
     private _methodName: string,
     private _reload?: boolean,
     private _onLoad?: () => void
@@ -22,11 +22,11 @@ export class DatatableContentManager<T> {
     this._params = undefined;
   }
 
-  public get paginator(): DatatablePaginator<T> {
+  public get paginator(): DatatablePaginator<T, RestService> {
     return this._paginator;
   } 
 
-  public get dataObs(): Observable<DatatablePaginator<T>> {
+  public get dataObs(): Observable<DatatablePaginator<T, RestService>> {
     return this._dataObs;
   }
 

@@ -23,7 +23,7 @@ import { Status as VersionStatus, Version } from "entities/version";
   templateUrl: './filelist.component.html',
   styleUrls: ['./filelist.component.css']
 })
-export class FilelistComponent extends DatatableContentManager<File> {
+export class FilelistComponent extends DatatableContentManager<File, RestApiService> {
   private _startLoading: boolean = false;
 
   private _firstLoading: boolean = true; // tout premier chargement (pas encore eu de rechargement suite à recherche/tri...)
@@ -39,7 +39,7 @@ export class FilelistComponent extends DatatableContentManager<File> {
 
   private _rightsChecker: RightsChecker = new DefaultRightsChecker(this._restService);
 
-  // charge les roles à chaque changement de projet et met à jour le service de check de role
+  // charger les roles à chaque changement de projet et mettre à jour le service de check de role
   private _roleCheckerUpdater: RoleChecker = new DefaultRoleChecker(this._restService, this._roleCheckerService);
 
   private _addFile$: EventEmitter<File> = new EventEmitter<File>();
@@ -263,7 +263,7 @@ export class FilelistComponent extends DatatableContentManager<File> {
             this._project.name = projectName;
           },
           (error: Response) => {
-            this._modal.info('Erreur', 'Erreur lors du changment de nom du projet.', false);
+            this._modal.info('Erreur', 'Erreur lors du changement de nom du projet.', false);
           }
         );
       },

@@ -16,7 +16,7 @@ import { FlexQueryResult } from "objects/flex-query-result";
   templateUrl: './userlist.component.html',
   styleUrls: ['./userlist.component.css']
 })
-export class UserlistComponent extends DatatableContentManager<User> implements OnInit {
+export class UserlistComponent extends DatatableContentManager<User, RestApiService> implements OnInit {
   private _add$: EventEmitter<void> = new EventEmitter<void>();
   private _edit$: EventEmitter<User> = new EventEmitter<User>();
   private _rights$: EventEmitter<User> = new EventEmitter<User>();
