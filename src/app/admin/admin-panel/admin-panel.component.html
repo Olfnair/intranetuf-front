@@ -1,5 +1,5 @@
 <!-- utilisateurs -->
-<section *ngIf="selectedItem === getItem('Utilisateurs')">
+<section *ngIf="selectedItemId === getItemId('Utilisateurs')">
   <md-tab-group [(selectedIndex)]="usersTabIndex">
     <md-tab label="Utilisateurs">
       <app-users-section *ngIf="usersTabIndex === 0" [stateName]="'List'"></app-users-section>
@@ -11,7 +11,7 @@
 </section>
 
 <!-- projets -->
-<section *ngIf="selectedItem === getItem('Projets')">
+<section *ngIf="selectedItemId === getItemId('Projets')">
   <md-tab-group [(selectedIndex)]="projectsTabIndex">
     <md-tab label="Projets">
       <app-projects-section *ngIf="projectsTabIndex === 0" [stateName]="'List'"></app-projects-section>
@@ -20,7 +20,7 @@
 </section>
 
 <!-- logs -->
-<section *ngIf="selectedItem === getItem('Logs')">
+<section *ngIf="selectedItemId === getItemId('Logs')">
   <md-tab-group [(selectedIndex)]="logsTabIndex">
     <md-tab label="Logs">
       <p *ngIf="logsTabIndex === 0">Affichage des logs (WIP)</p>

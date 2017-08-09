@@ -95,9 +95,14 @@ export class FileSectionComponent extends AppSection {
     return this._session.readyForContent;
   }
 
-  setStateAndFile(state: number, file: File) {
+  setStateAndFile(state: number, file: File): void {
     this.state = state;
     this._file = file;
+  }
+
+  setStateAndCheck(state: number, check: WorkflowCheck): void {
+    this.state = state;
+    this._check = check;
   }
 
   navback(): void {
