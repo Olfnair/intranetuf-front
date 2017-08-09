@@ -1,7 +1,7 @@
 import { EventEmitter, Output, Input } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
-import { BitsContainer } from "app/shared/bit-box-grid-rules";
+import { BitsContainer } from "app/gui/bit-box-grid-rules";
 import { DatatableBitBoxContentManager } from "app/gui/datatable";
 import { Project } from "entities/project";
 import { ProjectRight } from "entities/project-right";

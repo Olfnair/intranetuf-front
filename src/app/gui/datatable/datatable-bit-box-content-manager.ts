@@ -1,5 +1,5 @@
 import { DatatableContentManager } from ".";
-import { BitBoxGridRules, BitsContainer } from "app/shared/bit-box-grid-rules";
+import { BitBoxGridRules, BitsContainer } from "../bit-box-grid-rules";
 
 export class DatatableBitBoxContentManager<T, RestService> extends DatatableContentManager<T, RestService> {
   private _gridRules: BitBoxGridRules<T>;

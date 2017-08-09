@@ -7,7 +7,7 @@ import { RouterModule } from "@angular/router";
 // Services
 import {
   AdminRouteAccessChecker,
-  EmptyRouteAccessChecker,
+  EmptyRouteAccessChecker
 } from "./route-access-checker.service";
 import { FileUploadService } from "./file-upload.service";
 import { RestApiService } from "./rest-api.service";
@@ -26,7 +26,7 @@ import { SessionService } from "./session.service";
   imports: [ // modules importés
     CommonModule,
     HttpModule,
-    RouterModule,
+    RouterModule
   ]
 })
 export class ServicesModule {}

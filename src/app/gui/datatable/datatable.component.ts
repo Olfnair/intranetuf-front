@@ -18,7 +18,7 @@ import {
   DatatableQueryOptions,
   DatatablePaginator
 } from ".";
-import { ColumnParam, ColumnHeaderComponent } from "../column-header";
+import { ColumnParam } from "../column-header";
 
 @Directive({
   selector: 'datatable-title'
