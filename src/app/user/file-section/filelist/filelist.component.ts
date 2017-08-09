@@ -53,7 +53,7 @@ export class FilelistComponent extends DatatableContentManager<File, RestApiServ
     private _modal: ModalService
   ) {
     super(restService, 'fetchFilesByProject', true, () => {
-      this._loadChecks();
+      this.loadChecks();
       this.reload = false;
     });
   }
@@ -67,12 +67,12 @@ export class FilelistComponent extends DatatableContentManager<File, RestApiServ
     }
   }
 
-  private _resetChecksMap(): void {
+  private resetChecksMap(): void {
     this._controls = new Map<number, WorkflowCheck>();
     this._validations = new Map<number, WorkflowCheck>();
   }
 
-  private _getChecksMapFromType(type: CheckType): Map<number, WorkflowCheck> {
+  private getChecksMapFromType(type: CheckType): Map<number, WorkflowCheck> {
     if(type == CheckType.CONTROL) {
       return this._controls;
     }
@@ -82,7 +82,7 @@ export class FilelistComponent extends DatatableContentManager<File, RestApiServ
     return null;
   }
 
-  private _loadChecks(): void {
+  private loadChecks(): void {
     if(! this.paginator.content || this.paginator.content.length <= 0) { return; }
 
     let sub: Subscription = this._restService.fetchWorkflowCheckByStatusUserVersions(
@@ -91,9 +91,9 @@ export class FilelistComponent extends DatatableContentManager<File, RestApiServ
       sub.unsubscribe();
     }).subscribe(
       (checks: WorkflowCheck[]) => {
-        this._resetChecksMap();
+        this.resetChecksMap();
         checks.forEach((check: WorkflowCheck) => { 
-          let map: Map<number, WorkflowCheck> = this._getChecksMapFromType(check.type);
+          let map: Map<number, WorkflowCheck> = this.getChecksMapFromType(check.type);
           if(map) {
             map.set(check.version.id, check);
           }
@@ -192,38 +192,34 @@ export class FilelistComponent extends DatatableContentManager<File, RestApiServ
     return this._session.base64AuthToken;
   }
 
-  base64UrlEncode(file: File): string {
-    return Base64.urlEncode(JSON.stringify(file));
-  }
-
-  private _getCheckAsParameter(type: CheckType, versionId: number): string {
-    let map: Map<number, WorkflowCheck> = this._getChecksMapFromType(type);
-    if(! map) { return ''; }
+  private getCheckAsParameter(type: CheckType, versionId: number): WorkflowCheck {
+    let map: Map<number, WorkflowCheck> = this.getChecksMapFromType(type);
+    if(! map) { return null; }
     let check: WorkflowCheck = map.get(versionId);
-    if(! check) { return ''; }
-    return Base64.urlEncode(JSON.stringify(check));
+    if(! check) { return null; }
+    return check;
   }
 
-  getControlAsParameter(versionId: number): string {
-    return this._getCheckAsParameter(CheckType.CONTROL, versionId);
+  getControl(versionId: number): WorkflowCheck {
+    return this.getCheckAsParameter(CheckType.CONTROL, versionId);
   }
 
-  getValidationAsParameter(versionId: number): string {
-    return this._getCheckAsParameter(CheckType.VALIDATION, versionId);
+  getValidation(versionId: number): WorkflowCheck {
+    return this.getCheckAsParameter(CheckType.VALIDATION, versionId);
   }
 
-  private _hasCheck(type: CheckType, versionId: number): boolean {
-    let map: Map<number, WorkflowCheck> = this._getChecksMapFromType(type);
+  private hasCheck(type: CheckType, versionId: number): boolean {
+    let map: Map<number, WorkflowCheck> = this.getChecksMapFromType(type);
     if(! map) { return false; }
     return map.has(versionId);
   }
 
   hasControl(versionId: number): boolean {
-    return this._hasCheck(CheckType.CONTROL, versionId);
+    return this.hasCheck(CheckType.CONTROL, versionId);
   }
 
   hasValidation(versionId: number): boolean {
-    return ! this.hasControl(versionId) && this._hasCheck(CheckType.VALIDATION, versionId);
+    return ! this.hasControl(versionId) && this.hasCheck(CheckType.VALIDATION, versionId);
   }
 
   deleteFile(file: File): void {

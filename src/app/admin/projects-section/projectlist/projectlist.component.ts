@@ -125,13 +125,11 @@ export class ProjectlistComponent extends DatatableContentManager<Project, RestA
   }
 
   activateSelection(activate: boolean): void {
-    console.log('activateSelection');
     let projects: Project[] = [];
     this._selectedProjects.forEach((project: Project, id: number) => {
       if(project.active != activate) {
         project.active = activate;
         projects.push(project);
-        console.log(project);
       }
     });
     if(projects.length <= 0) {

@@ -71,13 +71,13 @@
       </span>
       <span *ngIf="hasControl(file.version.id)">
         <a md-raised-button class="smallButton" color="accent" mdTooltip="Contrôler" mdTooltipPosition="above"
-            [routerLink]="['/check', getControlAsParameter(file.version.id)]">
+            href="javascript:void(0)" (click)="checkVersion(getControl(file.version.id))">
           <md-icon>find_in_page</md-icon>
         </a>
       </span>
       <span *ngIf="hasValidation(file.version.id)">
         <a md-raised-button class="smallButton" color="warn" mdTooltip="Valider" mdTooltipPosition="above"
-            [routerLink]="['/check', getValidationAsParameter(file.version.id)]">
+            href="javascript:void(0)" (click)="checkVersion(getValidation(file.version.id))">
           <md-icon>find_in_page</md-icon>
         </a>
       </span>

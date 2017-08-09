@@ -113,9 +113,7 @@ export class DatatableComponent<T, RestService> {
     return this._paginator.content;
   }
 
-  private updateSelection(): void {
-    let selectedIds: number[] = [];
-    
+  private updateSelection(): void {  
     // on récupère les id qui sont sélectionnés et qui correspondent à du contenu qu'on a :
     this.content.forEach((data: T, index: number) => {
       index = data['id'] != undefined ? data['id'] : index;
