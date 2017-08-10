@@ -1,3 +1,11 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Datatable de gestion des droits par utilisateur (prend un utilisateur en entrée) :
+  [entity]="user"
+-->
+
 <datatable
     [options]="{
       selectionCol: true,
@@ -9,25 +17,31 @@
     [data]="dataObs"
     [columns]="[
       { label: 'Projet',            query: 'name',   search: true, sort: true, width: '21%' },
-      { label: 'Actif',             query: 'active',               sort: true, width: '6%' },
-      { label: 'Voir',                                                         width: '9%' },
-      { label: 'Editer',                                                       width: '9%' },
-      { label: 'Supprimer',                                                    width: '9%' },
-      { label: 'Ajout fichier',                                                width: '9%' },
-      { label: 'Supprimer fichier',                                            width: '9%' },
-      { label: 'Contrôleur',                                                   width: '9%' },
-      { label: 'Valideur',                                                     width: '9%' },
+      { label: 'Actif',             query: 'active',               sort: true, width:  '6%' },
+      { label: 'Voir',                                                         width:  '9%' },
+      { label: 'Editer',                                                       width:  '9%' },
+      { label: 'Supprimer',                                                    width:  '9%' },
+      { label: 'Ajout fichier',                                                width:  '9%' },
+      { label: 'Supprimer fichier',                                            width:  '9%' },
+      { label: 'Contrôleur',                                                   width:  '9%' },
+      { label: 'Valideur',                                                     width:  '9%' },
       { label: 'Tous',                                                         width:  '6%' }
     ]"
     (selectedDataUpdate)="grid.updateSelection($event)"
     (queryParams)="update($event, [entity])">
   <!-- total width: 96% : 4% de width pour la colonne de selection -->
+  
   <datatable-title>
     <h2>Droits de {{entity.firstname}} {{entity.name}}</h2>
   </datatable-title>
+  
+  <!-- template d'affichage pour une ligne : -->
   <ng-template let-right="item" let-checked="checked">
+    <!-- Infos sur le projet -->
     <td>{{right.project.name | truncate:30}}</td>
     <td>{{right.project.active | boolToString}}</td>
+    
+    <!-- une case à cocher pour chaque droit possible sur le projet -->
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event, right, 1, checked)"></md-checkbox></td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 2)" (change)="grid.setBit($event, right, 2, checked)"></md-checkbox></td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 4)" (change)="grid.setBit($event, right, 4, checked)"></md-checkbox></td>
@@ -35,10 +49,16 @@
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 16)" (change)="grid.setBit($event, right, 16, checked)"></md-checkbox></td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 32)" (change)="grid.setBit($event, right, 32, checked)"></md-checkbox></td>
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 64)" (change)="grid.setBit($event, right, 64, checked)"></md-checkbox></td>
+    
+    <!-- une case de sélection globale des droits -->
     <td><md-checkbox color="accent" [checked]="grid.isBitBoxChecked(right, 64 + 63)" (change)="grid.setBit($event, right, 64 + 63, checked)"></md-checkbox></td>
   </ng-template>
+  
+  <!-- Dernière rangée pour cocher décocher les droits sur les projets sélectionnés dans la datatable : -->
   <datatable-final-row>
     <td colSpan="3" class="selectInfo">Sélectionner colonne :</td>
+    
+    <!-- Une case pour chaque droit possible -->
     <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event, 1)"></md-checkbox></td>
     <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event, 2)"></md-checkbox></td>
     <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(4)" (change)="grid.setSelectedColBit($event, 4)"></md-checkbox></td>
@@ -46,13 +66,20 @@
     <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(16)" (change)="grid.setSelectedColBit($event, 16)"></md-checkbox></td>
     <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(32)" (change)="grid.setSelectedColBit($event, 32)"></md-checkbox></td>
     <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(64)" (change)="grid.setSelectedColBit($event, 64)"></md-checkbox></td>
+    
+    <!-- une case de sélection globale -->
     <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(64 + 63)" (change)="grid.setSelectedColBit($event, 64 + 63)"></md-checkbox></td>
   </datatable-final-row>
+  
+  <!-- Footer : Enregistrer les modifications s'il y en a ou annuler -->
   <datatable-footer>
+    <!-- Enregistrer -->
     <button md-raised-button color="primary" type="button"
         (click)="submit()" [disabled]="! grid.modified">
       Enregistrer les modifications
     </button>
+    
+    <!-- Annuler -->
     <button md-raised-button color="warn" type="button"
         (click)="cancel()">
       Annuler

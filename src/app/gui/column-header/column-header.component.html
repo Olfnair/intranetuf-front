@@ -1,4 +1,14 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Header de colonne utilisé dans les datatables :
+  Affiche le titre de la colonne et permet les recherches et tris éventuels sur cette colonne
+-->
+
 <section class="tableRow" [class.pointerCursor]="! column.search && column.label">
+  
+  <!-- recherche possible : -->
   <ng-container *ngIf="column.search && column.label != undefined">
     <span class="tdLeft" style="width: 100%;">
       <md-input-container style="width: 100%;">
@@ -6,25 +16,42 @@
       </md-input-container>
     </span>
   </ng-container>
+
+  <!-- Pas de recherche possible : -->
   <ng-container *ngIf="! column.search && column.label != undefined">
+    
     <span *ngIf="! column.sort" class="td">
       <label>{{column.label}}</label>
     </span>
-    <span *ngIf="column.sort" class="td" (click)="switchSortOrder()">
+    
+    <!-- si le tri est possible sur cette colonne, cliquer dessus entraine une modification du tri -->
+    <span *ngIf="column.sort" class="td" (click)="switchOrderState()">
       <label>{{column.label}}</label>
     </span>
+
   </ng-container>
+  
+  <!-- aucun label n'a été précisé pour le titre de colonne : -->
   <ng-container *ngIf="column.label == undefined">
     <span class="td">
-      <label>{{column}}</label>
+      <label>{{column}}</label> <!-- suppose que column est le label -->
     </span>
   </ng-container>
-  <span *ngIf="column.sort" class="pointerCursor" [class.tdRight]="column.search" [class.td]="! column.search" (click)="switchSortOrder()">
-    <ng-container *ngIf="searchState == SearchState.UNDEFINED">
+  
+  <!-- fleches de tri : -->
+  <span *ngIf="column.sort" class="pointerCursor" [class.tdRight]="column.search" [class.td]="! column.search"
+      (click)="switchOrderState()">
+    
+    <!-- Aucun tri -->
+    <ng-container *ngIf="orderState == OrderState.UNDEFINED">
       <md-icon class="undefined">arrow_drop_up</md-icon>
       <md-icon class="undefined">arrow_drop_down</md-icon>
     </ng-container>
-    <md-icon *ngIf="searchState == SearchState.ASC">arrow_drop_up</md-icon>
-    <md-icon *ngIf="searchState == SearchState.DESC">arrow_drop_down</md-icon>
+    
+    <!-- Tri croissant -->
+    <md-icon *ngIf="orderState == OrderState.ASC">arrow_drop_up</md-icon>
+    
+    <!-- Tri décroissant -->
+    <md-icon *ngIf="orderState == OrderState.DESC">arrow_drop_down</md-icon>
   </span>
 <section>

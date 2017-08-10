@@ -69,7 +69,7 @@ export class LoginComponent extends GuiForm {
      *
      * @override
      */
-  protected _buildForm(): FormGroup {
+  protected buildForm(): FormGroup {
     return new FormGroup({
       login: new FormControl('', Validators.compose([
         Validators.required

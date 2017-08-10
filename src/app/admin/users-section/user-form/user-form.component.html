@@ -1,31 +1,56 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Formulaire d'ajout/modification d'un user
+-->
+
 <section class="container margin">
   <gui-form [formGroup]="form" title="Créer un compte" submitOnEnter="true" (formSubmit)="submit()">
+    
+    <!-- champ Prénom -->
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Prénom" formControlName="firstname" required/>
+      <!-- Erreurs prévues dans le modèle : -->
       <md-error *ngIf="form.controls.firstname.errors?.required">Veuillez indiquer votre prénom</md-error>
       <md-error *ngIf="form.controls.firstname.errors?.minlength">Au moins 2 caractères</md-error>
     </md-input-container>
     
+    <!-- champ Nom -->
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Nom" formControlName="name" required/>
+      <!-- Erreurs prévues dans le modèle : -->
       <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer votre nom</md-error>
       <md-error *ngIf="form.controls.name.errors?.minlength">Au moins 2 caractères</md-error>
     </md-input-container>
     
+    <!-- champ Identifiant -->
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Identifiant (Login)" formControlName="login" required/>
+      <!-- Erreurs prévues dans le modèle : -->
       <md-error *ngIf="form.controls.login.errors?.required">Veuillez choisir un identifiant</md-error>
       <md-error *ngIf="form.controls.login.errors?.minlength">Au moins 2 caractères</md-error>
       <md-error *ngIf="form.controls.login.errors?.login">Entrez uniquement des lettres (sans accents) ou des chiffres</md-error>
     </md-input-container>
 
+    <!-- champ E-mail -->
     <md-input-container gui-form-input>
       <input mdInput type="email" placeholder="E-mail" formControlName="email" required/>
+      <!-- Erreurs prévues dans le modèle : -->
       <md-error *ngIf="form.controls.email.errors?.required">Veuillez indiquer votre adresse e-mail</md-error>
       <md-error *ngIf="form.controls.email.errors?.email">Veuillez entrer une adresse e-mail valide</md-error>
     </md-input-container>
 
-    <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit" (click)="submit()" [disabled]="!form.valid">Créer le compte</button>
-    <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button" (click)=cancel()>Annuler</button>
+    <!-- Enregistrer -->
+    <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit"
+        (click)="submit()" [disabled]="!form.valid">
+      Créer le compte
+    </button>
+    <!-- Annuler -->
+    <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button"
+        (click)=cancel()>
+      Annuler
+    </button>
+
   </gui-form>
 </section>

@@ -224,7 +224,7 @@ export class AddFileComponent extends GuiForm {
   /**
    * @override
    */
-  protected _buildForm(): FormGroup {
+  protected buildForm(): FormGroup {
     return new FormGroup({
       filename: new FormControl({ value: '', disabled: true }, Validators.compose([
         Validators.required

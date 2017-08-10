@@ -1,7 +1,7 @@
 import { FormGroup } from "@angular/forms";
 
 export abstract class GuiForm {
-  private _form: FormGroup = this._buildForm();
+  private _form: FormGroup = this.buildForm();
 
   constructor() { }
   
@@ -14,7 +14,7 @@ export abstract class GuiForm {
   }
 
   reset(): void {
-    this._form = this._buildForm();
+    this._form = this.buildForm();
   }
 
   /**
@@ -24,5 +24,5 @@ export abstract class GuiForm {
      *
      * @protected
      */
-  protected abstract _buildForm(): FormGroup;
+  protected abstract buildForm(): FormGroup;
 }

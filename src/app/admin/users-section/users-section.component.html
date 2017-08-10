@@ -1,10 +1,25 @@
+<!--
+  Auteur : Florian
+  License : 
+  
+  Template de la section 'utilisateurs' du panneau d'administration :
+  - Affiche le bon composant, un seul à la fois, en fonction de la variable (this.)state
+  - Ecoute les évènements du composant affiché pour savoir quand il faut afficher un autre composant
+    et quels paramètres il faut lui donner en entrée
+-->
+
+<!-- Liste des utilisateurs -->
 <app-userlist *ngIf="state == State.List"
     (add)="state = State.Add" (edit)="setStateAndEntity(State.Edit, $event)"
     (rights)="setStateAndEntity(State.Rights, $event)">
 </app-userlist>
 
+<!-- formulaire d'ajout/édition d'un utilisateur -->
 <app-user-form *ngIf="state == State.Add" (close)="state = State.List"></app-user-form>
 
-<app-user-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List"></app-user-rightslist>
+<!-- Gestion des droits d'un utilisateur -->
+<app-user-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List">
+</app-user-rightslist>
 
+<!-- Gestion des rôles des utilisateurs -->
 <p *ngIf="state == State.Roles">Gestion des rôles par utilisateur (W.I.P)</p>

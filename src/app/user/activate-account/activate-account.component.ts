@@ -151,7 +151,7 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
   /**
      * @override
      */
-  protected _buildForm(): FormGroup {
+  protected buildForm(): FormGroup {
     return new FormGroup({
       pwd: new FormControl('', Validators.compose([
         Validators.required, Validators.minLength(ActivateAccountComponent.minlength)

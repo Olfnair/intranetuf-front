@@ -1,3 +1,10 @@
+<!--
+  Auteur : Florian
+  License : 
+  
+  Datatable de la liste des projets dans le panneau d'admin
+-->
+
 <datatable
     [options]="{
       selectionCol: true,
@@ -16,37 +23,56 @@
     (addButtonClick)="add()"
     (selectedDataUpdate)="selectedProjects = $event"
     (queryParams)="update($event)">
+  <!-- total width: 96% : 4% de width pour la colonne de selection -->
+
   <datatable-title>
     <h2>Liste des projets</h2>
   </datatable-title>
+
+  <!-- template d'affichage du contenu pour une ligne de la datatable : -->
   <ng-template let-project="item">
+    <!-- infos sur le projet -->
     <td><a href="javascript:void(0)" (click)="filelist(project)">{{project.name | truncate:30}}</a></td>
     <td>{{project.active | boolToString}}</td>
+    
+    <!-- actions : -->
     <td>
+      <!-- Gestion des droits relatifs au projet -->
       <button md-raised-button class="smallButton" color="primary" type="button"
           mdTooltip="Gestion des Droits" mdTooltipPosition="above" (click)="rights(project)">
         <md-icon>lock_open</md-icon>
       </button>
+      
+      <!-- Editer le projet -->
       <button md-raised-button class="smallButton" color="accent" type="button"
           mdTooltip="Editer" mdTooltipPosition="above" (click)="edit(project)">
         <md-icon>edit</md-icon>
       </button>
+
+      <!-- Supprimer le projet -->
       <button *ngIf="project.active" md-raised-button class="smallButton" color="warn" type="button"
           mdTooltip="Supprimer" mdTooltipPosition="above" (click)="activate(project, false)">
         <md-icon>delete</md-icon>
       </button>
+
+      <!-- Restaurer le projet -->
       <button *ngIf="! project.active" md-raised-button class="smallButton" color="warn" type="button"
           mdTooltip="Restaurer" mdTooltipPosition="above" (click)="activate(project, true)">
         <md-icon>replay</md-icon>
       </button>
     </td>
   </ng-template>
+  
+  <!-- Footer pour des actions globales sur les projets sélectionnés dans la datatable : -->
   <datatable-footer>
+    <!-- Restaurer les projets sélectionnés -->
     <button md-raised-button class="smallButton" color="warn" type="button"
         mdTooltip="Restaurer la Sélection" mdTooltipPosition="above" (click)="activateSelection(true)"
         [disabled]="emptySelection">
       <md-icon>replay</md-icon>
     </button>
+    
+    <!-- Supprimer les projets sélectionnés -->
     <button md-raised-button class="smallButton" color="warn" type="button"
         mdTooltip="Supprimer la Sélection" mdTooltipPosition="above" (click)="activateSelection(false)"
         [disabled]="emptySelection">

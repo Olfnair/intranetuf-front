@@ -1,21 +1,25 @@
-export class DatatableColumn {
-  public label: string = undefined
-  public sort: boolean = undefined;
-  public search: boolean = undefined;
-  public width: number = undefined;
-  public query: string = undefined;
+/***
+ * Auteur : Florian
+ * License : 
+ */
 
+/**
+ * Informations de colonne de datatable
+ */
+export class DatatableColumn {
+  /**
+   * @constructor
+   * @param {string} label - label du titre de la colonne 
+   * @param {boolean} sort - indique si on peut trier la colonne on non. false par défaut
+   * @param {boolean} search - indique si on peut faire une recherche ou non. false par défaut
+   * @param {string} width - largeur de la colonne ('75px', '20%', ...)
+   * @param {string} query - nom de la colonne correspondante dans la DB côté back-end
+   */
   constructor(
-    label: string = undefined,
-    sort: boolean = false,
-    search: boolean = false,
-    width: number = undefined,
-    query: string = undefined
-  ) {
-    this.label = label;
-    this.sort = sort;
-    this.search = search;
-    this.width = width;
-    this.query = query;
-  }
+    public label: string = undefined,
+    public sort: boolean = false,
+    public search: boolean = false,
+    public width: number = undefined,
+    public query: string = undefined
+  ) { }
 }

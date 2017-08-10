@@ -31,10 +31,10 @@ export class AdminNavListComponent extends NavList {
     
     // définition des items du menu :
     let items: string[] = [
-      // item         // index
-      'Utilisateurs', //  0
-      'Projets',      //  1
-      'Logs'          //  2
+      // ITEM         // INDEX
+      'Utilisateurs', //  0   Section utilisateurs
+      'Projets',      //  1   Section projets
+      'Logs'          //  2   Section logs
     ];
     
     // ajout des items aux éléments de la NavList :

@@ -1,12 +1,26 @@
+<!--
+  Auteur : Florian
+  License : 
+  
+  Template de la section 'projets' du panneau d'administration :
+  - Affiche le bon composant, un seul à la fois, en fonction de la variable (this.)state
+  - Ecoute les évènements du composant affiché pour savoir quand il faut afficher un autre composant
+    et quels paramètres il faut lui donner en entrée
+-->
+
+<!-- Liste des projets -->
 <admin-projectlist *ngIf="state == State.List"
     (add)="state = State.Add" (rights)="setStateAndEntity(State.Rights, $event)"
     (filelist)="setStateAndEntity(State.Filelist, $event)">
 </admin-projectlist>
 
+<!-- Formulaire de création (ajout) de projet -->
 <app-user-form *ngIf="state == State.Add" (close)="state = State.List"></app-user-form>
 
+<!-- Droits relatifs à un projet -->
 <app-project-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List"></app-project-rightslist>
 
+<!-- liste des fichiers d'un projet -->
 <app-file-section *ngIf="state == State.Filelist"
     [project]="entity" [canNavBack]="true" [ignoreSessionProject]="true"
     (navback)="state = State.List">

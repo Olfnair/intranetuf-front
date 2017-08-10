@@ -1,10 +1,18 @@
+<!--
+  Auteur : Florian
+  License : 
+  
+  Template du contenu du panneau d'admin :
+  Affiche la bonne section en fonction de l'item sélectionné dans le menu de navigation du panneau d'admin
+-->
+
 <!-- utilisateurs -->
 <section *ngIf="selectedItemId === getItemId('Utilisateurs')">
   <md-tab-group [(selectedIndex)]="usersTabIndex">
-    <md-tab label="Utilisateurs">
+    <md-tab label="Utilisateurs">   <!-- Onglet Utilisateurs -->
       <app-users-section *ngIf="usersTabIndex === 0" [stateName]="'List'"></app-users-section>
     </md-tab>
-    <md-tab label="Rôles">
+    <md-tab label="Rôles">          <!-- Onglet Roles -->
       <app-users-section *ngIf="usersTabIndex === 1" [stateName]="'Roles'"></app-users-section>
     </md-tab>
   </md-tab-group>
@@ -13,7 +21,7 @@
 <!-- projets -->
 <section *ngIf="selectedItemId === getItemId('Projets')">
   <md-tab-group [(selectedIndex)]="projectsTabIndex">
-    <md-tab label="Projets">
+    <md-tab label="Projets">    <!-- Onglet Projets -->
       <app-projects-section *ngIf="projectsTabIndex === 0" [stateName]="'List'"></app-projects-section>
     </md-tab>
   </md-tab-group>
@@ -22,7 +30,7 @@
 <!-- logs -->
 <section *ngIf="selectedItemId === getItemId('Logs')">
   <md-tab-group [(selectedIndex)]="logsTabIndex">
-    <md-tab label="Logs">
+    <md-tab label="Logs">   <!-- Onglet Logs -->
       <p *ngIf="logsTabIndex === 0">Affichage des logs (WIP)</p>
     </md-tab>
   </md-tab-group>

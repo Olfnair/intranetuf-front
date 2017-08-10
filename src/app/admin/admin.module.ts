@@ -1,3 +1,8 @@
+/**
+ * Auteur : Florian
+ * License :
+ */
+
 // Angular
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -23,6 +28,9 @@ import { UserlistComponent } from "./users-section/userlist/userlist.component";
 import { UserRightslistComponent } from "./users-section/user-rightslist/user-rightslist.component";
 import { UsersSectionComponent } from './users-section/users-section.component';
 
+/**
+ * Module Admin
+ */
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
     AdminNavListComponent,

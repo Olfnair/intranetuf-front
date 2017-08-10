@@ -35,7 +35,7 @@ export class ChoseProjectNameComponent extends GuiForm {
      *
      * @override
      */
-  protected _buildForm(): FormGroup {
+  protected buildForm(): FormGroup {
     return new FormGroup({
       name: new FormControl('', Validators.compose([
         Validators.required

@@ -1,3 +1,10 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Datatable de la liste des utilisateurs dans le panneau d'admin
+-->
+
 <datatable
     [options]="{
       selectionCol: true,
@@ -19,32 +26,47 @@
     ]"
     (addButtonClick)="add()"
     (queryParams)="update($event)">
+  <!-- total width: 96% : 4% de width pour la colonne de selection -->
+  
+  <!-- Titre -->
   <datatable-title>
     <h2>Liste des utilisateurs</h2>
   </datatable-title>
-  <ng-template let-user="item">
+
+  <!-- Template pour l'affichage d'une ligne de la datatable : -->
+  <ng-template let-user="item">   
+    <!-- Infos sur l'utilisateur -->
     <td>{{user.login}}</td>
     <td>{{user.email}}</td>
     <td>{{user.firstname}}</td>
     <td>{{user.name}}</td>
     <td>{{user.active | boolToString}}</td>
     <td>{{user.pending | boolToString}}</td>
+    
+    <!-- Actions : -->
     <td>
+      <!-- Gestion des droits -->
       <button *ngIf="! isSuperAdmin(user) || roleChecker.userIsSuperAdmin()"
           md-raised-button class="smallButton" color="primary" type="button"
           mdTooltip="Gestion des Droits" mdTooltipPosition="above" (click)="rights(user)">
         <md-icon>lock_open</md-icon>
       </button>
+
+      <!-- Editer -->
       <button *ngIf="! isSuperAdmin(user) || roleChecker.userIsSuperAdmin()"
           md-raised-button class="smallButton" color="accent" type="button"
           mdTooltip="Editer" mdTooltipPosition="above" (click)="edit(user)">
         <md-icon>edit</md-icon>
       </button>
+      
+      <!-- Utiliser le compte de l'utilisateur comme si c'était le notre (superadmin uniquement) -->
       <button *ngIf="roleChecker.userIsSuperAdmin() && ! isSuperAdmin(user)" class="smallButton"
           mdTooltip="Utiliser ce Compte" mdTooltipPosition="above"
           md-raised-button color="warn" type="button" (click)="adminLoginAs(user.login)">
         <md-icon>exit_to_app</md-icon>
       </button>
+
+      <!-- Supprimer -->
       <button *ngIf="! isSuperAdmin(user) || roleChecker.userIsSuperAdmin()" class="smallButton"
           mdTooltip="Supprimer" mdTooltipPosition="above"
           md-raised-button color="warn" type="button" (click)="delete(user)">

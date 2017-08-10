@@ -78,7 +78,7 @@ export class CheckVersionComponent extends GuiForm {
   /**
     * @override
     */
-  protected _buildForm(): FormGroup {
+  protected buildForm(): FormGroup {
     return new FormGroup({
       comment: new FormControl('', Validators.compose([
         Validators.required, Validators.minLength(10), Validators.maxLength(250)
