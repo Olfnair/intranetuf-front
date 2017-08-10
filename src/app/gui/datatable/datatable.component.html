@@ -1,4 +1,12 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template pour les datatables
+-->
+
 <md-card>
+  <!-- Toggle entre affichage réduit (Titre uniquement) et complet quand {displayToggle: true} est dans les options -->
   <table>
     <tr>
       <td *ngIf="options.displayToggle">
@@ -9,10 +17,15 @@
       </td>
     </tr>
   </table>
+
+  <!-- Contenu de la datatable -->
   <md-card-content *ngIf="! options.displayToggle || options.displayToggle && showContent">
     <table class="dataTable" cellspacing="0">
-      <thead>
+      <thead>   
+        <!-- Header -->
         <ng-content select="datatable-header"></ng-content>
+        
+        <!-- Bouton ajouter si option {addButton: true} -->
         <tr *ngIf="options.addButton" class="add">
           <td>
             <button md-mini-fab (click)="add()" mdTooltip="{{options.addButtonTooltip}}" mdTooltipPosition="after">
@@ -20,6 +33,8 @@
             </button>
           </td>
         </tr>
+        
+        <!-- Headers de colonnes (titres, boutons de tris, champs de recherche) -->
         <tr class="columnTitles" *ngIf="! emptyData && loaded || ! params.isEmpty() || options.displayEmpty">
           <th *ngIf="options.selectionCol" class="selectionCol">
             <md-checkbox color="warn" [checked]="selectAllTrue" (change)="setSelectAllState($event)"></md-checkbox>
@@ -31,34 +46,47 @@
         </tr>
       </thead>
       <tbody>
+        <!-- Spinner de chargement des données -->
         <tr *ngIf="loading">
           <td [colSpan]="tableSpan">
             <md-spinner class="spinner" mode="indeterminate"></md-spinner>
           </td>
         </tr>
+        
+        <!-- Message d'erreur en cas d'erreur lors du chargement -->
         <tr *ngIf="loadingError">
           <td [colSpan]="tableSpan">
             <p class="errorMessage">Une erreur est survenue pendant le chargement des données de la table !</p>
           </td>
         </tr>
+        
+        <!-- Message si il n'y a aucune donnée à charger -->
         <tr *ngIf="loaded && emptyData && options.emptyMessage && params.isEmpty()">
           <td [colSpan]="tableSpan">
             <p class="message">{{options.emptyMessage}}</p>
           </td>
         </tr>
+        
+        <!-- Message si le résultat de reche est vide -->
         <tr *ngIf="loaded && emptyData && options.emptySearchMessage && ! params.isEmpty()">
           <td [colSpan]="tableSpan">
             <p class="message">{{options.emptySearchMessage}}</p>
           </td>
         </tr>
+        
+        <!-- Boucle sur les lignes de contenu : -->
         <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="content" let-index="index" let-event="even" let-odd="odd" let-last="last">
-          <tr [class.oddRow]="odd">
+          <tr [class.oddRow]="odd">           
+            <!-- Colonne de sélection -->
             <td *ngIf="options.selectionCol" class="selectionCol">
               <gui-checkbox
                   [checked]="isItemChecked(item, index)"
                   (change)="checkSelect($event, item, index)">
               </gui-checkbox>
             </td>
+            
+            <!-- Template qui expose le contexte de la ligne au composant utlisateur -->
+            <!-- Permet au composant utilisateur de spécifier l'affichage des lignes -->
             <ng-container *ngTemplateOutlet="_content; context: {
               item: item,
               checked: isItemChecked(item, index),
@@ -70,31 +98,48 @@
             </ng-container>
           </tr>
         </ng-template>
+        
+        <!-- rangée complémentaire pour des choses qu'on voudrait afficher en plus -->
         <ng-content select="datatable-final-row"></ng-content>
+        
+        <!-- Footer si pagination ou option {displayFooter: true} -->
         <tr *ngIf="loaded && (options.displayFooter || (paginator.hasPrevPage() || paginator.hasNextPage()))" class="footer">
           <td [colSpan]="tableSpan">
             <table class="footerTable">
-              <tr>
+              <tr>  
+                <!-- Boutons de pagination -->
                 <td *ngIf="(paginator.hasPrevPage() || paginator.hasNextPage())" class="pagination">
                   <span>Page :&nbsp;</span>
+                  
+                  <!-- Première page -->
                   <button md-raised-button type="button" class="tinyButton" color="accent"
                       [disabled]="! paginator.hasPrevPage()" (click)="goToFirstPage()">
                     <md-icon>first_page</md-icon>
                   </button>
+                  
+                  <!-- Page précédente -->
                   <button md-raised-button type="button" class="tinyButton" color="accent"
                       [disabled]="! paginator.hasPrevPage()" (click)="goToPrevPage()">
                     <md-icon>chevron_left</md-icon>
                   </button>
+                  
+                  <!-- Numéro de page courant -->
                   <span>{{paginator.currentPageNum}}/{{paginator.totalPages}}</span>
+                  
+                  <!-- Page suivante -->
                   <button md-raised-button type="button" class="tinyButton" color="accent"
                       [disabled]="! paginator.hasNextPage()" (click)="goToNextPage()">
                     <md-icon>chevron_right</md-icon>
                   </button>
+                  
+                  <!-- Dernière page -->
                   <button md-raised-button type="button" class="tinyButton" color="accent"
                       [disabled]="! paginator.hasNextPage()" (click)="goToLastPage()">
                     <md-icon>last_page</md-icon>
                   </button>
                 </td>
+                
+                <!-- Contenu du footer -->
                 <td>
                   <ng-content select="datatable-footer"></ng-content>
                 </td>

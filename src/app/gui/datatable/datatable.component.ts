@@ -225,10 +225,12 @@ export class DatatableComponent<T, RestService> {
       // J'arrête donc ici et laisse la table dans l'état 'en cours de chargement'.
       return;
     }
+    
+    // Chargement des données :
     let sub: Subscription = obs.finally(() => {
-      this.endLoading(sub); // finalement
+      this.endLoading(sub);                                 // Finalement, quand on a chargé, on libère les ressources
     }).subscribe(
-      (paginator: DatatablePaginator<T, RestService>) => { // ok
+      (paginator: DatatablePaginator<T, RestService>) => {  // Ok : données chargées avec succès
         if(paginator instanceof DatatablePaginator) {
           this._paginator = paginator;
         }
@@ -240,10 +242,10 @@ export class DatatableComponent<T, RestService> {
         }
         this.updateSelection(); // mise à jour des lignes sélectionnées
       },
-      (error: any) => { // erreur
+      (error: any) => {                                     // Erreur lors du chargement
         this.loadingError = true;
       },
-      () => { // complete (pas d'erreur)
+      () => { // en complément du finally, pour être sûr    // Complete : (pas d'erreur)
         this.endLoading(sub);
       }
     );
