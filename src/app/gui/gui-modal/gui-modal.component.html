@@ -1,13 +1,27 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template générique pour une modale
+-->
+
 <section>
+  <!-- Titre -->
   <h2 md-dialog-title>{{title}}</h2>
+  
+  <!-- Texte -->
   <md-dialog-content>
     <p class="center">
       {{text}}
     </p>
   </md-dialog-content>
+  
+  <!-- Bouton OK -->
   <md-dialog-actions *ngIf="! yesno">
     <button md-raised-button class="submitButton" [color]="buttonColor" type="button" [md-dialog-close]="success">OK</button>
   </md-dialog-actions>
+  
+  <!-- OU Boutons Oui et Non -->
   <md-dialog-actions *ngIf="yesno">
     <button md-raised-button class="submit" color="primary" type="button" [md-dialog-close]="true">Oui</button>
     <button md-raised-button class="cancel" color="warn" type="button" [md-dialog-close]="false">Non</button>

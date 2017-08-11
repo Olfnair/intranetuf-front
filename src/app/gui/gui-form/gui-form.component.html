@@ -1,18 +1,30 @@
-<md-card>
+<!--
+  Auteur : Florian
+  License : 
+  
+  Template pour les formulaires
+-->
+
+<md-card> 
+  <!-- Titre -->
   <md-card-title *ngIf="title" class="centerText">{{title}}</md-card-title>
 
   <md-card-content>
     <form [formGroup]="form" novalidate (ngSubmit)="submit()">
       
+      <!-- Affiche les inputs. (Ajouter l'attribut 'gui-form-input' aux divs qui les contiennent.) -->
       <ng-content select="[gui-form-input]"></ng-content>
       
+      <!-- Bouton caché pour pouvoir submit en appuyant sur enter quand submitOnEnter est true -->
       <input *ngIf="submitOnEnter && form != undefined && valid" type="submit" style="display: none" />
       
+      <!-- Contenu supplémentaire -->
       <ng-content></ng-content>
 
     </form>
   </md-card-content>
 
+  <!-- Actions personalisées (submit, cancel, ...) -->
   <md-card-actions align="end">
     <ng-content select="[gui-form-action]"></ng-content>
   </md-card-actions>

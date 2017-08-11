@@ -1,5 +1,13 @@
+/**
+ * Auteur : Florian
+ * License : 
+ */
+
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 
+/**
+ * Composant qui affiche un bouton 'haut' et un autre bouton 'bas' juste en dessous 
+ */
 @Component({
   selector: 'up-down',
   templateUrl: './up-down.component.html',
@@ -7,47 +15,67 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 })
 export class UpDownComponent {
 
-  // si first : pas de bouton up
+  /** first == true => pas de bouton up */
   private _first: boolean = false;
-  // si last : pas de bouton down
+  /** first == true => pas de bouton down */
   private _last: boolean = false;
 
-  // events pour savoir quand on clique sur up ou down
-  private _upEmitter: EventEmitter<void> = new EventEmitter<void>();
-  private _downEmitter: EventEmitter<void> = new EventEmitter<void>();
+  // Events :
+  /** @event - l'utilisateur a cliqué sur le bouton up */
+  private _up$: EventEmitter<void> = new EventEmitter<void>();
+  /** @event - l'utilisateur a cliqué sur le bouton down */
+  private _down$: EventEmitter<void> = new EventEmitter<void>();
 
+  /** @constructor */
   constructor() { }
+
+  /** @property {boolean} first - indique si le bouton up est actif */
+  get first(): boolean {
+    return this._first;
+  }
 
   @Input() set first(first: boolean) {
     this._first = first;
   }
 
-  get first(): boolean {
-    return this._first;
+  /** @property {boolean} last - indique si le bouton down est actif */
+  get last(): boolean {
+    return this._last;
   }
 
   @Input() set last(last: boolean) {
     this._last = last;
   }
 
-  get last(): boolean {
-    return this._last;
-  }
-
+  
+  /**
+   * @event up - l'utilisateur a cliqué sur le bouton up
+   * @returns {EventEmitter<void>}
+   */
   @Output('up') get up(): EventEmitter<void> {
-    return this._upEmitter;
+    return this._up$;
   }
 
+  /**
+   * @event down - l'utilisateur a cliqué sur le bouton down
+   * @returns {EventEmitter<void>}
+   */
   @Output('down') get down(): EventEmitter<void> {
-    return this._downEmitter;
+    return this._down$;
   }
 
+  /**
+   * @emits up - l'utilisateur a cliqué sur le bouton up
+   */
   emitUp(): void {
-    this._upEmitter.emit();
+    this._up$.emit();
   }
 
+  /**
+   * @emits down - l'utilisateur a cliqué sur le bouton down
+   */
   emitDown(): void {
-    this._downEmitter.emit();
+    this._down$.emit();
   }
 
 }

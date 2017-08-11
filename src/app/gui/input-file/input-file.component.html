@@ -1,7 +1,17 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Composant qui permet de choisir un fichier
+-->
+
 <section>
+  <!-- Composant natif de sélection de fichier -->
   <input [accept]="accept" type="file" (change)="onNativeInputFileSelect($event)" #inputFile hidden />
+  
+  <!-- Bouton d'upload affiché à la place -->
   <button type="button" md-raised-button color="accent" (click)="selectFile()">
-    <md-icon>file_upload</md-icon>
-    <ng-content select=".buttonText"></ng-content>
+    <md-icon>file_upload</md-icon>                  <!-- icone d'upload               -->
+    <ng-content select=".buttonText"></ng-content>  <!-- Texte éventuel sur le bouton -->
   </button>
 </section>

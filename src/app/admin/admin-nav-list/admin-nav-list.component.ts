@@ -5,7 +5,7 @@
 
 import { Component, Input } from '@angular/core';
 import { DomSanitizer } from "@angular/platform-browser";
-import { NavList, NavListSelection } from "app/gui/nav-list";
+import { NavList, NavListSelectable } from "app/gui/nav-list";
 import { SessionService } from "app/services/session.service";
 
 /**
@@ -43,16 +43,16 @@ export class AdminNavListComponent extends NavList {
     this.selectables = [];                        // on s'assure que la NavList soit vide
     this._session.clearAdminNavListItemToIdMap(); // clear du mapping item -> index
     items.forEach((item: string) => {
-      this.selectables.push(new NavListSelection(i, item, '#000000', '#ffffff')); // ajout de l'item à la NavList
+      this.selectables.push(new NavListSelectable(i, item, '#000000', '#ffffff')); // ajout de l'item à la NavList
       this._session.mapAdminNavListItemToId(item, i++);                           // création du mapping item -> index
     });
   }
 
   /**
    * Met à jour l'item sélectionné
-   * @param {NavListSelection} selection - la sélection
+   * @param {NavListSelectable} selection - la sélection
    */
-  select(selection: NavListSelection): void {
+  select(selection: NavListSelectable): void {
     this._session.selectedAdminItem = selection.id;
     this.selected = this.selectables[selection.id];
   }

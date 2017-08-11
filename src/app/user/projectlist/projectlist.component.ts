@@ -7,7 +7,7 @@ import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
 import { BasicRoleChecker, RoleCheckerService } from "app/services/role-checker";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
-import { NavList, NavListSelection } from "app/gui/nav-list";
+import { NavList, NavListSelectable } from "app/gui/nav-list";
 import { Project } from "entities/project";
 import { FlexQueryResult } from "objects/flex-query-result";
 
@@ -81,7 +81,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
         this.selectables = [];
         for(let i = 0; i < this._projects.length; ++i) {
           this.selectables.push(
-            new NavListSelection(
+            new NavListSelectable(
               i,
               this._projects[i].name,
               this._projects[i].active ? '#000000' : '#ff0000',
@@ -158,7 +158,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
     );
   }
 
-  select(selection: NavListSelection): void {
+  select(selection: NavListSelectable): void {
     this.selectedProject = this._projects[selection.id];
   }
 

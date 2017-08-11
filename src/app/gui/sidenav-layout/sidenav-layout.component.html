@@ -1,9 +1,19 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Layout de contenu : Menu de navigation à gauche | contenu à droite
+-->
+
 <section class="sidenavLayout">
+  <!-- Menu de navigation -->
   <div *ngIf="openSidenav" class="sidenav"
       [class.showOnLarge]="openSidenavOnLarge"
       [class.showOnSmall]="openSidenavOnSmall">
     <ng-content select="sl-sidenav"></ng-content>
   </div>
+  
+  <!-- Contenu de la page -->
   <div class="content">
     <ng-content select="sl-content"></ng-content>
   </div>

@@ -1,20 +1,25 @@
+/***
+ * Auteur : Florian
+ * License : 
+ */
+
+/**
+ * Informations d'une modale
+ */
 export class GuiModalData {
 
-  public title: string = '';
-  public text: string = '';
-  public success: boolean = false;
-  public yesno: boolean = false;
-
+  /**
+   * @constructor
+   * @param {string} title - titre de la modale 
+   * @param {string} text - texte de la modale
+   * @param {boolean} success - message de réussite ou non
+   * @param {boolean} yesno - true => un bouton OUI et un bouton NON, false => juste un bouton OK
+   */
   constructor(
-    title: string = '',
-    text: string = '',
-    success: boolean = false,
-    yesno: boolean = false
-  ) {
-    this.title = title;
-    this.text =text;
-    this.success = success;
-    this.yesno = yesno;
-  }
+    public title: string = '',
+    public text: string = '',
+    public success: boolean = false,
+    public yesno: boolean = false
+  ) { }
   
 }

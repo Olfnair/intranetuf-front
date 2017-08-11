@@ -1,3 +1,15 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template qui affiche une icone en fonction du statut passé en entrée
+-->
+
+<!-- check -->
 <md-icon *ngIf="status=='check'" style="color: #008800;">check_circle</md-icon>
+
+<!-- warning -->
 <md-icon *ngIf="status=='warning'" style="color: #ff8800;">warning</md-icon>
+
+<!-- error -->
 <md-icon *ngIf="status=='error'" style="color: #ff0000;">error</md-icon>

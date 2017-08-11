@@ -1,15 +1,36 @@
-<md-card class="navList">
+<!--
+  Auteur : Florian
+  License : 
+
+  Template d'un menu de navigation : nav-list
+-->
+
+<md-card class="navList"> 
+  <!-- Titre -->
   <md-card-title class="title">{{title}}</md-card-title>
+  
+  <!-- Eléments -->
   <md-card-content>
-    <ng-content></ng-content>
+    <ng-content></ng-content> <!-- contenu personnalisable -->
+    
+    <!-- spinner de chargement -->
     <md-spinner *ngIf="!selectables && !error" class="spinner" mode="indeterminate"></md-spinner>
+    
+    <!-- Messages d'erreur -->
     <p *ngIf="error" class="errors">{{error}}</p>
+    
+    <!-- Message lorsque la nav-list est vide après chargement -->
     <p *ngIf="emptyMessage && selectables && selectables.length <= 0">{{emptyMessage}}</p>
+    
+    <!-- Eléments sélectionnables de la nav-list -->
     <md-nav-list *ngIf="selectables" [attr.dense]="isDense()">
-      <ng-container *ngFor="let selectable of selectables">
+      <ng-container *ngFor="let selectable of selectables">  <!-- pour chaque élément : -->     
+        <!-- Element sélectionné : -->
         <md-list-item *ngIf="isSelected(selectable)" class="selected no-padding">
           <span md-line [style.color]="getTextColor(selectable.selectedTextColor)">{{selectable.text}}</span>
         </md-list-item>
+        
+        <!-- Autres éléments -->
         <md-list-item *ngIf="! isSelected(selectable)" (click)="select(selectable)" class="no-padding">
           <span md-line [style.color]="getTextColor(selectable.textColor)">{{selectable.text}}</span>
         </md-list-item>

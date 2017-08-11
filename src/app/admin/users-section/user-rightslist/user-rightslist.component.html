@@ -42,16 +42,16 @@
     <td>{{right.project.active | boolToString}}</td>
     
     <!-- une case à cocher pour chaque droit possible sur le projet -->
-    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event, right, 1, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 2)" (change)="grid.setBit($event, right, 2, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 4)" (change)="grid.setBit($event, right, 4, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 8)" (change)="grid.setBit($event, right, 8, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 16)" (change)="grid.setBit($event, right, 16, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 32)" (change)="grid.setBit($event, right, 32, checked)"></md-checkbox></td>
-    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 64)" (change)="grid.setBit($event, right, 64, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event.checked, right, 1, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 2)" (change)="grid.setBit($event.checked, right, 2, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 4)" (change)="grid.setBit($event.checked, right, 4, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 8)" (change)="grid.setBit($event.checked, right, 8, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 16)" (change)="grid.setBit($event.checked, right, 16, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 32)" (change)="grid.setBit($event.checked, right, 32, checked)"></md-checkbox></td>
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 64)" (change)="grid.setBit($event.checked, right, 64, checked)"></md-checkbox></td>
     
     <!-- une case de sélection globale des droits -->
-    <td><md-checkbox color="accent" [checked]="grid.isBitBoxChecked(right, 64 + 63)" (change)="grid.setBit($event, right, 64 + 63, checked)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitBoxChecked(right, 64 + 63)" (change)="grid.setBit($event.checked, right, 64 + 63, checked)"></md-checkbox></td>
   </ng-template>
   
   <!-- Dernière rangée pour cocher décocher les droits sur les projets sélectionnés dans la datatable : -->
@@ -59,16 +59,16 @@
     <td colSpan="3" class="selectInfo">Sélectionner colonne :</td>
     
     <!-- Une case pour chaque droit possible -->
-    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event, 1)"></md-checkbox></td>
-    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event, 2)"></md-checkbox></td>
-    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(4)" (change)="grid.setSelectedColBit($event, 4)"></md-checkbox></td>
-    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(8)" (change)="grid.setSelectedColBit($event, 8)"></md-checkbox></td>
-    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(16)" (change)="grid.setSelectedColBit($event, 16)"></md-checkbox></td>
-    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(32)" (change)="grid.setSelectedColBit($event, 32)"></md-checkbox></td>
-    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(64)" (change)="grid.setSelectedColBit($event, 64)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event.checked, 1)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event.checked, 2)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(4)" (change)="grid.setSelectedColBit($event.checked, 4)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(8)" (change)="grid.setSelectedColBit($event.checked, 8)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(16)" (change)="grid.setSelectedColBit($event.checked, 16)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(32)" (change)="grid.setSelectedColBit($event.checked, 32)"></md-checkbox></td>
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(64)" (change)="grid.setSelectedColBit($event.checked, 64)"></md-checkbox></td>
     
     <!-- une case de sélection globale -->
-    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(64 + 63)" (change)="grid.setSelectedColBit($event, 64 + 63)"></md-checkbox></td>
+    <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(64 + 63)" (change)="grid.setSelectedColBit($event.checked, 64 + 63)"></md-checkbox></td>
   </datatable-final-row>
   
   <!-- Footer : Enregistrer les modifications s'il y en a ou annuler -->

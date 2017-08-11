@@ -25,7 +25,7 @@ import { GuiProgressComponent } from "./gui-progress";
 import { InputFileComponent } from "./input-file";
 import { NavListComponent } from "./nav-list"
 import { SidenavLayoutComponent, SlSidenav, SlContent } from "./sidenav-layout";
-import { StatusIconComponent } from './status-icon/status-icon.component';
+import { StatusIconComponent } from './status-icon';
 import { UpDownComponent } from "./up-down";
 
 @NgModule({
