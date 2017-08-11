@@ -20,13 +20,11 @@ export class DatatableBitBoxContentManager<T, RestService> extends DatatableCont
    * @constructor
    * @param {RestService} restService - le service REST à utiliser 
    * @param {string} methodName - le nom de la méthode à appeler sur le service REST pour charger/sauver
-   * @param {number} MAXBIT - un entier avec le bit de poids le plus fort qu'un container de type T peut contenir à 1
    * @param _ContainerType - Le type de containers utilisés, implémentant l'interface BitsContainer
    */
   constructor(
     readonly restService: RestService,
     readonly methodName: string,
-    readonly MAXBIT: number,
     private readonly _ContainerType
   ) {
     super(restService, methodName, undefined, () => {
@@ -58,7 +56,7 @@ export class DatatableBitBoxContentManager<T, RestService> extends DatatableCont
     });
 
     // retour au constructeur :
-    this._gridRules = new BitBoxGridRules<any>(this._ContainerType, MAXBIT);
+    this._gridRules = new BitBoxGridRules<any>(this._ContainerType);
   }
 
   /** @property {BitBoxGridRules<T>} grid - règles qui permettent de savoir si un bit est assigné ou pas */

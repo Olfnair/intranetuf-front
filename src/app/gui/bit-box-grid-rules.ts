@@ -48,10 +48,8 @@ export class BitBoxGridRules<T> {
   /**
    * @constructor
    * @param _ContainerType - Classe des containers à utiliser pour encapsuler les données contenants les bits
-   * @param {number} _MAXBITS - Entier dont le bit correspondant au bit de poids le plus fort pouvant être affecté
-   * dans les containers est mis à 1.
    */
-  constructor(private readonly _ContainerType, private readonly _MAXBITS: number) { }
+  constructor(private readonly _ContainerType) { }
 
   /**
    * Mets les bits à 1 dans bitsToAdd à 1 dans bits
@@ -189,7 +187,7 @@ export class BitBoxGridRules<T> {
   setSelectedColBit(check: boolean, bit: number): void {
     // modifie ce qu'il faut dans les entiers de règle des containers sélectionnés
     this._bitsMustBeChecked = BitBoxGridRules.setBits(this._bitsMustBeChecked, bit, check);
-    this._bitsMustBeUnchecked = BitBoxGridRules.setBits(this._bitsMustBeChecked, bit, ! check);
+    this._bitsMustBeUnchecked = BitBoxGridRules.setBits(this._bitsMustBeUnchecked, bit, ! check);
 
     // réévalue les bits des containers sélectionnés
     this.reEvaluateBits();
@@ -253,33 +251,14 @@ export class BitBoxGridRules<T> {
   }
 
   /**
-   * Réévalue les bits du container
-   * @param {BitsContainer} bitsContainer - le container dont les bits doivent être réévalués 
-   * @param bit 
-   */
-  reEvaluateBit(bitsContainer: BitsContainer, bit: number): void {
-    let colChecked: boolean = this.bitColChecked(bit);
-    if(colChecked == undefined) {
-      // garde : pas besoin de réévaluer si le statut global pour les sélections de ce bit est undefined
-      return;
-    }
-    
-    // modifie les bits dans le container
-    bitsContainer.setBits(BitBoxGridRules.setBits(bitsContainer.getBits(), bit, colChecked));   
-    // Met à jour le map des containers modifiés
-    this.updateBits(bitsContainer);
-  }
-
-  /**
    * Réévalue les bits des containers sélectionnés
    */
-  reEvaluateBits(): void {  
+  reEvaluateBits(): void {
     setTimeout(() => { // Timeout pour retarder le changeDetection (sert juste à éviter un warning)
       this._selectedBitsContainer.forEach((bitsContainer: BitsContainer, id: number) => {
-        for (let bit: number = this._MAXBITS; bit >= 1; bit >>= 1) {
-          this.reEvaluateBit(bitsContainer, bit);
-        }
-        this.reEvaluateBit(bitsContainer, this._MAXBITS * 2 - 1);
+        bitsContainer.setBits(BitBoxGridRules.addBits(bitsContainer.getBits(), this._bitsMustBeChecked));
+        bitsContainer.setBits(BitBoxGridRules.removeBits(bitsContainer.getBits(), this._bitsMustBeUnchecked));
+        this.updateBits(bitsContainer); // mise à jour des containers modifiés
       });
       
       // On a réévalué ce qu'il fallait, il n'y a donc plus rien à décocher (mettre à 0)

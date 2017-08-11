@@ -104,7 +104,6 @@ export class RightsGridContentManager<T> extends DatatableBitBoxContentManager<T
     super(
       restService,        // service REST
       rightsGetterMethod, // nom de la méthode à appler sur le service REST pour charger/sauver
-      64,                 // Droit avec la plus grande valeur (bit le plus élevé possible dans les container à 1)
       ContainerType       // classe à utiliser pour instancier les containers
     );
   }
