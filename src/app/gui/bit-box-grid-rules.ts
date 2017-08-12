@@ -25,25 +25,25 @@ export interface BitsContainer {
 export class BitBoxGridRules<T> {
   
   /** Map des conteneurs sélectionnés (dans une datatable par exemple) */
-  private _selectedBitsContainer: Map<number, BitsContainer> = new Map<number, BitsContainer>();
+  private _selectedContainers: Map<number, BitsContainer> = new Map<number, BitsContainer>();
 
   /** Map des conteneurs qui ont été modifiés */
-  private _mapModifiedBits: Map<number, BitsContainer> = new Map<number, BitsContainer>();
+  private _mapModifiedContainers: Map<number, BitsContainer> = new Map<number, BitsContainer>();
   
   /** Map des conteneurs à leur état original, quand la grille a été créée */
-  private _mapOriginalBits: Map<number, BitsContainer> = new Map<number, BitsContainer>();
+  private _mapOriginalContainers: Map<number, BitsContainer> = new Map<number, BitsContainer>();
 
   /**
    * Entier dont chaque bit à 1 indique que les bits correspondants dans les conteneurs sélectionnés
    * doivent être mis à 1.
    */
-  private _bitsMustBeChecked: number = 0;
+  private _selectedContainersCheckBits: number = 0;
   
   /**
    * Entier dont chaque bit à 1 indique que les bits correspondants dans les conteneurs sélectionnés
    * doivent être mis à 0.
    */
-  private _bitsMustBeUnchecked: number = 0;
+  private _selectedContainersUncheckBits: number = 0;
 
   /**
    * @constructor
@@ -102,25 +102,25 @@ export class BitBoxGridRules<T> {
 
   /** @property {Map<number, BitsContainer>} originalBits - Map des conteneurs avec les données originales  */
   get originalBits(): Map<number, BitsContainer> {
-    return this._mapOriginalBits;
+    return this._mapOriginalContainers;
   }
 
   /** @property {Map<number, BitsContainer>} modifiedBits - Map des conteneurs ayant subi des modifications */
   get modifiedBits(): Map<number, BitsContainer> {
-    return this._mapModifiedBits;
+    return this._mapModifiedContainers;
   }
 
   /** @property {boolean} modified - indique si la grille a été modifiée */
   get modified(): boolean {
-    return this._mapModifiedBits.size > 0;
+    return this._mapModifiedContainers.size > 0;
   }
 
   /**
    * Réinitialisation (vide les maps)
    */
   clear(): void {
-    this._mapModifiedBits.clear();
-    this._mapOriginalBits.clear();
+    this._mapModifiedContainers.clear();
+    this._mapOriginalContainers.clear();
   }
 
   /**
@@ -128,12 +128,12 @@ export class BitBoxGridRules<T> {
    * @param {Map<number, T>} selection - Map des données sélectionnées (dans une datatable par exemple)
    */
   updateSelection(selection: Map<number, T>): void {
-    this._selectedBitsContainer.clear(); // vide le map des containers sélectionnés
+    this._selectedContainers.clear(); // vide le map des containers sélectionnés
     
     // pour chaque élément de la sélection :
     selection.forEach((bitsContent: T, id: number) => {
       // crée un container pour cet élément et l'ajoute dans le map des containers sélectionnés
-      this._selectedBitsContainer.set(id, new this._ContainerType(bitsContent));
+      this._selectedContainers.set(id, new this._ContainerType(bitsContent));
     });
 
     // évalue le nouvel état des bits des containers sélectionnés :
@@ -147,8 +147,8 @@ export class BitBoxGridRules<T> {
    * @returns {boolean} true si le container est tjrs à son état original, false sinon
    */
   isSameAsOriginal(bitsContainer: BitsContainer): boolean {
-    return this._mapOriginalBits.has(bitsContainer.getId()) &&
-      this._mapOriginalBits.get(bitsContainer.getId()).getBits() === bitsContainer.getBits();
+    return this._mapOriginalContainers.has(bitsContainer.getId()) &&
+      this._mapOriginalContainers.get(bitsContainer.getId()).getBits() === bitsContainer.getBits();
   }
 
   /**
@@ -167,11 +167,11 @@ export class BitBoxGridRules<T> {
 
     if (itemChecked && check) { 
       // Ce(s) bit(s) dans les containers sélectionnés ne doit plus forcément être à 0, on vient d'en mettre un à 1
-      this._bitsMustBeUnchecked = BitBoxGridRules.removeBits(this._bitsMustBeUnchecked, bit);
+      this._selectedContainersUncheckBits = BitBoxGridRules.removeBits(this._selectedContainersUncheckBits, bit);
     }
     else if (itemChecked && ! check) {
       // Ce(s) bit(s) dans les containers sélectionnés ne doit plus forcément être à 1, on vient d'en mettre un à 0
-      this._bitsMustBeChecked = BitBoxGridRules.removeBits(this._bitsMustBeChecked, bit);
+      this._selectedContainersCheckBits = BitBoxGridRules.removeBits(this._selectedContainersCheckBits, bit);
     }
 
     // Mise à jour de la grille en fonction des modifications contenues dans le container qu'on vient de créer
@@ -186,8 +186,8 @@ export class BitBoxGridRules<T> {
    */
   setSelectedColBit(check: boolean, bit: number): void {
     // modifie ce qu'il faut dans les entiers de règle des containers sélectionnés
-    this._bitsMustBeChecked = BitBoxGridRules.setBits(this._bitsMustBeChecked, bit, check);
-    this._bitsMustBeUnchecked = BitBoxGridRules.setBits(this._bitsMustBeUnchecked, bit, ! check);
+    this._selectedContainersCheckBits = BitBoxGridRules.setBits(this._selectedContainersCheckBits, bit, check);
+    this._selectedContainersUncheckBits = BitBoxGridRules.setBits(this._selectedContainersUncheckBits, bit, ! check);
 
     // réévalue les bits des containers sélectionnés
     this.reEvaluateBits();
@@ -199,7 +199,7 @@ export class BitBoxGridRules<T> {
    * @returns {boolean} - true si les bits doivent être à 1, sinon false 
    */
   bitsColMustBeChecked(bits: number): boolean {
-    return BitBoxGridRules.hasBits(this._bitsMustBeChecked, bits);
+    return BitBoxGridRules.hasBits(this._selectedContainersCheckBits, bits);
   }
 
   /**
@@ -208,7 +208,7 @@ export class BitBoxGridRules<T> {
    * @returns {boolean} - true si les bits doivent être à 0, sinon false 
    */
   bitsColMustBeUnchecked(bits: number): boolean {
-    return BitBoxGridRules.hasBits(this._bitsMustBeUnchecked, bits);
+    return BitBoxGridRules.hasBits(this._selectedContainersUncheckBits, bits);
   }
 
   /**
@@ -242,11 +242,11 @@ export class BitBoxGridRules<T> {
   updateBits(bitsContainer: BitsContainer): void {
     if (! this.isSameAsOriginal(bitsContainer)) {
       // un droit a été modifié : ajouter l'état actuel aux modifiés
-      this._mapModifiedBits.set(bitsContainer.getId(), bitsContainer);
+      this._mapModifiedContainers.set(bitsContainer.getId(), bitsContainer);
     }
-    else if (this.isSameAsOriginal(bitsContainer) && this._mapModifiedBits.has(bitsContainer.getId())) {
+    else if (this.isSameAsOriginal(bitsContainer) && this._mapModifiedContainers.has(bitsContainer.getId())) {
       // un droit est revenu à son état original : le supprimer de la liste des modifiés
-      this._mapModifiedBits.delete(bitsContainer.getId());
+      this._mapModifiedContainers.delete(bitsContainer.getId());
     }
   }
 
@@ -255,14 +255,14 @@ export class BitBoxGridRules<T> {
    */
   reEvaluateBits(): void {
     setTimeout(() => { // Timeout pour retarder le changeDetection (sert juste à éviter un warning)
-      this._selectedBitsContainer.forEach((bitsContainer: BitsContainer, id: number) => {
-        bitsContainer.setBits(BitBoxGridRules.addBits(bitsContainer.getBits(), this._bitsMustBeChecked));
-        bitsContainer.setBits(BitBoxGridRules.removeBits(bitsContainer.getBits(), this._bitsMustBeUnchecked));
+      this._selectedContainers.forEach((bitsContainer: BitsContainer) => {
+        let bits: number = BitBoxGridRules.addBits(bitsContainer.getBits(), this._selectedContainersCheckBits);
+        bitsContainer.setBits(BitBoxGridRules.removeBits(bits, this._selectedContainersUncheckBits));
         this.updateBits(bitsContainer); // mise à jour des containers modifiés
       });
       
       // On a réévalué ce qu'il fallait, il n'y a donc plus rien à décocher (mettre à 0)
-      this._bitsMustBeUnchecked = 0;
+      this._selectedContainersUncheckBits = 0;
     }, 0);
   }
 
@@ -270,7 +270,7 @@ export class BitBoxGridRules<T> {
    * Indique si les données ont tous les bits passés en paramètre à 1 ou non
    * @param {T} bitsContent - donnée dont les bits doivent être testés
    * @param {number} bits - Entier dont les bits à 1 sont les bits à tester
-   * @returns {boolean} 
+   * @returns {boolean} - true si les bits sont à 1, false sinon 
    */
   isBitBoxChecked(bitsContent: T, bits: number): boolean {
     return BitBoxGridRules.hasBits(new this._ContainerType(bitsContent).getBits(), bits);
