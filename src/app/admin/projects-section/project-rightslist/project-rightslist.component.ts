@@ -25,7 +25,7 @@ export class ProjectRightslistComponent extends RightsGridContentManager<Project
   constructor(restService: RestApiService) {
     super(
       restService,                // service REST à utiliser
-      'getRightsForProject',      // méthode à appeler pour récupérer les droits
+      'fetchRightsForProject',      // méthode à appeler pour récupérer les droits
       ProjectRightsBitsContainer  // Classe de représentation des droits
     );
   }

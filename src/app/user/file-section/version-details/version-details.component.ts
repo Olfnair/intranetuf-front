@@ -66,7 +66,7 @@ export class VersionDetailsComponent {
 
   @Input() set file(file: File) {
     this._file = file;
-    let sub: Subscription = this._restService.getWorkflowChecksForVersion(this._file.version.id).finally(() => {
+    let sub: Subscription = this._restService.fetchWorkflowChecksForVersion(this._file.version.id).finally(() => {
       sub.unsubscribe();
     }).subscribe(
       (checks: WorkflowCheck[]) => {

@@ -62,7 +62,7 @@ export class CheckVersionComponent extends GuiForm {
   submit(validated: boolean): void {
     this._check.comment = this.form.controls.comment.value;
     this._check.status = validated ? Status.CHECK_OK : Status.CHECK_KO;
-    let sub: Subscription = this._restService.updateWorkflowCheck(this._check).finally(() => {
+    let sub: Subscription = this._restService.editWorkflowCheck(this._check).finally(() => {
       sub.unsubscribe();
       this._close$.emit();
     }).subscribe(

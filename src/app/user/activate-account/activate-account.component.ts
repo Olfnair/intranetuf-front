@@ -1,3 +1,8 @@
+/**
+ * Auteur : Florian
+ * License : 
+ */
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -12,21 +17,39 @@ import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
 import { User } from "entities/user";
 
+/**
+ * Composant pour que les utilisateurs puissent choisir leur mot de passe et activer leur compte
+ */
 @Component({
   selector: 'app-activate-account',
   templateUrl: './activate-account.component.html',
   styleUrls: ['./activate-account.component.css']
 })
 export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestroy {
+  
+  /** Longeur min du mot de passe */
   public static readonly minlength: number = 8;
   
+  /** subscription aux paramètres de route */
   private _paramsSub: Subscription;
 
+  /** token d'authentification pour l'activation */
   private _authToken: AuthToken;
+  /** user à activer */
   private _user: User = undefined;
+  /** erreur ? */
   private _error: boolean = false;
+  /** texte d'erreur */
   private _errorText: string = '';
 
+  /**
+   * @constructor
+   * @param {Router} _router - router
+   * @param {ActivatedRoute} _route - route activée 
+   * @param {SessionService} _session - infos globales de session 
+   * @param {RestApiService} _restService - service REST utilisé
+   * @param {ModalService} _modal - service pour afficher les modales
+   */
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -35,14 +58,20 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
     private _modal: ModalService
   ) { super(); }
 
+  /**
+   * Après initialisation...
+   */
   ngOnInit() {
     this._paramsSub = this._route.params.subscribe(params => {
+      // récupération du token dans l'url :
       this._authToken = JSON.parse(Base64.urlDecode(params['token']) || undefined);
       if (!this._authToken) {
         this._router.navigate(['/home']);
       }
       else {
         this._session.authToken = this._authToken;
+        
+        // utilisateur à activer :
         let userSub: Subscription = this._restService.getUserToActivate()
           .finally(() => {
             userSub.unsubscribe();
@@ -70,35 +99,52 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
     });
   }
 
+  /**
+   * Après la destruction du composant...
+   */
   ngOnDestroy() {
     this._paramsSub.unsubscribe();
   }
 
+  /** @property {boolean} error - indique s'il y a une erreur de chargement ou non */
   get error(): boolean {
     return this._error;
   }
 
+  /** @property {string} errorText - texte de l'erreur de chargement */
   get errorText(): string {
     return this._errorText;
   }
 
+  
+  /**
+   * Mettre une erreur
+   * @param {string} text - texte de l'erreur 
+   */
   setError(text: string): void {
     this._error = true;
     this._errorText = text;
   }
 
+  /** @property {User} user - utilisateur à activer */
   get user(): User {
     return this._user;
   }
 
+  /** @property {number} longueur min du mot de passe */
   get minlength(): number {
     return ActivateAccountComponent.minlength;
   }
 
+  /** @property {boolean} valid - indique si le formulaire est valide ou pas */
   get valid(): boolean {
     return (this.form.valid && this.form.controls.pwd.value == this.form.controls.pwd_confirm.value);
   }
 
+  /**
+   * Enregistre le mot de passe entré dans le formulaire et redirige l'utilisateur vers l'accueil pour
+   * l'inviter à se connecter
+   */
   submit(): void {
     let userActivateSub: Subscription = this._restService.activateUser(this._user.id, new Credentials(undefined, this.form.value.pwd))
       .finally(() => {
@@ -129,10 +175,19 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
       );
   }
 
+  /**
+   * Redirection vers l'accueil
+   */
   cancel(): void {
     this._router.navigate(['/home']);
   }
 
+  /**
+   * Modale d'information
+   * @param {string} title - titre
+   * @param {string} text - texte de la modale
+   * @param {boolean} success - information de réussite (true), ou d'échec (false)
+   */
   infoModal(title: string, text: string, success: boolean = false): void {
     let modalSub: Subscription = this._modal.info(title, text, success).finally(() => {
       modalSub.unsubscribe();
@@ -149,8 +204,10 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
   }
 
   /**
-     * @override
-     */
+   * Construction du formulaire
+   * @override
+   * @returns {FormGroup}
+   */
   protected buildForm(): FormGroup {
     return new FormGroup({
       pwd: new FormControl('', Validators.compose([
@@ -161,4 +218,5 @@ export class ActivateAccountComponent extends GuiForm implements OnInit, OnDestr
       ]))
     });
   }
+  
 }

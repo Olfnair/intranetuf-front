@@ -1,3 +1,10 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Formulaire d'ajout de fichier (ou nouvelle version)
+-->
+
 <section class="container">
   <gui-form
       [formGroup]="form"
@@ -6,17 +13,22 @@
       [submitCondition]="isValidForm"
       (formSubmit)="submit()">
 
+    <!-- sélection du fichier -->
     <div class="margin" gui-form-input>
       <input-file (fileSelect)="fileSelect($event)" [accept]="'*/*'">
         <span class="buttonText">Choisir un fichier</span>
       </input-file>
     </div>
+    <!-- num du fichier choisi -->
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Nom du fichier choisi" formControlName="filename" required/>
       <md-error>Veuillez choisir un fichier à ajouter</md-error>
     </md-input-container>
 
+    <!-- choix contrôleurs et valideurs -->
     <div *ngFor="let container of userContainers" gui-input-form class="userContainerDataTable">
+      
+      <!-- Afficahge datatable des contrôleurs ou valideurs sélectionnés pour une nouvelle version uniquement -->
       <datatable *ngIf="newVersionMode"
           [data]="container.usersObs"
           [columns]="container.size > 1 ? ['Ordre', 'Nom', 'Prénom'] : ['Nom', 'Prénom']">
@@ -30,6 +42,7 @@
         </ng-template>
       </datatable>
       
+      <!-- datatable des contrôleurs ou valideurs sélectionnés pour un nouveau fichier (modifiable) -->
       <datatable *ngIf="! newVersionMode && container.isListMode()"
         [options]="{
           addButton: container.availableSize > 0,
@@ -67,6 +80,7 @@
         </ng-template>
       </datatable>
 
+      <!-- datatable d'ajout de contrôleurs/valideurs -->
       <datatable *ngIf="! newVersionMode && container.isAddMode()"
         [options]="{
           selectionCol: true,
@@ -97,6 +111,7 @@
       </datatable>
     </div>
 
+    <!-- boutons submit et cancel -->
     <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit"
         (click)="submit()" [disabled]="!isValidForm">
       Ajouter le fichier

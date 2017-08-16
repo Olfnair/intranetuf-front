@@ -1,13 +1,21 @@
+/**
+ * Auteur : Florian
+ * License : 
+ */
+
 import { FormControl } from '@angular/forms';
 
+
+/**
+ * Validations personnalisées
+ */
 export class CustomValidators {
+  
   /**
-    * Function to control email with custom validator
-    *
-    * @param control
-    *
-    * @returns {{googleEmail: boolean}}
-    */
+   * vérifie que l'utilisateur a entré un email google
+   * @param {FormControl} control - le contrôle sur lequel le test va être effectué
+   * @returns {{googleEmail: boolean}}
+   */
   static googleEmail(control: FormControl) {
     // email regex
     const regex = /^\w+\.\w+@gmail\.com$/;
@@ -16,10 +24,8 @@ export class CustomValidators {
   }
 
   /**
-   * Function to control email with custom validator
-   *
-   * @param control
-   *
+   * Vérifie que l'utilisateur a entré un email
+   * @param {FormControl} control - le contrôle sur lequel le test va être effectué
    * @returns {{email: boolean}}
    */
   static email(control: FormControl) {
@@ -32,6 +38,11 @@ export class CustomValidators {
     return regex.test(control.value) ? null : { email: true }
   }
 
+  /**
+   * Vérifie le login
+   * @param {FormControl} control - le contrôle sur lequel le test va être effectué
+   * @returns {{login: boolean}}
+   */
   static login(control: FormControl) {
     const regex = /^[a-z0-9]+$/i;
 

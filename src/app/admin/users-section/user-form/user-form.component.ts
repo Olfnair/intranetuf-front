@@ -60,7 +60,7 @@ export class UserFormComponent extends GuiForm {
     user.email = this.form.value.email;
 
     // Appel au service REST pour créer l'utilisateur dans la bdd :
-    let addUserSub: Subscription = this._restService.addUser(user).finally(() => {
+    let addUserSub: Subscription = this._restService.createUser(user).finally(() => {
         addUserSub.unsubscribe(); // Finally, quand tout est terminé : libérer les ressources
     }).subscribe(
       (user: User) => {           // OK : utilisateur créé avec succès

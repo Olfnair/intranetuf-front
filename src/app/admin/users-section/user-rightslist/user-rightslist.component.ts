@@ -25,7 +25,7 @@ export class UserRightslistComponent extends RightsGridContentManager<User> {
   constructor(restService: RestApiService) {
     super(
       restService,            // service REST à utiliser
-      'getRightsForUser',     // nom de la méthode à appler sur le service
+      'fetchRightsForUser',   // nom de la méthode à appeler sur le service
       UserRightsBitsContainer // Classe de représentation des droits
     );
   }

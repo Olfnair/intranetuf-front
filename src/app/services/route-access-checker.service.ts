@@ -1,3 +1,8 @@
+/**
+ * Auteur : Florian
+ * License : 
+ */
+
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from "@angular/router";
 import { Observable } from "rxjs/Observable";
@@ -8,9 +13,20 @@ import { AuthorizationChecker } from "app/services/authorization-checker";
 import { RoleChecker, AdminRoleChecker, RoleCheckerService, EmptyRoleChecker } from "app/services/role-checker";
 import { RightsChecker } from "app/services/rights-checker";
 
+/**
+ * Vérifie l'accès à une route pour un utilisateur
+ */
 class RouteAccessChecker {
+  
+  /** autorisations à vérifier */
   private _authorizationCheckers: AuthorizationChecker[] = [];
 
+  /**
+   * @constructor
+   * @param {Router} _router - routeur
+   * @param {RoleChecker} _roleChecker - vérificateur de rôles
+   * @param {RightsChecker} _rightsChecker - vérificateur de droits
+   */
   constructor(
     private _router: Router,
     private _roleChecker: RoleChecker = undefined,
@@ -20,18 +36,26 @@ class RouteAccessChecker {
     if(this._rightsChecker)   this._authorizationCheckers.push(this._rightsChecker);
   }
 
+  /** @property {Router} router - routeur */
   get router(): Router {
     return this._router;
   }
 
+  /** @property {RightsChecker} rightsChecker - vérifcateur de droits */
   get rightsChecker(): RightsChecker {
     return this._rightsChecker;
   }
 
+  /** @property {RoleChecker} roleChecker - vérificateur de rôles */
   get roleChecker(): RoleChecker {
     return this._roleChecker;
   }
 
+  /**
+   * Charge et vérifie l'autorisation
+   * @param {AuthorizationChecker} authorizationChecker - autorisation à vérifier
+   * @returns {Observable<boolean>} - Observable qui indique la fin du check : true si ok, sinon false 
+   */
   private static check(authorizationChecker: AuthorizationChecker): Observable<boolean> {
     return Observable.create((observer: Observer<boolean>) => {
       let sub: Subscription = authorizationChecker.load().finally(() => {
@@ -43,6 +67,13 @@ class RouteAccessChecker {
     });
   }
 
+  /**
+   * Mets fin à la récursion de checkAuthorizations et renvoie le résultat
+   * @private
+   * @param {boolean} isEnd - true indique qu'on est arrivé au bout de la récursion, false que non
+   * @param {Observer} observer - observer sur lequel envoyer le résultat (true ou false)
+   * @param {boolean} conjunction - true indique une conjonction de clauses, false une disjonction
+   */
   private checkAuthorizationsOver(isEnd: boolean, observer: Observer<boolean>, conjunction: boolean): void {
     // conjonction : vrai si on est au bout, faux sinon
     // disjonction : faux si on est au bout, vrai sinon
@@ -53,12 +84,16 @@ class RouteAccessChecker {
     }
   }
 
-  // méthode récursive :
-  // conjonction des authorizations (ET logique) (conjunction = true)
-  // ou par defaut
-  // disjonction des authorizations (OU logique) (conjunction = false)
-  private checkAuthorizations(startIndex: number, observer: Observer<boolean>, conjunction: boolean = false): void {
-    
+  /**
+   * Vérification des autorisations sous forme de clauses conjonctives ou disjonctives par récursion
+   * - Conjonction : OU logique
+   * - Disjonction : ET logique
+   * @private
+   * @param {number} startIndex - index à partir duquel on commence dans le tableau des autorisations
+   * @param {Observer} observer - Observer sur lequel envoyer le résultat de la disjonction/conjonction
+   * @param {boolean} conjunction - true indique une conjonction de clauses, false une disjonction
+   */
+  private checkAuthorizations(startIndex: number, observer: Observer<boolean>, conjunction: boolean = false): void {   
     // fin de la récursion, on a parcouru tous les éléments :
     if(startIndex >= this._authorizationCheckers.length) {
       // conjonction => vrai : toutes les clauses sont vraies
@@ -85,93 +120,96 @@ class RouteAccessChecker {
     });
   }
 
-  public isAuhthorized(conjunction: boolean = false): Observable<boolean> {   
+  
+  /**
+   * Indique si l'utilisateur courant peut accéder à la route ou non en fonction des autorisations à vérifier
+   * @param {boolean} conjunction - true indique qu'il faut vérifier les autorisations par conjonction,
+   *                                false par disjonction
+   * @returns {Observable<boolean>} indique la fin de la vérification : true => accès, false => pas accès
+   */
+  public isAuthorized(conjunction: boolean = false): Observable<boolean> {   
     return Observable.create((observer: Observer<boolean>) => {
       this.checkAuthorizations(0, observer, conjunction);
     });
   }
 
+  /**
+   * Vide la liste des autorisations à vérifier
+   */
   public clearAuthorizationCheckers(): void {
     this._authorizationCheckers = [];
   }
 
+  /**
+   * Ajoute une autorisation à vérifier
+   * @param {AuthorizationChecker} authorizationChecker - l'autorisation à vérifier qu'on veut ajouter
+   */
   public addAuthorizationChecker(authorizationChecker: AuthorizationChecker): void {
     this._authorizationCheckers.push(authorizationChecker);
   }
 
+  /**
+   * Remplace les autorisations à vérifier actuelles par celles passées en paramètre
+   * @param {AuthorizationChecker[]} authorizationCheckers - les autorisations à vérifier
+   */
   public setAuthorizationsCheckers(authorizationCheckers: AuthorizationChecker[] = []): void {
     this._authorizationCheckers = authorizationCheckers;
   }
 }
 
+/**
+ * Vérifie l'accès à la route par conjonction des clauses
+ */
 class ConjunctiveRouteAccessChecker extends RouteAccessChecker implements CanActivate {   
+  /**
+   * Indique si la route peut-être activée ou non par l'utilisateur
+   * @param {ActivatedRouteSnapshot} route - la route qu'on veut activer
+   * @param {RouterStateSnapshot} state 
+   */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return this.isAuhthorized(true); // conjonction (ET logique) des clauses (role et rights checker)
+    return this.isAuthorized(true); // conjonction (ET logique) des clauses (role et rights checker)
   }
 }
 
+/**
+ * Vérifie l'accès à la route par disjonction des clauses
+ */
 class DisjunctiveRouteAccessChecker extends RouteAccessChecker implements CanActivate {
+  /**
+   * Indique si la route peut-être activée ou non par l'utilisateur
+   * @param {ActivatedRouteSnapshot} route - la route qu'on veut activer
+   * @param {RouterStateSnapshot} state 
+   */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return this.isAuhthorized(false); // disjonction (OU logique) des clauses (role et rights checker)
+    return this.isAuthorized(false); // disjonction (OU logique) des clauses (role et rights checker)
   }
 }
 
-abstract class AbstractConjunctiveRouteAccessChecker extends ConjunctiveRouteAccessChecker {
-  constructor(
-    router: Router,
-    protected _restService: RestApiService,
-    protected _roleCheckerService: RoleCheckerService
-  ) { super(router); }
-
-  public abstract setCheckers(route: ActivatedRouteSnapshot): void;
-
-  /* 
-   * @override
-   */ 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    this.setCheckers(route);
-    return super.canActivate(route, state);
-  }
-}
-
-abstract class AbstractDisjunctiveRouteAccessChecker extends DisjunctiveRouteAccessChecker {
-  constructor(
-    router: Router,
-    protected _restService: RestApiService,
-    protected _roleCheckerService: RoleCheckerService
-  ) { super(router); }
-
-  public abstract setCheckers(route: ActivatedRouteSnapshot): void;
-
-  /* 
-   * @override
-   */ 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    this.setCheckers(route);
-    return super.canActivate(route, state);
-  }
-}
-
+/**
+ * Service qui ne vérifie rien : utilisé pour garder les rôles de l'utilisateur à jour lors de l'activation de routes
+ */
 @Injectable()
 export class EmptyRouteAccessChecker extends RouteAccessChecker implements CanActivate {
   constructor(restService: RestApiService, router: Router, roleCheckerService: RoleCheckerService) {
     super(router, new EmptyRoleChecker(restService, roleCheckerService));
   }
 
-  /*
-   * force le retour à true, juste pour éviter une boucle infinie en cas de redirection si le back end a planté
-   * 
+  /**
+   * Force le retour à true, juste pour éviter une boucle infinie en cas de redirection si le back end a planté
    * @override
    */ 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return Observable.create((observer: Observer<boolean>) => {
-      this.isAuhthorized(false); // disjonction (OU logique) des clauses (role et rights checker)
+      this.isAuthorized(false); // disjonction (OU logique) des clauses (role et rights checker)
       observer.next(true);
       observer.complete();
     });
   }
 }
 
+/**
+ * Service qui vérifie que l'utilisateur est bien un admin ou superadmin avant d'activer la route
+ */
 @Injectable()
 export class AdminRouteAccessChecker extends ConjunctiveRouteAccessChecker {
   constructor(router: Router, restService: RestApiService, roleCheckerService: RoleCheckerService) {

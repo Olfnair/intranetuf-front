@@ -1,7 +1,16 @@
+<!--
+  Auteur : Florian
+  License :
+  
+  Template pour l'activation des comptes
+-->
+
+<!-- spinner de chargement -->
 <section *ngIf="! error && user == undefined" class="spinnerSection">
   <md-spinner class="margin" mode="indeterminate"></md-spinner>
 </section>
 
+<!-- erreurs -->
 <section *ngIf="error" class="container margin">
   <md-card>
     <md-card-content>
@@ -10,11 +19,13 @@
   </md-card>
 </section>
 
+<!-- Message de bienvenue -->
 <section *ngIf="user != undefined">
   <h2>Bienvenue {{user.firstname}} {{user.name}}</h2>
   <p class="info">Nous allons procéder à l'activation de votre compte après le choix de votre mot de passe...</p>
 </section>
 
+<!-- Formulaire de choix de mot de passe -->
 <section *ngIf="user != undefined" class="container">
   <gui-form
       [formGroup]="form"
@@ -22,21 +33,26 @@
       submitOnEnter="true"
       [submitCondition]="valid"
       (formSubmit)="submit()">
+    
+    <!-- Mot de passe -->
     <md-input-container gui-form-input>
       <input mdInput type="password" placeholder="Mot de passe" formControlName="pwd" required/>
       <md-error *ngIf="form.controls.pwd.errors?.required">Veuillez choisir un mot de passe</md-error>
       <md-error *ngIf="form.controls.pwd.errors?.minlength">Au moins {{minlength}} caractères</md-error>
     </md-input-container>
 
+    <!-- Confirmation de mot de passe -->
     <md-input-container gui-form-input>
       <input mdInput type="password" placeholder="Confirmation du mot de passe" formControlName="pwd_confirm" required/>
       <md-error>Veuillez retaper le mot de passe choisi</md-error>
     </md-input-container>
 
+    <!-- erreurs : mots de passes différents -->
     <p class="errors" *ngIf="form.controls.pwd.touched && form.controls.pwd_confirm.touched && form.controls.pwd.value != form.controls.pwd_confirm.value">
       Les 2 mots de passe sont différents !
     </p>
 
+    <!-- bouton submit -->
     <button md-raised-button gui-form-action class="submitButton" color="primary" type="submit"
         (click)="submit()" [disabled]="! valid">
       Activer mon compte

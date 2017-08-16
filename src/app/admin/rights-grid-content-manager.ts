@@ -140,7 +140,7 @@ export class RightsGridContentManager<T> extends DatatableBitBoxContentManager<T
     });
 
     // Utilise le service REST pour mettre à jour les droits :
-    let updateSub: Subscription = this._restService.setRights(update).finally(() => {
+    let updateSub: Subscription = this._restService.createOrEditRights(update).finally(() => {
       updateSub.unsubscribe(); // Finally, quand tout est terminé : on libère les ressources
     }).subscribe(
       (res: number) => {       // OK : droits enregistrés
