@@ -29,8 +29,9 @@
     <md-icon>create_new_folder</md-icon>
   </button>
   
-  <!-- liste des projets -->
+  <!-- champ de recherche -->
   <md-input-container *ngIf="selectables" class="searchBox">
-    <input #search mdInput placeholder="Recherche de projet" (change)="projectSearch(search.value)">
+    <input #search mdInput placeholder="Recherche de projet"
+        [value]="searchName" (change)="projectSearch(search.value)">
   </md-input-container>
 </nav-list>

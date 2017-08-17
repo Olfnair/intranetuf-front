@@ -163,6 +163,11 @@ export class ProjectlistComponent extends NavList implements OnInit {
     this._session.selectedProject = this._selectedProject;
   }
 
+  /** @property {string} searchName - valeur du champ de recherche */
+  get searchName(): string {
+    return this._searchName;
+  }
+
   /** @property {boolean} update - recharger la liste des projets ? */
   @Input()
   set update(update: boolean) {
