@@ -1,7 +1,16 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template pour afficher les détails de version d'un fichier
+-->
+
 <md-card class="details">
+  <!-- Titre : nom du fichier -->
   <md-card-title>Fichier : {{file?.version?.filename}}</md-card-title>
   
   <md-card-content>
+    <!-- Infos sur le fichier -->
     <md-card class="fileSummary">
       <md-card-content>
         <md-list dense>
@@ -27,6 +36,7 @@
       </md-card-content>
     </md-card>
 
+    <!-- Contrôles et validations -->
     <section *ngFor="let container of checkContainers" class="checkContainer">
       <datatable
           [options]="{displayToggle: true, emptyMessage: 'Pas d\'action sur ce fichier.'}"
@@ -48,6 +58,7 @@
     </section>
   </md-card-content>
 
+  <!-- bouton de retour -->
   <md-card-actions align="end">
     <button md-raised-button class="submitButton" color="primary" type="button" (click)="close()">
       Retour

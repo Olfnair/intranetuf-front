@@ -1,9 +1,18 @@
+<!--
+  Auteur : Florian
+  License :
+  
+  Section qui gère les informations relatives aux fichiers des projets
+-->
+
+<!-- Bouton retour -->
 <button *ngIf="canNavBack"
     md-raised-button class="backButton" type="button" color="primary"
     mdTooltip="Retour" mdTooltipPosition="above" (click)="navback()">
   <md-icon>arrow_back</md-icon>&nbsp;Retour
 </button>
 
+<!-- Liste des fichiers d'un projet -->
 <app-filelist *ngIf="stateToActivate() == State.Filelist"
     [project]="project" [startLoading]="readyForContent"
     (addFile)="setStateAndFile(State.AddFile, $event)"
@@ -11,15 +20,17 @@
     (checkVersion)="setStateAndCheck(State.CheckVersion, $event)">
 </app-filelist>
 
+<!-- Ajout d'un fichier / nouvelle version -->
 <app-add-file *ngIf="stateToActivate() == State.AddFile"
     [data]="{project: project, file: file}" (close)="state = State.Filelist">
 </app-add-file>
 
-
+<!-- Details de version d'un fichier -->
 <app-version-details *ngIf="stateToActivate() == State.VersionDetails"
     [file]="file" (close)="state = State.Filelist">
 </app-version-details>
 
+<!-- Contrôle / Validation d'une version d'un fichier -->
 <app-check-version *ngIf="stateToActivate() == State.CheckVersion"
     [check]="check" (close)="state = State.Filelist">
 </app-check-version>

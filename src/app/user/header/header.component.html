@@ -1,21 +1,37 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template pour l'affichage du header de l'application
+-->
+
 <md-toolbar color="primary">
+  <!-- Bouton pour afficher/cacher le menu de navigation -->
   <md-icon *ngIf="displayListButton" class="list showOnLarge" (click)="toggleOnLarge()">menu</md-icon>
   <md-icon *ngIf="displayListButton" class="list showOnSmall" (click)="toggleOnSmall()">menu</md-icon>
+  
+  <!-- Accueil -->
   <a [routerLink]="['/']" mdTooltip="Accueil" mdTooltipPosition="below">
     <md-icon>home</md-icon>
     <label>Accueil</label>
   </a>
 
-  
+  <!-- Occuper tout l'espace restant à droite -->
   <span class="flex"></span>
+  
+  <!-- Compte de l'utilisateur -->
   <a *ngIf="logged" class="right userLogin" [routerLink]="['/']" mdTooltip="Compte" mdTooltipPosition="below">
     <md-icon>account_box</md-icon>
     <label>{{userLogin}}</label>
   </a>
+  
+  <!-- Administration -->
   <a *ngIf="logged && isAdmin" class="right" [routerLink]="['/admin']" mdTooltip="Administration" mdTooltipPosition="below">
     <md-icon>build</md-icon>
     <label>Administration</label>
   </a>
+
+  <!-- Déconnexion -->
   <a *ngIf="logged" class="right" [routerLink]="['/']" (click)="disconnect()" mdTooltip="Déconnexion" mdTooltipPosition="below">
     <md-icon>power_settings_new</md-icon>
     <label>Déconnexion</label>

@@ -128,10 +128,10 @@ export class AddFileComponent extends GuiForm {
   @Input()
   set data(inputData: InputData) {
     this._project = inputData.project;
-    this._file = inputData.file;
-    this._newVersionMode = (this._file != undefined);
+    this._newVersionMode = (inputData.file != undefined);
     this.init();
     if(this._newVersionMode) {
+      this._file = inputData.file;
       this.loadCurrentControllers();
     }
   }
@@ -190,6 +190,7 @@ export class AddFileComponent extends GuiForm {
    * Enregistre le fichier et les contrôleurs et valideurs spécifiés
    */
   submit(): void {
+    console.log('submit');
     // Prépare une nouvelle entité version :
     let entityType: string;
     let entity: any;
@@ -332,5 +333,5 @@ export class AddFileComponent extends GuiForm {
       ]))
     });
   }
-  
+
 }

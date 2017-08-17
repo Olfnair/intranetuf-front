@@ -1,5 +1,14 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template pour les checks de version : contrôle ou validation
+-->
+
 <section class="container">
   <gui-form [formGroup]="form" title="{{checkTypeName}} de {{filename}}" submitOnEnter="false">
+    
+    <!-- Zone de commentaire -->
     <md-input-container gui-form-input>
       <textarea mdInput class="comment" type="text"
           placeholder="Commentaire sur le fichier..."
@@ -16,6 +25,7 @@
       Maximum 250 caractères.
     </p>
 
+    <!-- Boutons : valider - refuser --> 
     <button md-raised-button gui-form-action
         class="submitButton" color="primary" type="submit"
         (click)="confirm(true)" [disabled]="!form.valid">

@@ -1,3 +1,11 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Datatable de la liste des fichiers d'un projet
+-->
+
+<!-- Aucun projet sélectionné -->
 <md-card *ngIf="! project">
   <md-card-content>
     <p>Selectionnez un projet dans la liste...<p>
@@ -25,23 +33,33 @@
     (addButtonClick)="addFile(undefined)"
     (queryParams)="update($event, [project])">
   <datatable-title>
-    <h2>Projet : {{project.name}} <span [class.hidden]="project.active" class="inactive">(Supprimé)</span></h2>
+    <!-- Titre -->
+    <h2>Projet : {{project.name}} <span [class.hidden]="project.active" class="inactive">(Supprimé)</span></h2>   
+    
+    <!-- Actions : disponibles en fonction des droits de l'utilisateur -->
     <div class="projectActions">
+      <!-- Editer projet -->
       <button [class.hidden]="! userCanEditProject()" md-raised-button class="smallButton" type="button" color="accent"
           mdTooltip="Editer" mdTooltipPosition="above" (click)="editProject()">
         <md-icon>mode_edit</md-icon>
       </button>
+      
+      <!-- Supprimer projet -->
       <button [class.hidden]="! userCanDeleteProject()" md-raised-button class="smallButton" type="button" color="warn"
           mdTooltip="Supprimer" mdTooltipPosition="above" (click)="activateProject(false)">
         <md-icon>delete_forever</md-icon>
       </button>
+
+      <!-- Restaurer projet -->
       <button [class.hidden]="! userCanActivateProject()" md-raised-button class="smallButton" type="button" color="warn"
           mdTooltip="Restaurer" mdTooltipPosition="above" (click)="activateProject(true)">
         <md-icon>replay</md-icon>
       </button>
     </div>
   </datatable-title>
+  <!-- Template pour l'affichage des fichiers : -->
   <ng-template let-file="item">
+    <!-- Infos du fichier -->
     <td>
       <a
           href="javascript:void(0)"
@@ -54,7 +72,10 @@
     <td>{{file.version?.num}}</td>
     <td>{{file.version?.date_upload | date}}</td>
     <td>{{file.version?.status | versionStatus}}</td>
+    
+    <!-- Actions sur le fichier (en fonction des droits sur le projet) -->
     <td>
+      <!-- Télécharger -->
       <span *ngIf="file.version && canDownload(file)">
         <form ngNoForm class="inlineForm" [action]="downloadLink(file.version.id)" method="POST">
           <input type="hidden" name="token" [value]="getToken()">
@@ -63,18 +84,24 @@
           </button>
         </form>
       </span>
+
+      <!-- Nouvelle version -->
       <span *ngIf="file.author && file.author.id == userId && userCanAddFile()">
         <a md-raised-button class="smallButton" color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above"
             href="javascript:void(0)" (click)="addFile(file)">
           <md-icon>file_upload</md-icon>
         </a>
       </span>
+      
+      <!-- Contrôler -->
       <span *ngIf="hasControl(file.version.id)">
         <a md-raised-button class="smallButton" color="accent" mdTooltip="Contrôler" mdTooltipPosition="above"
             href="javascript:void(0)" (click)="checkVersion(getControl(file.version.id))">
           <md-icon>find_in_page</md-icon>
         </a>
       </span>
+
+      <!-- Valider -->
       <span *ngIf="hasValidation(file.version.id)">
         <a md-raised-button class="smallButton" color="warn" mdTooltip="Valider" mdTooltipPosition="above"
             href="javascript:void(0)" (click)="checkVersion(getValidation(file.version.id))">
@@ -82,7 +109,8 @@
         </a>
       </span>
     </td>
-    <td>
+    <td>    
+      <!-- Supprimer -->
       <span *ngIf="userCanDeleteFile()">
         <button md-raised-button class="smallButton" type="button" color="warn"
             mdTooltip="Supprimer" mdTooltipPosition="above" (click)="deleteFile(file)">
