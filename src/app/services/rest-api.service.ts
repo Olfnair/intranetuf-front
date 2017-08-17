@@ -250,7 +250,7 @@ export class RestApiService {
    * @returns {Observable<number>} - statut de la réponse http
    */
   createOrEditRights(rights: ProjectRight[]): Observable<number> {
-    return this._http.post(this._backendURL.projectRight, {projectRight: rights}, this.options()).map((res: Response) => {
+    return this._http.put(this._backendURL.projectRight, {projectRight: rights}, this.options()).map((res: Response) => {
       return res.status;
     });
   }
