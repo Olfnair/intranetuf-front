@@ -1,3 +1,11 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template de Home
+-->
+
+<!-- Ecran de login quand n'est pas connecté -->
 <section *ngIf="! logged">
   <p class="welcomeMessage">
     Bienvenue sur Intranet UF
@@ -5,4 +13,5 @@
   <app-login></app-login>
 </section>
 
+<!-- File Section quand on est connecté -->
 <app-file-section *ngIf="logged"></app-file-section>

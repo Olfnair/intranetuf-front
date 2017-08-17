@@ -1,9 +1,18 @@
-export class Credentials {
-  private login: string;
-  private password: string;
+/***
+ * Auteur : Florian
+ * License : 
+ */
 
-  constructor(login: string, pwd: string) {
-    this.login = login;
-    this.password = pwd;
-  }
+/**
+ * Entité Crédentials : login et mot de passe d'un utilisateur
+ */
+export class Credentials {
+
+  /**
+   * @constructor
+   * @param {string} login - login de l'utilisateur
+   * @param {string} pwd - mot de passe de l'utilisateur
+   */
+  constructor(public login: string, public pwd: string) { }
+
 }

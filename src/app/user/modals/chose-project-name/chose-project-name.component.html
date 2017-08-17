@@ -1,14 +1,29 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template pour une modale qui permet de choisir le nom d'un projet
+-->
+
 <section style="min-width: 350px;">
   <gui-form [formGroup]="form" title="{{options.title}}" submitOnEnter="true" (formSubmit)="submit()">
+    
+    <!-- Input du nom du projet -->
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Nom du projet" formControlName="name" required/>
       <md-error>{{options.errorText}}</md-error>
     </md-input-container>
+    
+    <!-- Bouton pour Valider -->
     <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit"
         [disabled]="!form.valid" [md-dialog-close]="form.controls.name.value">
       {{options.submitText}}
     </button>
+    
+    <!-- Espace -->
     <span style="min-width: 0.3em;"></span>
+    
+    <!-- Bouton pour Annuler -->
     <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button" md-dialog-close>
       {{options.cancelText}}
     </button>

@@ -1,3 +1,10 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template du menu de navigation des projets
+-->
+
 <nav-list title="Projets"
     dense="true"
     [error]="error"
@@ -5,6 +12,8 @@
     [selectables]="selectables"
     [selected]="selected"
     (select)="select($event)">
+  
+  <!-- Tabs projets actifs/supprimés (admin uniquement) -->
   <md-tab-group *ngIf="roleChecker.userIsAdmin()"
       class="projectListTabs"
       [selectedIndex]="getSelectedTab()"
@@ -14,9 +23,13 @@
     <md-tab label="Supprimés">
     </md-tab>
   </md-tab-group>
+
+  <!-- Bouton de création de projet (admins uniquement) -->
   <button *ngIf="roleChecker.userIsAdmin()" md-mini-fab class="add" (click)="add()" mdTooltip="Nouveau projet" mdTooltipPosition="after">
     <md-icon>create_new_folder</md-icon>
   </button>
+  
+  <!-- liste des projets -->
   <md-input-container *ngIf="selectables" class="searchBox">
     <input #search mdInput placeholder="Recherche de projet" (change)="projectSearch(search.value)">
   </md-input-container>

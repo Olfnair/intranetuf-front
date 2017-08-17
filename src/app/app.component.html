@@ -1,18 +1,35 @@
+<!--
+  Auteur : Florian
+  License :
+
+  Template du composant racine de l'application
+-->
+
+<!-- Header -->
 <app-header
     [displayListButton]="showProjectList() || showAdminNavList()"
     (toggleOnSmall)="toggleSidenavOnSmall()"
     (toggleOnLarge)="toggleSidenavOnLarge()">
 </app-header>
+
+<!-- Layout avec un sidenav (menu de navigation) et contenu scrollable à droite -->
 <sidenav-layout [openSidenavOnSmall]="sidenavShowOnSmall" [openSidenavOnLarge]="sidenavShowOnLarge">
+  
+  <!-- menu de navigation des projets -->
   <sl-sidenav *ngIf="showProjectList()">
     <app-projectlist
         [selectedProject]="selectedProject" [update]="updateProjectList" (loaded)="loaded()" sidenav>
     </app-projectlist>
   </sl-sidenav>
+  
+  <!-- menu de navigation du panneau d'admin -->
   <sl-sidenav *ngIf="showAdminNavList()">
     <app-admin-nav-list [selectedAdminItem]="selectedAdminItem" sidenav></app-admin-nav-list>
   </sl-sidenav>
+
+  <!-- contenu de la page -->
   <sl-content>
+    <!-- router : charge un composant en fonction de la route active (voir app.route.ts) -->
     <router-outlet></router-outlet>
   </sl-content>
 </sidenav-layout>

@@ -1,20 +1,31 @@
+<!--
+  Auteur : Florian
+  License : 
+
+  Template de l'écran de login
+-->
+
 <section class="container">
   <gui-form [formGroup]="form" title="Connexion" submitOnEnter="true" (formSubmit)="submit()">
     
+    <!-- Identifiant -->
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Identifiant" formControlName="login" required>
       <md-error>Veuillez indiquer votre identifiant</md-error>
     </md-input-container>
     
+    <!-- Mot de passe -->
     <md-input-container gui-form-input>
       <input mdInput type="password" placeholder="Mot de passe" formControlName="pwd" required/>
       <md-error>Veuillez indiquer votre mot de passe</md-error>
     </md-input-container>
     
+    <!-- erreur éventuelles -->
     <p class="errors" *ngIf="loginFail && form.pristine">
       {{loginFailMessage}}
     </p>
 
+    <!-- Bouton de connexion -->
     <button md-raised-button gui-form-action class="submitButton" color="primary" type="submit" (click)="submit()" [disabled]="!form.valid">Connexion</button>
   </gui-form>
 </section>
