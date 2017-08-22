@@ -3,6 +3,7 @@
  * License : 
  */
 
+import { Entity } from "entities/entity"; 
 import { Credentials } from "entities/credentials";
 
 /**
@@ -18,10 +19,7 @@ export enum Roles {
 /**
  * Entité Utilisateur
  */
-export class User {
-  
-  /** id de l'utilisateur */
-  public id: number = undefined;
+export class User extends Entity {
   
   /** roles de l'utilisateur */
   public role: number = undefined;
@@ -47,8 +45,13 @@ export class User {
   /** utilisateur en attente ou non (compte en attente d'activation ou non) */
   public pending: boolean = undefined;
 
-  /** @constructor */
-  constructor() { }
+  /**
+   * @constructor
+   * @param {number} id - id du l'utilisateur
+   */
+  constructor(id: number = undefined) {
+    super(id);
+  }
 
   /**
    * Indique si les rôles à tester userRole contiennent les rôles à vérifier roleCheck
@@ -62,5 +65,5 @@ export class User {
     }
     return (userRole & rolecheck) == rolecheck || rolecheck == Roles.USER;
   }
-  
+
 }

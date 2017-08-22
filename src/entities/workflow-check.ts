@@ -3,6 +3,7 @@
  * License : 
  */
 
+import { Entity } from "entities/entity";
 import { User } from "entities/user";
 import { Version } from "entities/version";
 
@@ -29,10 +30,7 @@ export enum Status {
 /**
  * Entité Check de workflow
  */
-export class WorkflowCheck {
-  
-  /** id du check */
-  id: number = undefined;
+export class WorkflowCheck extends Entity {
   
   /** statut */
   status: number = undefined;
@@ -58,7 +56,12 @@ export class WorkflowCheck {
   /** utilisateur responsable du check */
   user: User = undefined;
 
-  /** @constructor */
-  constructor() { }
+  /**
+   * @constructor
+   * @param {number} id - id du check 
+   */
+  constructor(id: number = undefined) {
+    super(id);
+  }
 
 }

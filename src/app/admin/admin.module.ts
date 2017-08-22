@@ -26,6 +26,7 @@ import { ProjectsSectionComponent } from './projects-section/projects-section.co
 import { UserFormComponent } from "./users-section/user-form/user-form.component";
 import { UserlistComponent } from "./users-section/userlist/userlist.component";
 import { UserRightslistComponent } from "./users-section/user-rightslist/user-rightslist.component";
+import { UserRolesComponent } from './users-section/user-roles/user-roles.component';
 import { UsersSectionComponent } from './users-section/users-section.component';
 
 /**
@@ -41,6 +42,7 @@ import { UsersSectionComponent } from './users-section/users-section.component';
     UserFormComponent,
     UserlistComponent,
     UserRightslistComponent,
+    UserRolesComponent,
     UsersSectionComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
@@ -63,6 +65,7 @@ import { UsersSectionComponent } from './users-section/users-section.component';
     UserFormComponent,
     UserlistComponent,
     UserRightslistComponent,
+    UserRolesComponent,
     UsersSectionComponent
   ]
 })

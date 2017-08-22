@@ -3,13 +3,12 @@
  * License : 
  */
 
+import { Entity } from "entities/entity";
+
 /**
  * Entité Projet
  */
-export class Project {
-  
-  /** id du projet */
-  public id: number = undefined;
+export class Project extends Entity {
   
   /** nom du projet */
   public name: string = undefined;
@@ -17,6 +16,11 @@ export class Project {
   /** projet actif ou non */
   public active: boolean = undefined;
 
-  /** @constructor */
-  constructor() { }
+  /**
+   * @constructor
+   * @param {number} id - id du projet
+   */
+  constructor(id: number = undefined) {
+    super(id);
+  }
 }

@@ -3,18 +3,16 @@
  * License : 
  */
 
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router } from "@angular/router";
 import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
-import { Observable } from "rxjs/Observable";
-import { Observer } from "rxjs/Observer";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { ModalService } from "app/gui/modal.service";
 import { BasicRoleChecker, RoleCheckerService } from "app/services/role-checker";
-import { DatatableContentManager } from "app/gui/datatable";
+import { DatatableContentManager, DatatableSelectionManager } from "app/gui/datatable";
 import { User, Roles } from "entities/user";
-import { FlexQueryResult } from "objects/flex-query-result";
 
 /**
  * Datatable de la liste des utilisateurs dans le panneau d'admin
@@ -34,6 +32,9 @@ export class UserlistComponent extends DatatableContentManager<User, RestApiServ
   /** @event - gérer les droits d'un utilisateur */
   private _rights$: EventEmitter<User> = new EventEmitter<User>();
 
+  /** permet d'activer/désactiver la sélection */
+  private _selectionManager: DatatableSelectionManager<User, RestApiService, ModalService>;
+
   /**
    * @constructor
    * @param {RestApiService} restService - service REST
@@ -45,11 +46,23 @@ export class UserlistComponent extends DatatableContentManager<User, RestApiServ
     restService: RestApiService,
     private _session: SessionService,
     private _roleCheckerService: RoleCheckerService,
-    private _router: Router
+    private _router: Router,
+    private _modal: ModalService
   ) {
     super(
-      restService, // service REST à utiliser
-      'fetchUsers' // nom de la méthode du service à utiliser
+      restService,  // service REST à utiliser
+      'fetchUsers', // nom de la méthode du service à utiliser
+      false,        // ne pas afficher le spinner de chargement lors des chargements suivants
+      () => {       // mets à jour les utlisateurs sélectionnés
+        this._selectionManager.updateSelectedEntities(this._selectionManager.selectedEntities);
+      }
+    );
+
+    this._selectionManager = new DatatableSelectionManager<User, RestApiService, ModalService>(
+      restService,              // service REST utilisé
+      'activateManyUsers',      // méthode pour activer ou désactiver les utilisateurs sélectionnés
+      this,                     // content manager
+      this._modal               // modale pour les messages d'erreur
     );
   }
 
@@ -88,6 +101,14 @@ export class UserlistComponent extends DatatableContentManager<User, RestApiServ
   }
 
   /**
+   * @property {DatatableSelectionManager<User, RestApiService, ModalService>} selectionManager -
+   * manager des sélections
+   */
+  get selectionManager(): DatatableSelectionManager<User, RestApiService, ModalService> {
+    return this._selectionManager;
+  }
+
+  /**
    * Ajouter un utilisateur
    * @emits add - demande d'ajout d'un utilisateur
    */
@@ -114,11 +135,47 @@ export class UserlistComponent extends DatatableContentManager<User, RestApiServ
   }
 
   /**
-   * Suppression de l'utilisateur user
-   * @param {User} user - utilisateur à supprimer
+   * Réinitialisation du mot de passe de l'utilisateur
+   * @param {User} user - l'utilisateur dont il faut réinitialiser le mot de passe
    */
-  delete(user: User): void {
-    
+  resetPassword(user: User): void {
+    user.pending = true;
+    let sub : Subscription = this._restService.editUser(user).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (res: Response) => {    // OK :
+        // OK : Afficher message ok ?
+      },
+      (error: Response) => {  // Erreur :
+        // gestion d'erreur : afficher erreur ?
+      }
+    );
+  }
+
+  /**
+   * Active ou désactive un compte
+   * @param {User} user - utilisateur dont il faut activer/désactiver le compte
+   * @param {boolean} activate - true => activer, false => désactiver
+   */
+  activateAccount(user: User, activate: boolean): void {
+    let methodName: string;
+    if(activate) {  // Activation
+      user.active = true;
+      methodName = 'editUser';
+    }
+    else {          // Désactivation
+      methodName = 'deleteUser';
+    }
+    let sub: Subscription = this._restService[methodName](user).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (res: Response) => {    // OK :
+        this.load(); // on recharge la table
+      },
+      (error: Response) => {  // Erreur :
+        // TODO : afficher un message d'erreur (utiliser ModalService)
+      }
+    );
   }
 
   /** @property {BasicRoleChecker} roleChecker - roleChecker permettant de vérifier le role de l'utiliseur courant */
@@ -152,4 +209,5 @@ export class UserlistComponent extends DatatableContentManager<User, RestApiServ
   isSuperAdmin(user: User): boolean {
     return User.hasRole(user.role, Roles.SUPERADMIN);
   }
+
 }

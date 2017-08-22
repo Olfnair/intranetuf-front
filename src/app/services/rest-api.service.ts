@@ -13,6 +13,7 @@ import { FlexQueryResult } from "objects/flex-query-result";
 import { RestLong } from "objects/rest-long";
 import { AuthToken } from "entities/auth-token";
 import { Credentials } from "entities/credentials";
+import { Entity } from "entities/entity";
 import { File } from "entities/file";
 import { Project } from "entities/project";
 import { ProjectRight, Right } from "entities/project-right";
@@ -45,7 +46,9 @@ export class RestApiService {
     }
 
     // build all backend urls
-    Object.keys(environment.backend.endpoints).forEach(k => this._backendURL[k] = `${baseUrl}${environment.backend.endpoints[k]}`);
+    Object.keys(environment.backend.endpoints).forEach(k => {
+      this._backendURL[k] = `${baseUrl}${environment.backend.endpoints[k]}`
+    });
   }
 
   /**
@@ -77,7 +80,12 @@ export class RestApiService {
    * @param {number} limit - nombre max d'items pour la pagination
    * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
    */
-  fetchProjects(searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<Project>> {
+  fetchProjects(
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<Project>> {
     return this._http.get(
       this._backendURL.project + '/query/'
         + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
@@ -96,7 +104,13 @@ export class RestApiService {
    * @param {number} limit - nombre max d'items pour la pagination
    * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
    */
-  fetchFilesByProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<File>> {
+  fetchFilesByProject(
+    project: Project,
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<File>> {
     return this._http.get(
       this._backendURL.file + '/project/' + project.id.toString() + '/query/'
       + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
@@ -134,7 +148,10 @@ export class RestApiService {
    * @returns {Observable<RestLong>} - contient 1 si l'utilisateur courant est l'auteur, 0 sinon
    */
   userIsFileAuthor(fileId: number): Observable<RestLong> {
-    return this._http.get(this._backendURL.file + '/' + fileId + '/isauthor/' + this._authToken.u, this.options()).map((res: Response) => {
+    return this._http.get(
+      this._backendURL.file + '/' + fileId + '/isauthor/' + this._authToken.u,
+      this.options()
+    ).map((res: Response) => {
       return res.json().restLong;
     });
   }
@@ -177,11 +194,11 @@ export class RestApiService {
    * @returns {Observable<Response>} - réponse http 
    */
   activateManyProjects(projects: Project[], activate: boolean): Observable<Response> {
-    let projectIds: RestLong[] = [];
-    projects.forEach((project: Project) => {
-      projectIds.push(new RestLong(project.id));
-    });
-    return this._http.put(this._backendURL.project + '/activateMany/' + (activate ? '1' : '0'), {restLong: projectIds}, this.options());
+    return this._http.put(
+      this._backendURL.project + '/activateMany/' + (activate ? '1' : '0'),
+      {restLong: RestApiService.listIds(projects)},
+      this.options()
+    );
   }
 
   /**
@@ -192,7 +209,12 @@ export class RestApiService {
    * @param {number} limit - nombre max d'items pour la pagination
    * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
    */
-  fetchUsers(searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<User>> {
+  fetchUsers(
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<User>> {
     return this._http.get(
       this._backendURL.user + '/' + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
       this.options()
@@ -213,11 +235,52 @@ export class RestApiService {
   }
 
   /**
+   * Edite un utilisateur
+   * @param {User} user - l'utilisateur modifié
+   * @returns {Observable<Response>} - la réponse du serveur
+   */
+  editUser(user: User): Observable<Response> {
+    return this._http.put(this._backendURL.user + '/' + user.id, {user: user}, this.options());
+  }
+
+  editUsers(users: User[]): Observable<number> {
+    return this._http.put(this._backendURL.user, {user: users}, this.options()).map((res: Response) => {
+      return res.status;
+    });
+  }
+
+  /**
+   * Supprime un utilisateur
+   * @param {User} user - l'utilisateur à supprimer
+   * @returns {Observable<Response>} - la réponse du serveur
+   */
+  deleteUser(user: User): Observable<Response> {
+    return this._http.delete(this._backendURL.user + '/' + user.id, this.options());
+  }
+
+  /**
+   * Active/désactive plusieurs utilisateurs en une seule requête
+   * @param {User[]} users - Liste des utilisateurs à affecter
+   * @param {boolean} activate - true => restaurer, false => supprimer
+   * @returns {Observable<Response>} - réponse http 
+   */
+  activateManyUsers(users: User[], activate: boolean): Observable<Response> {
+    return this._http.put(
+      this._backendURL.user + '/activateMany/' + (activate ? '1' : '0'),
+      {restLong: RestApiService.listIds(users)},
+      this.options()
+    );
+  }
+
+  /**
    * Récupère le(s) rôle(s) de l'utilisateur actuel
    * @returns {Observable<RestLong>} - la valeur du rôle de l'utilisateur actuel
    */
   getUserRole(): Observable<RestLong> {
-    return this._http.get(this._backendURL.user + '/' + (this._authToken ? this._authToken.u : 0) + '/role', this.options()).map((res: Response) => {
+    return this._http.get(
+      this._backendURL.user + '/' + (this._authToken ? this._authToken.u : 0) + '/role',
+      this.options()
+    ).map((res: Response) => {
       return res.json().restLong;
     });
   }
@@ -239,7 +302,11 @@ export class RestApiService {
    * @returns {Observable<number>} - statut de la réponse http
    */
   activateUser(userId: number, credentials: Credentials): Observable<number> {
-    return this._http.put(this._backendURL.activate + '/' + userId, {credentials: credentials}, this.options()).map((res: Response) => {
+    return this._http.put(
+      this._backendURL.activate + '/' + userId,
+      {credentials: credentials},
+      this.options()
+    ).map((res: Response) => {
       return res.status;
     });
   }
@@ -250,7 +317,11 @@ export class RestApiService {
    * @returns {Observable<number>} - statut de la réponse http
    */
   createOrEditRights(rights: ProjectRight[]): Observable<number> {
-    return this._http.put(this._backendURL.projectRight, {projectRight: rights}, this.options()).map((res: Response) => {
+    return this._http.put(
+      this._backendURL.projectRight,
+      {projectRight: rights},
+      this.options()
+    ).map((res: Response) => {
       return res.status;
     });
   }
@@ -261,7 +332,10 @@ export class RestApiService {
    * @returns {Observable<ProjectRight[]>} Observable sur les droits de l'utilisateur
    */
   fetchRightsForUserByProject(projectId: number) : Observable<ProjectRight[]> {
-    return this._http.get(this._backendURL.projectRight + '/project/' + projectId, this.options()).map((res: Response) => {
+    return this._http.get(
+      this._backendURL.projectRight + '/project/' + projectId,
+      this.options()
+    ).map((res: Response) => {
       return res.json().projectRight;
     });
   }
@@ -275,11 +349,18 @@ export class RestApiService {
    * @param {number} limit - nombre max d'items pour la pagination
    * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
    */
-  fetchRightsForUser(user: User, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<ProjectRight>> {
+  fetchRightsForUser(
+    user: User,
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<ProjectRight>> {
     return this._http.get(
       this._backendURL.projectRight + '/user/' + user.id + '/'
         + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
-      this.options()).map((res: Response) => {
+      this.options()
+    ).map((res: Response) => {
       return res.json().flexQueryResult;
     });
   }
@@ -293,11 +374,18 @@ export class RestApiService {
    * @param {number} limit - nombre max d'items pour la pagination
    * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
    */
-  fetchRightsForProject(project: Project, searchParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<ProjectRight>> {
+  fetchRightsForProject(
+    project: Project,
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<ProjectRight>> {
     return this._http.get(
       this._backendURL.projectRight + '/project/' + project.id + '/'
         + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
-      this.options()).map((res: Response) => {
+      this.options()
+    ).map((res: Response) => {
       return res.json().flexQueryResult;
     });
   }
@@ -309,7 +397,10 @@ export class RestApiService {
    * @returns {Observable<User[]>} Observable sur la liste des utilisateurs correspondants
    */
   fetchUsersByRightOnProject(project: Project, right: Right): Observable<User[]> {
-    return this._http.get(this._backendURL.user + '/rightOnProject/' + project.id + '/' + right, this.options()).map((res: Response) => {
+    return this._http.get(
+      this._backendURL.user + '/rightOnProject/' + project.id + '/' + right,
+      this.options()
+    ).map((res: Response) => {
       return res.json().user;
     });
   }
@@ -327,7 +418,11 @@ export class RestApiService {
     files.forEach((file: File) => {
       versionIds.push(new RestLong(file.version.id));
     });
-    return this._http.post(this._backendURL.workflowCheck + '/' + userId + '/' + status, {restLong: versionIds}, this.options()).map((res: Response) => {
+    return this._http.post(
+      this._backendURL.workflowCheck + '/' + userId + '/' + status,
+      {restLong: versionIds},
+      this.options()
+    ).map((res: Response) => {
       return res.json().workflowCheck;
     });
   }
@@ -338,7 +433,10 @@ export class RestApiService {
    * @returns {Observable<WorkflowCheck[]>} - Observable sur la liste des checks correspondants
    */
   fetchWorkflowChecksForVersion(versionId: number): Observable<WorkflowCheck[]> {
-    return this._http.get(this._backendURL.workflowCheck + '/forVersion/' + versionId, this.options()).map((res: Response) => {
+    return this._http.get(
+      this._backendURL.workflowCheck + '/forVersion/' + versionId,
+      this.options()
+    ).map((res: Response) => {
       return res.json().workflowCheck;
     });
   }
@@ -349,7 +447,10 @@ export class RestApiService {
    * @returns {Observable<WorkflowCheck[]>} - Observable sur la liste des checks correspondants
    */
   fetchWorkflowChecksForFile(fileId: number): Observable<WorkflowCheck[]> {
-    return this._http.get(this._backendURL.workflowCheck + '/forLastVersion/' + fileId, this.options()).map((res: Response) => {
+    return this._http.get(
+      this._backendURL.workflowCheck + '/forLastVersion/' + fileId,
+      this.options()
+    ).map((res: Response) => {
       return res.json().workflowCheck;
     });
   }
@@ -360,7 +461,11 @@ export class RestApiService {
    * @returns {Observable<number>} - statut de la réponse http
    */
   editWorkflowCheck(check: WorkflowCheck): Observable<number> {
-    return this._http.put(this._backendURL.workflowCheck + '/' + check.id, {workflowCheck: check}, this.options()).map((res: Response) => {
+    return this._http.put(
+      this._backendURL.workflowCheck + '/' + check.id,
+      {workflowCheck: check},
+      this.options()
+    ).map((res: Response) => {
       return res.status;
     });
   }
@@ -392,6 +497,14 @@ export class RestApiService {
   private options(accept: string = 'application/json', headerList: Object = {}): RequestOptions {
     const headers: Headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + JSON.stringify(this._authToken) }, headerList));
     return new RequestOptions({ headers: headers });
+  }
+
+  private static listIds(entities: Entity[]): RestLong[] {
+    let ids: RestLong[] = [];
+    entities.forEach((entity: File) => {
+      ids.push(new RestLong(entity.id));
+    });
+    return ids;
   }
 
 }

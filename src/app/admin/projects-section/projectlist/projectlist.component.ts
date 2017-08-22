@@ -10,7 +10,7 @@ import { Observable } from "rxjs/Observable";
 import { RestApiService } from "app/services/rest-api.service";
 import { ModalService } from "app/gui/modal.service";
 import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
-import { DatatableContentManager } from "app/gui/datatable";
+import { DatatableContentManager, DatatableSelectionManager } from "app/gui/datatable";
 import { Project } from "entities/project";
 
 /**
@@ -31,21 +31,29 @@ export class ProjectlistComponent extends DatatableContentManager<Project, RestA
   /** @event - afficher la liste des fichiers */
   private _filelist$: EventEmitter<Project> = new EventEmitter<Project>();
 
-  // Sélection :
-  /** Projets sélectionnés dans la datatable */
-  private _selectedProjects: Map<number, Project> = new Map<number, Project>();
-  /** Indique si la sélection est vide */
-  private _emptySelection: boolean = true;
+  /** permet d'activer/désactiver la sélection */
+  private _selectionManager: DatatableSelectionManager<Project, RestApiService, ModalService>;
   
   /**
    * @constructor
-   * @param {ModalService} _modal - service de modal : sert à afficher des popups
+   * @param {ModalService} _modal - service de modales : sert à afficher des popups
    * @param {RestApiService} restService - service REST
    */
   constructor(private _modal: ModalService, restService: RestApiService) {
     super(
-      restService,    // service REST à utiliser
-      'fetchProjects' // méthode à appeler pour récupérer les projets
+      restService,     // service REST à utiliser
+      'fetchProjects', // méthode à appeler pour récupérer les projets
+      false,           // ne pas afficher le spinner de chargement lors des chargements suivants
+      () => {          // mettre à jour les projets sélectionnés après chaque chargement
+        this._selectionManager.updateSelectedEntities(this._selectionManager.selectedEntities);
+      }
+    );
+
+    this._selectionManager = new DatatableSelectionManager<Project, RestApiService, ModalService>(
+      restService,              // service REST utilisé
+      'activateManyProjects',   // méthode pour activer ou désactiver les projets sélectionnés
+      this,                     // content manager
+      this._modal               // modale pour les messages d'erreur
     );
   }
 
@@ -83,21 +91,12 @@ export class ProjectlistComponent extends DatatableContentManager<Project, RestA
     return this._filelist$;
   }
 
-  /** @property {Map<number, Project>} selectedProjects - projets sélectionnés dans la datatable */
-  set selectedProjects(selectedProjects: Map<number, Project>) {
-    this._selectedProjects = selectedProjects;
-    this.emptySelection = this._selectedProjects.size <= 0; 
-  }
-
-  /** @property {boolean} emptySelection - indique si la liste des projets sélectionnés est vide ou non */
-  get emptySelection(): boolean {
-    return this._emptySelection;
-  }
-
-  set emptySelection(emptySelection: boolean) {
-    setTimeout(() => {
-      this._emptySelection = emptySelection;
-    }, 0);
+  /**
+   * @property {DatatableSelectionManager<Project, RestApiService, ModalService>} selectionManager -
+   * manager des sélections
+   */
+  get selectionManager(): DatatableSelectionManager<Project, RestApiService, ModalService> {
+    return this._selectionManager;
   }
 
   /**
@@ -196,48 +195,4 @@ export class ProjectlistComponent extends DatatableContentManager<Project, RestA
     );
   }
 
-  /**
-   * @private Active/désactive tous les projects en fonction de activate
-   * @param {Project[]} projects - liste des projets à activer/désactiver
-   * @param {boolean} activate - true => activer les projets, false => désactiver les projets
-   */
-  private activateProjects(projects: Project[], activate: boolean) {
-    if(projects.length <= 0) {
-      // garde : rien à faire si aucun projet n'est affecté
-      return;
-    }
-    let sub: Subscription = this._restService.activateManyProjects(projects, activate).finally(() => {
-      sub.unsubscribe();     // Finally, quand tout est terminé : on s'assure que les ressources soient libérées
-    }).subscribe(
-      (res: Response) => {   // Projets mis à jour correctement :
-        this.load(); // recharge la datatable
-      },
-      (error: Response) => { // Erreur lors de la mise à jour :
-        if(activate) {
-          this._modal.info('Erreur', 'Erreur lors de la tentative de restauration des projets.', false);
-        }
-        else {
-          this._modal.info('Erreur', 'Erreur lors de la tentative de suppression des projets', false);
-        }
-      }
-    );
-  }
-
-  /**
-   * Active/désactive tous les projets de la sélection en fonction de activate
-   * @param {boolean} activate 
-   */
-  activateSelection(activate: boolean): void {
-    // liste les projets de la sélection à modifier (dont project.active != activate) :
-    let projects: Project[] = [];
-    this._selectedProjects.forEach((project: Project, id: number) => {
-      if(project.active != activate) {
-        project.active = activate;
-        projects.push(project);
-      }
-    });
-
-    // activation/désactivation des projets :
-    this.activateProjects(projects, activate);
-  }
 }

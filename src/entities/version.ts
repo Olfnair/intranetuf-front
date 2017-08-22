@@ -3,6 +3,7 @@
  * License : 
  */
 
+import { Entity } from "entities/entity"; 
 import { File } from "entities/file";
 import { WorkflowCheck } from "entities/workflow-check";
 
@@ -20,10 +21,7 @@ export enum Status {
 /**
  * Entité Version
  */
-export class Version {
-  
-  /** id de la version */
-  public id: number = undefined;
+export class Version extends Entity {
   
   /** nom du fichier */
   public filename: string = undefined;
@@ -43,7 +41,12 @@ export class Version {
   /** liste des checks (contrôles ou validations) de cette version */
   public workflowChecks: WorkflowCheck[] = undefined;
 
-  /** @constructor */
-  constructor() { }
+  /**
+   * @constructor
+   * @param {number} id - id de la version
+   */
+  constructor(id: number = undefined) {
+    super(id);
+  }
 
 }

@@ -3,16 +3,14 @@
  * License : 
  */
 
+import { Entity } from "entities/entity";
 import { File } from "entities/file";
 import { User } from "entities/user";
 
 /**
  * Entité Log
  */
-export class Log {
-  
-  /** id d'un log */
-  public id: number = undefined;
+export class Log extends Entity {
   
   /** type d'infos logguées */
   public type: string = undefined;
@@ -29,7 +27,12 @@ export class Log {
   /** fichier relatif à cette entrée de log */
   public file: File = undefined;
 
-  /** @constructor */
-  constructor() { }
-  
+  /**
+   * @constructor
+   * @param {number} id - id du log
+   */
+  constructor(id: number = undefined) {
+    super(id);
+  }
+
 }

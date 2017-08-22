@@ -124,6 +124,20 @@ export class BitBoxGridRules<T> {
   }
 
   /**
+   * Enregistre les modifications du map des containers modifiés en les mettant dans le map des originaux
+   */
+  saveModifications(): void {
+    this._mapModifiedContainers.forEach((bitsContainer: BitsContainer, id: number) => {   
+      // copie les modifications en tant qu'originaux
+      let copy: any = {}; // variable de copie
+      let original: T = bitsContainer.getContent();
+      Object.keys(original).forEach((k: string) => copy[k] = original[k]); // copie
+      this._mapOriginalContainers.set(id, new this._ContainerType(copy));
+    });
+    this._mapModifiedContainers.clear(); // Il n'y a plus de modification : on efface
+  }
+
+  /**
    * Remplace les conteneurs sélectionnés en construisant de nouveaux à partir des données passées en paramètre
    * @param {Map<number, T>} selection - Map des données sélectionnées (dans une datatable par exemple)
    */

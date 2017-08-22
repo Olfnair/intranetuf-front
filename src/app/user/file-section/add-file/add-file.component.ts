@@ -190,7 +190,6 @@ export class AddFileComponent extends GuiForm {
    * Enregistre le fichier et les contrôleurs et valideurs spécifiés
    */
   submit(): void {
-    console.log('submit');
     // Prépare une nouvelle entité version :
     let entityType: string;
     let entity: any;

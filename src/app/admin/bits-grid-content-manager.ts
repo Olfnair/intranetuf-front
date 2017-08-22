@@ -1,16 +1,52 @@
-/**
- * Auteur : Florian
- * License : 
- */
-
-import { EventEmitter, Output, Input } from "@angular/core";
-import { Subscription } from "rxjs/Subscription";
-import { RestApiService } from "app/services/rest-api.service";
-import { BitsContainer } from "app/gui/bit-box-grid-rules";
+import { EventEmitter, Input, Output } from "@angular/core";
 import { DatatableBitBoxContentManager } from "app/gui/datatable";
-import { Project } from "entities/project";
+import { BitsContainer } from "app/gui/bit-box-grid-rules";
+import { RestApiService } from "app/services/rest-api.service";
+import { Subscription } from "rxjs/Subscription";
 import { ProjectRight } from "entities/project-right";
 import { User } from "entities/user";
+
+export class UserRolesBitsContainer implements BitsContainer {
+  
+  /**
+   * @constructor
+   * @param {User} _user - utlisateur dont on veut gérer les rôles 
+   */
+  constructor(private _user: User) { }
+
+  /**
+   * Renvoie l'id de l'utilisateur
+   * @returns {number} - id de l'utilisateur
+   */
+  getId(): number {
+    return this._user.id;
+  }
+
+  /**
+   * Renvoie les rôles de l'utilisateur (sous forme d'entier dont les bits représentes les rôles actifs ou non
+   * @returns {number} - entier représentant les rôles de l'utilisateur
+   */
+  getBits(): number {
+    return this._user.role;
+  }
+
+  /**
+   * Change les rôles de l'utilisateur
+   * @param {number} bits - entiers dont les bits à 1 sont les rôles de l'utilisateur
+   */
+  setBits(bits: number): void {
+    this._user.role = bits;
+  }
+
+  /**
+   * Renvoie l'utilisateur
+   * @returns {User} - l'utilisateur dont le conteneur gère les droits
+   */
+  getContent() {
+    return this._user
+  }
+
+}
 
 /**
  * Classe de représentation des droits d'un utilisateur sur un projet.
@@ -84,11 +120,11 @@ export class ProjectRightsBitsContainer extends UserRightsBitsContainer {
 }
 
 /**
- * Gestionaire de contenu d'une grille des droits sur un projet pour une entity de type T (T = User | Project)
+ * Gestionaire de contenu d'une grille de bits
  */
-export class RightsGridContentManager<T> extends DatatableBitBoxContentManager<T, RestApiService> {
+export class BitsGridContentManager<T, UpdateClass> extends DatatableBitBoxContentManager<T, RestApiService> {
   
-  /** entité projet ou user dont les droits sont gérés */
+  /** entité projet ou user dont les bits sont gérés */
   private _entity: T = undefined;
 
   /** @event - fermeture de la grille */
@@ -97,13 +133,19 @@ export class RightsGridContentManager<T> extends DatatableBitBoxContentManager<T
   /**
    * @constructor
    * @param {RestApiService} restService - service REST à utliser
-   * @param {string} rightsGetterMethod - nom de la méthode à appeler sur le service REST pour charger les droits 
+   * @param {string} bitsGetterMethod - nom de la méthode à appeler sur le service REST pour charger les bits
+   * @param {string} _updateBitsMethod - nom de la méthode à appeler sur le service REST pour mettre à jour les bits
    * @param ContainerType - Classe des conteneurs de droits
    */
-  constructor(restService: RestApiService, rightsGetterMethod: string, ContainerType) {
+  constructor(
+    restService: RestApiService,
+    bitsGetterMethod: string,
+    private _updateBitsMethod: string,
+    ContainerType
+  ) {
     super(
       restService,        // service REST
-      rightsGetterMethod, // nom de la méthode à appler sur le service REST pour charger/sauver
+      bitsGetterMethod,   // nom de la méthode à appler sur le service REST pour charger/sauver
       ContainerType       // classe à utiliser pour instancier les containers
     );
   }
@@ -116,7 +158,12 @@ export class RightsGridContentManager<T> extends DatatableBitBoxContentManager<T
   @Input() set entity(entity: T) {
     this.grid.clear();         // reset de la grille
     this._entity = entity;
-    this.load([this._entity]); // rechargement des droits pour l'entité
+    if(this._entity) {
+      this.load([this._entity]); // rechargement des bits pour l'entité
+    }
+    else {
+      this.load();
+    }
   }
 
   /**
@@ -133,18 +180,19 @@ export class RightsGridContentManager<T> extends DatatableBitBoxContentManager<T
    * @emits close - fermeture de la grille
    */
   submit(): void {
-    // Récupère les droits qui ont été modifiés :
-    let update: ProjectRight[] = [];
+    // Récupère les bits qui ont été modifiés :
+    let update: UpdateClass[] = [];
     this.grid.modifiedBits.forEach((bitsContainer) => {
       update.push(bitsContainer.getContent());
     });
 
     // Utilise le service REST pour mettre à jour les droits :
-    let updateSub: Subscription = this._restService.createOrEditRights(update).finally(() => {
+    let updateSub: Subscription = this._restService[this._updateBitsMethod](update).finally(() => {
       updateSub.unsubscribe(); // Finally, quand tout est terminé : on libère les ressources
     }).subscribe(
-      (res: number) => {       // OK : droits enregistrés
-        this._close$.emit(); // fermeture de la grille
+      (res: number) => {       // OK : bits enregistrés
+        this.grid.saveModifications();  // enregistrement local (dans le composant) des modifications
+        this._close$.emit();            // fermeture de la grille
       },
       (error: Response) => {   // Erreur :
         // TODO : afficher une erreur (utiliser ModalService)

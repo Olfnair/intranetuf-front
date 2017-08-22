@@ -14,12 +14,15 @@
     (rights)="setStateAndEntity(State.Rights, $event)">
 </app-userlist>
 
-<!-- formulaire d'ajout/édition d'un utilisateur -->
-<app-user-form *ngIf="state == State.Add" (close)="state = State.List"></app-user-form>
+<!-- formulaire d'ajout d'un utilisateur -->
+<app-user-form *ngIf="state == State.Add" (close)="state = State.List" [userToEdit]="undefined"></app-user-form>
+
+<!-- formulaire d'édition d'un utilisateur -->
+<app-user-form *ngIf="state == State.Edit" (close)="state = State.List" [userToEdit]="entity"></app-user-form>
 
 <!-- Gestion des droits d'un utilisateur -->
 <app-user-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List">
 </app-user-rightslist>
 
 <!-- Gestion des rôles des utilisateurs -->
-<p *ngIf="state == State.Roles">Gestion des rôles par utilisateur (W.I.P)</p>
+<app-user-roles *ngIf="state == State.Roles" [entity]="undefined"></app-user-roles>

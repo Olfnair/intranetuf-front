@@ -3,7 +3,7 @@
  * License :
  */
 
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, Input, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
@@ -22,6 +22,12 @@ import { User } from "entities/user";
   styleUrls: ['./user-form.component.css']
 })
 export class UserFormComponent extends GuiForm {
+
+  /** Utilisateur à éditer, undefined pour créer un nouvel utilisateur */
+  private _userToEdit: User = undefined;
+
+  /** form avant modfification */
+  private _initialValue: any = undefined;
   
   /** @event - click sur le bouton 'ajouter' */
   private _close$: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -38,6 +44,31 @@ export class UserFormComponent extends GuiForm {
     super();
   }
 
+  /** @property {User} userToEdit - Utilisateur à éditer, undefined pour créer un nouvel utilisateur */
+  get userToEdit(): User {
+    return this._userToEdit;
+  }
+
+  @Input()
+  set userToEdit(userToEdit: User) {
+    if(userToEdit != undefined) {
+      this.form.patchValue(userToEdit);
+      this._initialValue = this.form.value;
+    }
+    this._userToEdit = userToEdit;
+  }
+
+  /** @property {boolean} modified - indique si le formulaire a été modifié ou non */
+  get modified(): boolean {
+    let keys: string[] = Object.keys(this.form.value);
+    for(let i: number = 0; i < keys.length; ++i) {
+      if(this._initialValue[keys[i]] != this.form.value[keys[i]]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * @event close - fermeture du formulaire
    * @returns {EventEmitter<boolean>} - true => enregistré, false => annulé
@@ -48,7 +79,7 @@ export class UserFormComponent extends GuiForm {
   }
 
   /**
-   * Enregistre la création/modification d'un utilisateur
+   * Enregistre la création d'un utilisateur
    * @emits close - fermeture du formulaire
    */
   submit(): void {
@@ -59,20 +90,38 @@ export class UserFormComponent extends GuiForm {
     user.login = this.form.value.login;
     user.email = this.form.value.email;
 
-    // Appel au service REST pour créer l'utilisateur dans la bdd :
-    let addUserSub: Subscription = this._restService.createUser(user).finally(() => {
-        addUserSub.unsubscribe(); // Finally, quand tout est terminé : libérer les ressources
+    // création ou édition :
+    this.editOrCreateUser(user);
+  }
+
+  editOrCreateUser(user: User) {
+    let methodName: string;
+    let modalTitle: string;
+    let modalText: string;
+    if(this._userToEdit != undefined) {
+      methodName = 'editUser';
+      user.id = this._userToEdit.id;
+      modalTitle = 'Compte Modifié';
+      modalText = 'Le compte a été modifié avec succès.';
+    }
+    else {
+      methodName = 'createUser';
+      modalTitle = 'Compte Créé';
+      modalText = "Le compte a été créé avec succès. L'utilisateur va recevoir un email qui l'invite à choisir "
+        + "un mot de passe avant de pouvoir utiliser son compte.";
+    }
+
+    // Appel au service REST pour créer/modifier l'utilisateur dans la bdd :
+    let createUserSub: Subscription = this._restService[methodName](user).finally(() => {
+      createUserSub.unsubscribe(); // Finally, quand tout est terminé : libérer les ressources
     }).subscribe(
-      (user: User) => {           // OK : utilisateur créé avec succès
-        let sub: Subscription = this._modal.info(
-          "Compte créé",
-          "Le compte a été créé avec succès. L'utilisateur va recevoir un email qui l'invite à choisir " +
-          "un mot de passe avant de pouvoir utiliser son compte.",
-          true
-        ).finally(() => sub.unsubscribe()).subscribe();
+      (res: any) => {           // OK : utilisateur créé/modifié avec succès
+        let sub: Subscription = this._modal.info(modalTitle, modalText, true).finally(() => {
+          sub.unsubscribe()
+        }).subscribe();
         this._close$.emit(true);
       },
-      (error: Response) => {      // Erreur :
+      (error: Response) => {    // Erreur :
         if(error.json().restError.message == 'login') { // le login choisi existait déjà
           let sub: Subscription = this._modal.info(
             "Login invalide",

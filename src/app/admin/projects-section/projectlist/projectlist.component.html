@@ -11,6 +11,7 @@
       addButton: true,
       addButtonTooltip: 'Ajouter un Projet',
       addButtonIconName: 'create_new_folder',
+      displayFooter: true,
       emptyMessage: 'Il n\'y a pas encore de projet',
       emptySearchMessage: 'Aucun projet ne correspond à votre recherche.'
     }"
@@ -21,7 +22,7 @@
       { label: '',                                                 width: '52%' }
     ]"
     (addButtonClick)="add()"
-    (selectedDataUpdate)="selectedProjects = $event"
+    (selectedDataUpdate)="selectionManager.updateSelectedEntities($event)"
     (queryParams)="update($event)">
   <!-- total width: 96% : 4% de width pour la colonne de selection -->
 
@@ -67,15 +68,15 @@
   <datatable-footer>
     <!-- Restaurer les projets sélectionnés -->
     <button md-raised-button class="smallButton" color="warn" type="button"
-        mdTooltip="Restaurer la Sélection" mdTooltipPosition="above" (click)="activateSelection(true)"
-        [disabled]="emptySelection">
+        mdTooltip="Restaurer la Sélection" mdTooltipPosition="above" (click)="selectionManager.activateSelection(true)"
+        [disabled]="! selectionManager.canActivateAnySelectedItem">
       <md-icon>replay</md-icon>
     </button>
     
     <!-- Supprimer les projets sélectionnés -->
     <button md-raised-button class="smallButton" color="warn" type="button"
-        mdTooltip="Supprimer la Sélection" mdTooltipPosition="above" (click)="activateSelection(false)"
-        [disabled]="emptySelection">
+        mdTooltip="Supprimer la Sélection" mdTooltipPosition="above" (click)="selectionManager.activateSelection(false)"
+        [disabled]="! selectionManager.canDesactivateAnySelectedItem">
       <md-icon>delete_forever</md-icon>
     </button>
   </datatable-footer>

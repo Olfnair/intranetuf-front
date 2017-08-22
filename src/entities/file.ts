@@ -3,6 +3,7 @@
  * License : 
  */
 
+import { Entity } from "entities/entity";
 import { Project } from "entities/project";
 import { User } from "entities/user";
 import { Version } from "entities/version";
@@ -10,10 +11,7 @@ import { Version } from "entities/version";
 /**
  * Entité Fichier
  */
-export class File {
-  
-  /** id du fichier */
-  public id: number = undefined;
+export class File extends Entity {
   
   /** fichier actif ou non */
   public active: boolean = undefined;
@@ -27,7 +25,12 @@ export class File {
   /** projet dont le fichier fait partie */
   public project: Project = undefined;
 
-  /** @constructor */
-  constructor() { }
-  
+  /**
+   * @constructor
+   * @param {number} id - id du fichier
+   */
+  constructor(id: number = undefined) {
+    super(id);
+  }
+
 }

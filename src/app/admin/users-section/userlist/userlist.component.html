@@ -20,11 +20,12 @@
       { label: 'Email',       query: 'email',     sort: true, search: true, width: '18%' },
       { label: 'Prénom',      query: 'firstname', sort: true, search: true, width: '14%' },
       { label: 'Nom',         query: 'name',      sort: true, search: true, width: '14%' },
-      { label: 'Actif',       query: 'active',    sort: true,               width: '6%' },
-      { label: 'En Attente',  query: 'pending',   sort: true,               width: '8%' },
+      { label: 'Actif',       query: 'active',    sort: true,               width:  '6%' },
+      { label: 'En Attente',  query: 'pending',   sort: true,               width:  '8%' },
       { label: '',                                                          width: '26%' }
     ]"
     (addButtonClick)="add()"
+    (selectedDataUpdate)="selectionManager.updateSelectedEntities($event)"
     (queryParams)="update($event)">
   <!-- total width: 96% : 4% de width pour la colonne de selection -->
   
@@ -58,8 +59,16 @@
           mdTooltip="Editer" mdTooltipPosition="above" (click)="edit(user)">
         <md-icon>edit</md-icon>
       </button>
+
+      <!-- Réinitialisation du mot de passe -->
+      <button *ngIf="! isSuperAdmin(user)" class="smallButton"
+          mdTooltip="Ré-envoyer un mail d'activation / Reset mot de passe" mdTooltipPosition="above"
+          md-raised-button color="warn" type="button" (click)="resetPassword(user)"
+          [disabled]="! user.active">
+        <md-icon>rotate_left</md-icon>
+      </button>
       
-      <!-- Utiliser le compte de l'utilisateur comme si c'était le notre (superadmin uniquement) -->
+      <!-- Utiliser le compte de l'utilisateur comme si c'était le nôtre (superadmin uniquement) -->
       <button *ngIf="roleChecker.userIsSuperAdmin() && ! isSuperAdmin(user)" class="smallButton"
           mdTooltip="Utiliser ce Compte" mdTooltipPosition="above"
           md-raised-button color="warn" type="button" (click)="adminLoginAs(user.login)">
@@ -67,11 +76,35 @@
       </button>
 
       <!-- Supprimer -->
-      <button *ngIf="! isSuperAdmin(user) || roleChecker.userIsSuperAdmin()" class="smallButton"
+      <button *ngIf="user.active && (! isSuperAdmin(user) || roleChecker.userIsSuperAdmin())" class="smallButton"
           mdTooltip="Supprimer" mdTooltipPosition="above"
-          md-raised-button color="warn" type="button" (click)="delete(user)">
+          md-raised-button color="warn" type="button" (click)="activateAccount(user, false)">
         <md-icon>delete</md-icon>
+      </button>
+
+      <!--Réactiver -->
+      <button *ngIf="! user.active && (! isSuperAdmin(user) || roleChecker.userIsSuperAdmin())" class="smallButton"
+          mdTooltip="Réactiver" mdTooltipPosition="above"
+          md-raised-button color="warn" type="button" (click)="activateAccount(user, true)">
+        <md-icon>replay</md-icon>
       </button>
     </td>
   </ng-template>
+
+  <!-- Footer pour des actions globales sur les utilisateurs sélectionnés dans la datatable : -->
+  <datatable-footer>
+    <!-- Activer les comptes des utilisateurs sélectionnés -->
+    <button md-raised-button class="smallButton" color="warn" type="button"
+        mdTooltip="Activer les Comptes" mdTooltipPosition="above" (click)="selectionManager.activateSelection(true)"
+        [disabled]="! selectionManager.canActivateAnySelectedItem">
+      <md-icon>replay</md-icon>
+    </button>
+    
+    <!-- Désactiver les comptes des utilisateurs sélectionnés -->
+    <button md-raised-button class="smallButton" color="warn" type="button"
+        mdTooltip="Supprimer les Comptes" mdTooltipPosition="above" (click)="selectionManager.activateSelection(false)"
+        [disabled]="! selectionManager.canDesactivateAnySelectedItem">
+      <md-icon>delete_forever</md-icon>
+    </button>
+  </datatable-footer>
 </datatable>

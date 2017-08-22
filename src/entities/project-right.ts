@@ -3,6 +3,7 @@
  * License : 
  */
 
+import { Entity } from "entities/entity";
 import { Project } from "entities/project";
 import { User } from "entities/user";
 
@@ -28,7 +29,7 @@ export enum Right {
 /**
  * Entité Droits d'un utilisateur sur un projet
  */
-export class ProjectRight {
+export class ProjectRight extends Entity {
 
   /**
    * @constructor
@@ -38,11 +39,13 @@ export class ProjectRight {
    * @param {User} user - utilisateur relatif aux droits
    */
   constructor(
-    public id: number = undefined,
+    id: number = undefined,
     public rights: number = undefined,
     public project: Project = undefined,
     public user: User = undefined
-  ) { }
+  ) {
+    super(id);
+  }
 
   /**
    * Indique si les droits projectRights contiennnent le droit rightToCheck
@@ -54,5 +57,5 @@ export class ProjectRight {
   public static hasRight(projectRights: number, rightToCheck: Right): boolean {
     return (projectRights & rightToCheck) === rightToCheck;
   }
-  
+
 }

@@ -4,9 +4,10 @@
  */
 
 import { Component } from "@angular/core";
+import { BitsGridContentManager, ProjectRightsBitsContainer } from "app/admin/bits-grid-content-manager";
 import { RestApiService } from "app/services/rest-api.service";
-import { RightsGridContentManager, ProjectRightsBitsContainer } from "app/admin/rights-grid-content-manager";
 import { Project } from "entities/project";
+import { ProjectRight } from "entities/project-right";
 
 /**
  * Grille/Datatable de gestion des droits sur les projets par projet
@@ -16,7 +17,7 @@ import { Project } from "entities/project";
   templateUrl: './project-rightslist.component.html',
   styleUrls: ['./project-rightslist.component.css']
 })
-export class ProjectRightslistComponent extends RightsGridContentManager<Project> {
+export class ProjectRightslistComponent extends BitsGridContentManager<Project, ProjectRight> {
   
   /**
    * @constructor
@@ -25,7 +26,8 @@ export class ProjectRightslistComponent extends RightsGridContentManager<Project
   constructor(restService: RestApiService) {
     super(
       restService,                // service REST à utiliser
-      'fetchRightsForProject',      // méthode à appeler pour récupérer les droits
+      'fetchRightsForProject',    // méthode à appeler pour récupérer les droits
+      'createOrEditRights',       // méthode à appeler pour sauver les droits
       ProjectRightsBitsContainer  // Classe de représentation des droits
     );
   }
