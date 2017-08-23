@@ -3,9 +3,9 @@
  * License : 
  */
 
-import { Entity } from "entities/entity";
-import { File } from "entities/file";
-import { User } from "entities/user";
+import { Entity } from "./entity";
+import { File } from "./file";
+import { User } from "./user";
 
 /**
  * Entité Log

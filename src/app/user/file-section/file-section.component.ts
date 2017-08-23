@@ -4,6 +4,7 @@
  */
 
 import { Component, Input, EventEmitter, Output } from '@angular/core';
+import { Router } from "@angular/router";
 import { SessionService } from "app/services/session.service";
 import { AppSection } from "app/shared/app-section";
 import { File } from "entities/file";
@@ -41,9 +42,10 @@ export class FileSectionComponent extends AppSection {
 
   /**
    * @constructor
-   * @param {SessionService} _session - données globales de session 
+   * @param {SessionService} _session - données globales de session
+   * @param {Router} _router - router pour connaitre la route courante
    */
-  constructor(private _session: SessionService) {
+  constructor(private _session: SessionService, private _router: Router) {
     super({
       Filelist:       0,  // Liste des fichiers
       AddFile:        1,  // Ajouter un fichier
@@ -137,6 +139,11 @@ export class FileSectionComponent extends AppSection {
   /** @property {boolean} readyForContent - indique si le composant peut commencer à charger le contenu ou non */
   get readyForContent(): boolean {
     return this._session.readyForContent;
+  }
+
+  /** @property {string} route - la route courante */
+  get route(): string {
+    return this._router.url;
   }
 
   /**

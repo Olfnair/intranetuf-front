@@ -3,9 +3,9 @@
  * License : 
  */
 
-import { Entity } from "entities/entity"; 
-import { File } from "entities/file";
-import { WorkflowCheck } from "entities/workflow-check";
+import { Entity } from "./entity"; 
+import { File } from "./file";
+import { WorkflowCheck } from "./workflow-check";
 
 /**
  * Enumération des statuts possibles pour une version

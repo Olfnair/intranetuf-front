@@ -8,6 +8,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
+import { RoleCheckerService, BasicRoleChecker } from "app/services/role-checker";
 import { ModalService } from "app/gui/modal.service";
 import { GuiForm } from "app/gui/gui-form";
 import { CustomValidators } from "app/shared/custom-validators";
@@ -26,6 +27,9 @@ export class UserFormComponent extends GuiForm {
   /** Utilisateur à éditer, undefined pour créer un nouvel utilisateur */
   private _userToEdit: User = undefined;
 
+  /** Rôles courants définis pour l'utilisateur dans le form */
+  private _roles: number = 0;
+
   /** form avant modfification */
   private _initialValue: any = undefined;
   
@@ -36,10 +40,12 @@ export class UserFormComponent extends GuiForm {
    * @constructor
    * @param {RestApiService} _restService - service REST
    * @param {ModalService} _modal - service d'affichage des fenêtres popups
+   * @param {RoleCheckerService} _roleCheckerService - service global permettant de checker les rôles de l'utilisateur
    */
   constructor(
     private _restService: RestApiService,
-    private _modal: ModalService
+    private _modal: ModalService,
+    private _roleCheckerService: RoleCheckerService
   ) {
     super();
   }
@@ -52,10 +58,33 @@ export class UserFormComponent extends GuiForm {
   @Input()
   set userToEdit(userToEdit: User) {
     if(userToEdit != undefined) {
+      this._roles = userToEdit.role;
       this.form.patchValue(userToEdit);
       this._initialValue = this.form.value;
     }
     this._userToEdit = userToEdit;
+  }
+
+  /** @property {BasicRoleChecker} roleChecker - roleChecker permettant de vérifier le role de l'utiliseur courant */
+  get roleChecker(): BasicRoleChecker {
+    return this._roleCheckerService;
+  }
+
+  addRole(role: number): number {
+    return this._roles | role;
+  }
+
+  removeRole(role: number): number {
+    return this._roles & (0xffffffff - role);
+  }
+
+  setRole(add: boolean, role: number): void {
+    this._roles = add ? this.addRole(role) : this.removeRole(role);
+    this.form.controls.role.patchValue(this._roles.toString());
+  }
+
+  hasRole(role: number): boolean {
+    return User.hasRole(this._roles, role); 
   }
 
   /** @property {boolean} modified - indique si le formulaire a été modifié ou non */
@@ -89,6 +118,7 @@ export class UserFormComponent extends GuiForm {
     user.firstname = this.form.value.firstname;
     user.login = this.form.value.login;
     user.email = this.form.value.email;
+    user.role = this._roles;
 
     // création ou édition :
     this.editOrCreateUser(user);
@@ -175,7 +205,10 @@ export class UserFormComponent extends GuiForm {
       // champ E-mail :
       email: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.email   // requis, regex email
-      ]))
+      ])),
+
+      // champ Rôle :
+      role: new FormControl('0')                      // champ caché contenant le rôle
     });
   }
 

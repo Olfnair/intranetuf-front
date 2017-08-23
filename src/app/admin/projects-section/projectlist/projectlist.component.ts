@@ -133,8 +133,10 @@ export class ProjectlistComponent extends DatatableContentManager<Project, RestA
       // garde : il faut un nom de projet
       return;
     }
-    project.name = projectName;
-    let restSub: Subscription = this._restService.editProject(project).finally(() => {
+    let projectCopy: any = {};
+    Object.keys(project).forEach((k: string) => { projectCopy[k] = project[k] });
+    projectCopy.name = projectName;
+    let restSub: Subscription = this._restService.editProject(projectCopy).finally(() => {
       restSub.unsubscribe(); // Finally, quand tout est terminé : on s'assure que les ressources soient libérées
     }).subscribe(
       (res: Response) => {   // OK : projet édité correctement
@@ -176,8 +178,10 @@ export class ProjectlistComponent extends DatatableContentManager<Project, RestA
    */
   activate(project: Project, activate: boolean): void {
     let obs: Observable<Response>;
-    project.active = activate;
-    obs = activate ? this._restService.editProject(project) : this._restService.deleteProject(project);
+    let projectCopy: any = {};
+    Object.keys(project).forEach((k: string) => { projectCopy[k] = project[k] });
+    projectCopy.active = activate;
+    obs = activate ? this._restService.editProject(projectCopy) : this._restService.deleteProject(projectCopy);
     let sub: Subscription = obs.finally(() => {
       sub.unsubscribe();      // Finally, quand tout est terminé : on s'assure que les ressources soient libérées
     }).subscribe(

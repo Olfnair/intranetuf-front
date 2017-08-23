@@ -3,7 +3,7 @@
  * License : 
  */
 
-import { Entity } from "entities/entity";
+import { Entity } from "./entity";
 
 /**
  * Entité Projet

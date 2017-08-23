@@ -3,10 +3,10 @@
  * License : 
  */
 
-import { Entity } from "entities/entity";
-import { Project } from "entities/project";
-import { User } from "entities/user";
-import { Version } from "entities/version";
+import { Entity } from "./entity";
+import { Project } from "./project";
+import { User } from "./user";
+import { Version } from "./version";
 
 /**
  * Entité Fichier

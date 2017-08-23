@@ -3,9 +3,9 @@
  * License : 
  */
 
-import { Entity } from "entities/entity";
-import { Project } from "entities/project";
-import { User } from "entities/user";
+import { Entity } from "./entity";
+import { Project } from "./project";
+import { User } from "./user";
 
 /**
  * Enumération des droits qu'un utilisateur peut avoir sur un projet

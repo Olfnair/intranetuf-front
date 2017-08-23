@@ -10,11 +10,12 @@
   <md-card-title>Fichier : {{file?.version?.filename}}</md-card-title>
   
   <md-card-content>
-    <!-- Infos sur le fichier -->
     <md-card class="fileSummary">
       <md-card-content>
         <md-list dense>
           <h1 md-subheader>Sommaire</h1>
+          
+          <!-- Infos sur le fichier -->
           <md-list-item>
             <span class="keyText">Auteur :</span>
             <span class="valueText">&nbsp;{{file?.author?.firstname}} {{file?.author?.name}}</span>
@@ -31,6 +32,16 @@
             <span class="keyText">Statut :</span>
             <span class="valueText">&nbsp;{{file?.version?.status | versionStatus}}&nbsp;</span>
             <status-icon [status]="fileIconStatus()"></status-icon>
+          </md-list-item>
+
+          <!-- Télécharger -->
+          <md-list-item *ngIf="canDownload()">
+            <form ngNoForm class="inlineForm" [action]="downloadLink()" method="POST">
+              <input type="hidden" name="token" [value]="getToken()">
+              <button md-raised-button type="submit" color="primary" mdTooltip="Télécharger" mdTooltipPosition="right">
+                <md-icon>file_download</md-icon><label>Télécharger</label>
+              </button>
+            </form>
           </md-list-item>
         </md-list>
       </md-card-content>

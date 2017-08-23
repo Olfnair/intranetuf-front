@@ -3,9 +3,9 @@
  * License : 
  */
 
-import { Entity } from "entities/entity";
-import { User } from "entities/user";
-import { Version } from "entities/version";
+import { Entity } from "./entity";
+import { User } from "./user";
+import { Version } from "./version";
 
 /**
  * Enumération des types possibles pour un check

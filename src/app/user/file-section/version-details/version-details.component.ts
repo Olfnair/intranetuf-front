@@ -8,10 +8,12 @@ import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { RestApiService } from "app/services/rest-api.service";
+import { SessionService } from "app/services/session.service";
+import { RoleCheckerService } from "app/services/role-checker";
+import { environment } from "environments/environment";
 import { File } from "entities/file";
 import { Status as VersionStatus } from "entities/version";
 import { WorkflowCheck, CheckType, Status as CheckStatus } from "entities/workflow-check";
-
 
 /**
  * Contient les contrôles ou validations sur la version
@@ -83,11 +85,23 @@ export class VersionDetailsComponent {
   /** @event - fermeture du composant */
   private _close$: EventEmitter<void> = new EventEmitter<void>();
 
+  /** url de téléchargement des fichiers */
+  private _url = environment.backend.protocol + "://"
+               + environment.backend.host + ":"
+               + environment.backend.port
+               + environment.backend.endpoints.download;
+
   /**
    * @constructor
    * @param {RestApiService} _restService - service REST 
+   * @param {SessionService} _session - données globales de session
+   * @param {RoleCheckerService} _roleCheckerService - service global de vérification des rôles de l'utilisateur
    */
-  constructor(private _restService: RestApiService) {
+  constructor(
+    private _restService: RestApiService,
+    private _session: SessionService,
+    private _roleCheckerService: RoleCheckerService
+  ) {
     // initialisation des conteneurs :
     this._checkContainers.push(new CheckContainer(CheckType.CONTROL, 'Contrôles'));
     this._checkContainers.push(new CheckContainer(CheckType.VALIDATION, 'Validations'));
@@ -135,6 +149,60 @@ export class VersionDetailsComponent {
   @Output('close')
   get close$() : EventEmitter<void> {
     return this._close$;
+  }
+
+  /**
+   * Renvoie le conteneur contenant les checks du type demandé
+   * @private
+   * @param {CheckType} type - type de check dont on veut le conteneur (contrôles ou validations)
+   */
+  private getCheckContainerFromType(type: CheckType): CheckContainer {
+    return (type === CheckType.CONTROL ? this._checkContainers[0] : this._checkContainers[1]);
+  }
+
+  /**
+   * Indique si le check correspondant aux paramètres existe dans les conteneurs
+   * @private
+   * @param {CheckType} type - type de check demandé
+   * @returns {boolean} - true si le check existe, sinon false
+   */
+  private hasCheck(type: CheckType): boolean {
+    let container: CheckContainer = this.getCheckContainerFromType(type);
+    if(! container) { return false; }
+    for(let check of container.checks) {
+      if(check.user.id == this._session.userId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Indique si l'utilisateur courant peut télécharger le fichier
+   * @returns {boolean} - true si l'utilisateur peut télécharger le fichier, sinon false
+   */
+  canDownload(): boolean {
+    return this._file.version.status == VersionStatus.VALIDATED // fichier validé
+        || this._file.author.id == this._session.userId         // l'utilisateur courant est l'auteur
+        || this.hasCheck(CheckType.CONTROL)                     // l'utilisateur courant peut contrôler
+        || this.hasCheck(CheckType.VALIDATION)                  // l'utilisateur courant peut valider
+        || this._roleCheckerService.userIsAdmin();              // l'utilisateur courant est admin
+  }
+
+  /**
+   * Génère un lien de téléchargement pour la version actuelle du fichier
+   * @returns {string} - lien de téléchargement
+   */
+  downloadLink(): string {
+    return this._url + this._file.version.id;
+  }
+
+  /**
+   * Renvoie le token de session de l'utilisateur courant en base64
+   * @returns {string} - token de session de l'utilisateur courant en base64
+   */
+  getToken(): string {
+    return this._session.base64AuthToken;
   }
 
   /**

@@ -14,11 +14,16 @@
       displayFooter: true
     }"
     [data]="dataObs"
-    [columns]="[
+    [columns]="roleChecker.userIsSuperAdmin() ? [
       { label: 'Utilisateur',       query: 'login',   search: true, sort: true, width: '21%' },
       { label: 'Actif',             query: 'active',                sort: true, width:  '6%' },
       { label: 'Admin',                                                         width: '23%' },
       { label: 'SuperAdmin',                                                    width: '23%' },
+      { label: 'Tous',                                                          width: '23%' }
+    ] : [
+      { label: 'Utilisateur',       query: 'login',   search: true, sort: true, width: '21%' },
+      { label: 'Actif',             query: 'active',                sort: true, width:  '6%' },
+      { label: 'Admin',                                                         width: '46%' },
       { label: 'Tous',                                                          width: '23%' }
     ]"
     (selectedDataUpdate)="grid.updateSelection($event)"
@@ -26,33 +31,43 @@
   <!-- total width: 96% : 4% de width pour la colonne de selection -->
 
   <datatable-title>
-  <h2>Rôles des utilisateurs</h2>
+    <h2>Rôles des utilisateurs</h2>
   </datatable-title>
 
   <!-- template d'affichage pour une ligne : -->
   <ng-template let-user="item" let-checked="checked">
-  <!-- Infos sur le projet -->
-  <td>{{user.login | truncate:30}}</td>
-  <td>{{user.active | boolToString}}</td>
+    <!-- Infos sur le projet -->
+    <td>{{user.login | truncate:30}}</td>
+    <td>{{user.active | boolToString}}</td>
 
-  <!-- une case à cocher pour chaque rôle possible des utilisateurs -->
-  <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(user, 1)" (change)="grid.setBit($event.checked, user, 1, checked)"></md-checkbox></td>
-  <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(user, 2)" (change)="grid.setBit($event.checked, user, 2, checked)"></md-checkbox></td>
+    <!-- une case à cocher pour chaque rôle possible des utilisateurs -->
+    <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(user, 1)" (change)="grid.setBit($event.checked, user, 1, checked)"></md-checkbox></td>
+    <td *ngIf="roleChecker.userIsSuperAdmin()"><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(user, 2)" (change)="grid.setBit($event.checked, user, 2, checked)"></md-checkbox></td>
 
-  <!-- une case de sélection globale des rôles -->
-  <td><md-checkbox color="accent" [checked]="grid.isBitBoxChecked(user, 2 + 1)" (change)="grid.setBit($event.checked, user, 2 + 1, checked)"></md-checkbox></td>
+    <!-- une case de sélection globale des rôles -->
+    <td>
+      <md-checkbox color="accent" [checked]="grid.isBitBoxChecked(user, roleChecker.userIsSuperAdmin() ? 2 + 1 : 1)"
+          (change)="grid.setBit($event.checked, user, roleChecker.userIsSuperAdmin() ? 2 + 1 : 1, checked)">
+      </md-checkbox>
+    </td>
   </ng-template>
 
   <!-- Dernière rangée pour cocher décocher les droits sur les projets sélectionnés dans la datatable : -->
   <datatable-final-row>
-  <td colSpan="3" class="selectInfo">Sélectionner colonne :</td>
+    <td colSpan="3" class="selectInfo">Sélectionner colonne :</td>
 
-  <!-- Une case pour chaque rôle possible -->
-  <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event.checked, 1)"></md-checkbox></td>
-  <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event.checked, 2)"></md-checkbox></td>
+    <!-- Une case pour chaque rôle possible -->
+    <td><md-checkbox color="accent" [checked]="grid.isBitColChecked(1)" (change)="grid.setSelectedColBit($event.checked, 1)"></md-checkbox></td>
+    <td *ngIf="roleChecker.userIsSuperAdmin()">
+        <md-checkbox color="accent" [checked]="grid.isBitColChecked(2)" (change)="grid.setSelectedColBit($event.checked, 2)"></md-checkbox>
+    </td>
 
-  <!-- une case de sélection globale -->
-  <td><md-checkbox color="warn" [checked]="grid.isBitColChecked(2 + 1)" (change)="grid.setSelectedColBit($event.checked, 2 + 1)"></md-checkbox></td>
+    <!-- une case de sélection globale -->
+    <td>
+      <md-checkbox color="warn" [checked]="grid.isBitColChecked(roleChecker.userIsSuperAdmin() ? 2 + 1 : 1)"
+          (change)="grid.setSelectedColBit($event.checked, roleChecker.userIsSuperAdmin() ? 2 + 1 : 1)">
+      </md-checkbox>
+    </td>
   </datatable-final-row>
 
   <!-- Footer : Enregistrer les modifications s'il y en a -->

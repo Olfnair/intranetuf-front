@@ -3,8 +3,8 @@
  * License : 
  */
 
-import { Entity } from "entities/entity"; 
-import { Credentials } from "entities/credentials";
+import { Entity } from "./entity"; 
+import { Credentials } from "./credentials";
 
 /**
  * Enumération des rôles possibles d'un utilisateur

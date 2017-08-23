@@ -24,6 +24,7 @@ import { ChoseProjectNameComponent } from "./modals/chose-project-name/chose-pro
 import { CheckVersionComponent } from './file-section/check-version/check-version.component';
 import { VersionDetailsComponent } from './file-section/version-details/version-details.component';
 import { FileSectionComponent } from './file-section/file-section.component';
+import { AddProjectComponent } from './modals/add-project/add-project.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { FileSectionComponent } from './file-section/file-section.component';
     ChoseProjectNameComponent,
     CheckVersionComponent,
     VersionDetailsComponent,
-    FileSectionComponent
+    FileSectionComponent,
+    AddProjectComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     ChoseProjectNameComponent

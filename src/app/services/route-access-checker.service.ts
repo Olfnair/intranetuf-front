@@ -200,9 +200,18 @@ export class EmptyRouteAccessChecker extends RouteAccessChecker implements CanAc
    */ 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return Observable.create((observer: Observer<boolean>) => {
-      this.isAuthorized(false); // disjonction (OU logique) des clauses (role et rights checker)
-      observer.next(true);
-      observer.complete();
+      // disjonction (OU logique) des clauses (role et rights checker)
+      let sub: Subscription = this.isAuthorized(false).finally(() => {
+        sub.unsubscribe();      // libère ressources
+      }).subscribe(
+        (res: boolean) => {     // on attend le résultat (juste pour mettre à jour les rôles dans ce cas-ci)
+          observer.next(true);
+          observer.complete();
+        },
+        (error: any) => {
+          // erreur éventuelle : pas d'erreur envoyée par l'observer pour l'instant
+        }
+      );
     });
   }
 }

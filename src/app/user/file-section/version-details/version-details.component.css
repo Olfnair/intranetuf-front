@@ -28,3 +28,7 @@
 .valueText {
   font-size: 1.3em;
 }
+
+.inlineForm {
+  display: inline-block;
+}

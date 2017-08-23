@@ -68,7 +68,7 @@ export class FilelistComponent extends DatatableContentManager<File, RestApiServ
    * @constructor
    * @param {RestApiService} restService - service REST utlisé 
    * @param {SessionService} _session - données globales de session
-   * @param {RoleCheckerService} _roleCheckerService - service globale de check de rôle
+   * @param {RoleCheckerService} _roleCheckerService - service global de check de rôle
    * @param {ModalService} _modal - service pour afficher les modales
    */
   constructor(

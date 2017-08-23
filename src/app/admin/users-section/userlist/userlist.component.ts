@@ -159,14 +159,16 @@ export class UserlistComponent extends DatatableContentManager<User, RestApiServ
    */
   activateAccount(user: User, activate: boolean): void {
     let methodName: string;
+    let userCopy: any = {};
+    Object.keys(user).forEach((k: string) => { userCopy[k] = user[k] });
     if(activate) {  // Activation
-      user.active = true;
+      userCopy.active = true;
       methodName = 'editUser';
     }
     else {          // Désactivation
       methodName = 'deleteUser';
     }
-    let sub: Subscription = this._restService[methodName](user).finally(() => {
+    let sub: Subscription = this._restService[methodName](userCopy).finally(() => {
       sub.unsubscribe();
     }).subscribe(
       (res: Response) => {    // OK :

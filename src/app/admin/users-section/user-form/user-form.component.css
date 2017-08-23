@@ -1,3 +1,11 @@
 .margin {
   margin: 1em auto;
 }
+
+.hiddenInput {
+  display: none;
+}
+
+.rolesTable {
+  width: 100%;
+}
