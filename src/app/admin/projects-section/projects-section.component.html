@@ -15,7 +15,7 @@
 </admin-projectlist>
 
 <!-- Formulaire de création (ajout) de projet -->
-<app-user-form *ngIf="state == State.Add" (close)="state = State.List"></app-user-form>
+<app-add-project *ngIf="state == State.Add" (close)="state = State.List"></app-add-project>
 
 <!-- Droits relatifs à un projet -->
 <app-project-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List"></app-project-rightslist>

@@ -224,6 +224,35 @@ export class RestApiService {
   }
 
   /**
+   * Liste les utilisateurs en fonction des paramètres, sauf ceux dont les id's sont précisés
+   * @param {number[]} ids - liste des id's des utlisateurs qu'on ne veut pas lister
+   * @param {string} searchParams - paramètres de recherche
+   * @param {string} orderParams - paramètres de tri
+   * @param {number} index - index du début pour la pagination
+   * @param {number} limit - nombre max d'items pour la pagination
+   * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
+   */
+  fetchUsersExcludeIds(
+    ids: number[],
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<User>> {
+    let excludedUserIds: RestLong[] = [];
+    ids.forEach((id: number) => {
+      excludedUserIds.push(new RestLong(id));
+    });
+    return this._http.post(
+      this._backendURL.user + '/' + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      {restLong: excludedUserIds},
+      this.options()
+    ).map((res: Response) => {
+      return res.json().flexQueryResult;
+    });
+  }
+
+  /**
    * Crée un utilisateur
    * @param {User} user - utilisateur à créer
    * @returns {Observable<User>} - Observable sur l'utilisateur créé par le backend 

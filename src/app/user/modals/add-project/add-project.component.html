@@ -1,3 +1,89 @@
-<p>
-  add-project works!
-</p>
+<!--
+  Auteur : Florian
+  License : 
+
+  Template pour une modale qui permet de créer un nouveau projet
+-->
+
+<section class="container margin">
+  <gui-form [formGroup]="form" title="Nouveau Projet" submitOnEnter="true" (formSubmit)="submit()">
+    
+    <!-- Input du nom du projet -->
+    <md-input-container gui-form-input>
+      <input mdInput type="text" placeholder="Nom du projet" formControlName="name" required/>
+      <md-error>Veuillez entrer un nom de projet</md-error>
+    </md-input-container>
+
+    <!--
+      addButton: true,
+      addButtonTooltip: 'Ajouter un utilisateur',
+      addButtonIconName: 'person_add',
+    -->
+
+    <datatable
+        [options]="{
+          selectionCol: true,
+          displayFooter: true,
+          emptyMessage: 'Aucun utilisateur à ajouter.',
+          emptySearchMessage: 'Aucun utilisateur ne correspond à votre recherche.'
+        }"
+        [data]="availableUsers[0].dataObs"
+        [columns]="[
+          { label: 'Identifiant', query: 'login',     sort: true, search: true, width: '14%' },
+          { label: 'Email',       query: 'email',     sort: true, search: true, width: '22%' },
+          { label: 'Prénom',      query: 'firstname', sort: true, search: true, width: '18%' },
+          { label: 'Nom',         query: 'name',      sort: true, search: true, width: '18%' },
+          { label: 'Actif',       query: 'active',    sort: true,               width: '12%' },
+          { label: 'En Attente',  query: 'pending',   sort: true,               width: '12%' }
+        ]"
+        (selectedDataUpdate)="availableUsers[0].selectedUsers = $event"
+        (queryParams)="availableUsers[0].update($event)">
+        <!-- total width: 96% : 4% de width pour la colonne de selection -->
+  
+    <!-- Titre -->
+    <datatable-title>
+      <h2>Utilisateurs disponibles</h2>
+    </datatable-title>
+
+    <!-- Template pour l'affichage d'une ligne de la datatable : -->
+    <ng-template let-user="item">   
+      <!-- Infos sur l'utilisateur -->
+      <td>{{user.login}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.firstname}}</td>
+      <td>{{user.name}}</td>
+      <td>{{user.active | boolToString}}</td>
+      <td>{{user.pending | boolToString}}</td>
+    </ng-template>
+
+    <!-- Footer pour des actions globales sur les utilisateurs sélectionnés dans la datatable : -->
+    <datatable-footer>
+      <!-- Ajouter les utilisateurs sélectionnés -->
+      <button md-raised-button color="primary" type="button" (click)="submit()"
+          [disabled]="false">
+        Ajouter
+      </button>
+      
+      <!-- Annuler -->
+      <button md-raised-button color="warn" type="button" (click)="close()"
+          [disabled]="false">
+        Annuler
+      </button>
+    </datatable-footer>
+  </datatable>
+    
+    <!-- Bouton pour Valider -->
+    <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit"
+        [disabled]="!form.valid" (click)="submit()">
+      Créer le Projet
+    </button>
+    
+    <!-- Espace -->
+    <span style="min-width: 0.3em;"></span>
+    
+    <!-- Bouton pour Annuler -->
+    <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button" (click)="close()">
+      Annuler
+    </button>
+  </gui-form>
+</section>

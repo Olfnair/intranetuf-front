@@ -65,7 +65,8 @@ import { AddProjectComponent } from './modals/add-project/add-project.component'
     ChoseProjectNameComponent,
     CheckVersionComponent,
     VersionDetailsComponent,
-    FileSectionComponent
+    FileSectionComponent,
+    AddProjectComponent
   ]
 })
 export class UserModule {}
