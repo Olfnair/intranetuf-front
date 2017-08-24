@@ -48,7 +48,8 @@
     </md-input-container>
 
     <!-- erreurs : mots de passes différents -->
-    <p class="errors" *ngIf="form.controls.pwd.touched && form.controls.pwd_confirm.touched && form.controls.pwd.value != form.controls.pwd_confirm.value">
+    <p class="errors" *ngIf="form.controls.pwd.touched && form.controls.pwd_confirm.touched
+        && form.controls.pwd.value != form.controls.pwd_confirm.value">
       Les 2 mots de passe sont différents !
     </p>
 
