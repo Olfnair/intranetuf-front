@@ -144,10 +144,14 @@ export class UserlistComponent extends DatatableContentManager<User, RestApiServ
       sub.unsubscribe();
     }).subscribe(
       (res: Response) => {    // OK :
-        // OK : Afficher message ok ?
+        this._modal.info('Activation', 'Un mail d\'activation a été envoyé', true).subscribe();
       },
       (error: Response) => {  // Erreur :
-        // gestion d'erreur : afficher erreur ?
+        this._modal.info(
+          'Erreur',
+          'Erreur lors de la tentative d\'envoi d\'un e-mail d\'activation',
+          false
+        ).subscribe();
       }
     );
   }
