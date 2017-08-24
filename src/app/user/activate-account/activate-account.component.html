@@ -11,7 +11,7 @@
 </section>
 
 <!-- erreurs -->
-<section *ngIf="error" class="container margin">
+<section *ngIf="error" class="fullPageContainer margin">
   <md-card>
     <md-card-content>
       <p class="info errors">{{errorText}}</p>
@@ -26,7 +26,7 @@
 </section>
 
 <!-- Formulaire de choix de mot de passe -->
-<section *ngIf="user != undefined" class="container">
+<section *ngIf="user != undefined" class="fullPageContainer">
   <gui-form
       [formGroup]="form"
       title="Choix de votre mot de passe"
