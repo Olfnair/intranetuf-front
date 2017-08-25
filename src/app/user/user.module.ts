@@ -25,6 +25,8 @@ import { CheckVersionComponent } from './file-section/check-version/check-versio
 import { VersionDetailsComponent } from './file-section/version-details/version-details.component';
 import { FileSectionComponent } from './file-section/file-section.component';
 import { AddProjectComponent } from './modals/add-project/add-project.component';
+import { AccountNavListComponent } from './account-nav-list/account-nav-list.component';
+import { AccountPannelComponent } from './account-pannel/account-pannel.component';
 
 
 @NgModule({
@@ -40,7 +42,9 @@ import { AddProjectComponent } from './modals/add-project/add-project.component'
     CheckVersionComponent,
     VersionDetailsComponent,
     FileSectionComponent,
-    AddProjectComponent
+    AddProjectComponent,
+    AccountNavListComponent,
+    AccountPannelComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     ChoseProjectNameComponent
@@ -66,7 +70,9 @@ import { AddProjectComponent } from './modals/add-project/add-project.component'
     CheckVersionComponent,
     VersionDetailsComponent,
     FileSectionComponent,
-    AddProjectComponent
+    AddProjectComponent,
+    AccountNavListComponent,
+    AccountPannelComponent
   ]
 })
 export class UserModule {}

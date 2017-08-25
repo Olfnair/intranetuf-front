@@ -1,0 +1,13 @@
+<!--
+  Auteur : Florian
+  License : 
+  
+  Template du menu de navigation du panneau compte utilisateur :
+  Utilise le template de nav-list (voir Module gui) en lui passant les bons paramètres pour l'étendre
+-->
+
+<nav-list title="Mon Compte"
+    [selectables]="selectables"
+    [selected]="selected"
+    (select)="select($event)">
+</nav-list>

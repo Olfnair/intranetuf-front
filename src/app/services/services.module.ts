@@ -7,7 +7,8 @@ import { RouterModule } from "@angular/router";
 // Services
 import {
   AdminRouteAccessChecker,
-  EmptyRouteAccessChecker
+  EmptyRouteAccessChecker,
+  LoggedAccessChecker
 } from "./route-access-checker.service";
 import { FileUploadService } from "./file-upload.service";
 import { RestApiService } from "./rest-api.service";
@@ -18,6 +19,7 @@ import { SessionService } from "./session.service";
   providers: [ // services providés et injectables directement depuis le module (singletons)
     AdminRouteAccessChecker,
     EmptyRouteAccessChecker,
+    LoggedAccessChecker,
     FileUploadService,
     RestApiService,
     RoleCheckerService,

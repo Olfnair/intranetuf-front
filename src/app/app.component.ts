@@ -66,12 +66,9 @@ export class AppComponent {
     return this._session.updateProjectList;
   }
 
-  /**
-   * @property {number} selectedAdminItem - id de l'élément sélectionné dans le menu de navigation du panneau
-   *                                        d'admin
-   */
-  get selectedAdminItem(): number {
-    return this._session.selectedAdminItem;
+  /** @property {SessionService} session - données des session de l'application */
+  get session(): SessionService {
+    return this._session;
   }
 
   /** @property {string} route - la route courante */
@@ -107,6 +104,14 @@ export class AppComponent {
    */
   showAdminNavList(): boolean {
     return this.route == '/admin';
+  }
+
+  /**
+   * Indique s'il faut afficher le menu de navigation du panneau compte utilisateur
+   * @returns {boolean} - true s'il faut afficher le menu de navigation du panneau compte utilisateur, sinon false
+   */
+  showAccountNavList(): boolean {
+    return this.route == '/account';
   }
 
   /**

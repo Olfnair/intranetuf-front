@@ -1,0 +1,43 @@
+<!--
+  Auteur : Florian
+  License : 
+  
+  Template du contenu du panneau compte utilisateur :
+  Affiche la bonne section en fonction de l'item sélectionné dans le menu de navigation
+-->
+
+<!-- Informations -->
+<section *ngIf="selectedItemId === getItemId('Informations')">
+  <md-tab-group [selectedIndex]="getTabIndex('info')" (selectedIndexChange)="setTabIndex('info', $event)">
+    <md-tab label="Informations">   <!-- Onglet Informations -->
+      <p *ngIf="getTabIndex('info') === 0">Informations (WIP)</p>
+    </md-tab>
+  </md-tab-group>
+</section>
+
+<!-- Fichiers -->
+<section *ngIf="selectedItemId === getItemId('Fichiers')">
+  <md-tab-group [selectedIndex]="getTabIndex('files')" (selectedIndexChange)="setTabIndex('files', $event)">
+    <md-tab label="Fichiers">      <!-- Onglet Fichiers -->
+      <p *ngIf="getTabIndex('files') === 0">Fichiers (WIP)</p>
+    </md-tab>
+  </md-tab-group>
+</section>
+
+<!-- Contrôles -->
+<section *ngIf="selectedItemId === getItemId('Contrôles')">
+  <md-tab-group [selectedIndex]="getTabIndex('controls')" (selectedIndexChange)="setTabIndex('controls', $event)">
+    <md-tab label="Contrôles">     <!-- Onglet Contrôles -->
+      <p *ngIf="getTabIndex('controls') === 0">Contrôles (WIP)</p>
+    </md-tab>
+  </md-tab-group>
+</section>
+
+<!-- Validations -->
+<section *ngIf="selectedItemId === getItemId('Validations')">
+  <md-tab-group [selectedIndex]="getTabIndex('validations')" (selectedIndexChange)="setTabIndex('validations', $event)">
+    <md-tab label="Validations">   <!-- Onglet Validations -->
+      <p *ngIf="getTabIndex('validations') === 0">Validations (WIP)</p>
+    </md-tab>
+  </md-tab-group>
+</section>

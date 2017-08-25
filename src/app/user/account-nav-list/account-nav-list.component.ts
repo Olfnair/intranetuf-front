@@ -12,11 +12,11 @@ import { SessionService } from "app/services/session.service";
  * Menu de navigation du panneau d'admin
  */
 @Component({
-  selector: 'app-admin-nav-list',
-  templateUrl: './admin-nav-list.component.html',
-  styleUrls: ['./admin-nav-list.component.css']
+  selector: 'app-account-nav-list',
+  templateUrl: './account-nav-list.component.html',
+  styleUrls: ['./account-nav-list.component.css']
 })
-export class AdminNavListComponent extends SimpleNavList {
+export class AccountNavListComponent extends SimpleNavList {
   
   /**
    * @constructor
@@ -24,7 +24,7 @@ export class AdminNavListComponent extends SimpleNavList {
    * @param {SessionService} _session - le service de session global
    */
   constructor(sanitizer: DomSanitizer, session: SessionService) {
-    super('Admin', [ 'Utilisateurs', 'Projets', 'Logs' ], sanitizer, session);
+    super('Account', [ 'Informations', 'Fichiers', 'Contrôles', 'Validations' ], sanitizer, session);
   }
 
 }

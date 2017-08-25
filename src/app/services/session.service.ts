@@ -26,10 +26,15 @@ export class SessionService {
   private _readyForContent: boolean = true;
   /** projet sélectionné dans la nav-list des projets (côté utilisateur) */
   private _selectedProject: Project = undefined;
-  /** section sélectionnée dans la nav-list du panneau d'admin */
-  private _selectedAdminItem: number = 0;
-  /** mapping des noms des items de la nav_list d'admin vers leurs id's  */
-  private _adminNavListItemToIdMap: Map<string, number> = new Map<string, number>();
+  /** id des items sélectionnés dans les nav list (sauf projets) */
+  private _selectedItemId: number[] = [];
+  /** mapping des noms des items des nav-list vers leurs id's  */
+  private _navListItemToIdMap: Map<string, number>[] = [];
+
+  /** mapping des noms des nav-list vers leurs id's */
+  private _navListNameToIdMap: Map<string, number> = new Map<string, number>();
+  /** id de la prochaine nav-list créée */
+  private _currentNavListId: number = 0;
 
   /** true quand il faut mettre à jour la nav_list des projets */
   private _updateProjectList = false;
@@ -98,38 +103,73 @@ export class SessionService {
     this._fetchActiveProjects = fetchActiveProjects;
   }
 
-  /** @property {number} selectedAdminItem - section sélectionnée dans la nav-list du panneau d'admin */
-  get selectedAdminItem(): number {
-    return this._selectedAdminItem;
-  }
-
-  set selectedAdminItem(id: number) {
-    this._selectedAdminItem = id;
+  /**
+   * Renvoie l'id de l'item seléctionné pour la nav-list dont le nom
+   * @param {string} navListName - id de la nav list dont on veut l'id de l'item sélectionné
+   * @returns {number} - section sélectionnée dans la nav-list demandée
+   */
+  getSelectedItemId(navListName: string): number {
+    return this._selectedItemId[this.getNavListId(navListName)];
   }
 
   /**
-   * Ajoute un élément dans le map nom de section -> id correspondant pour la panneau d'admin
+   * Met à jour la sélection avec l'id précisé pour la nav list dont on donne le nom
+   * @param {string} navListName - nom de la nav-list à mettre à jour
+   * @param {number} id - id de sélection
+   */
+  setSelectedItemId(navListName: string, id: number): void {
+    this._selectedItemId[this.getNavListId(navListName)] = id;
+  }
+
+  /**
+   * Ajoute un élément dans le map nom de section -> id correspondant pour la nav-list dont le nom est précisé
+   * @param {string} navListName - nom de la nav-list
    * @param {string} item - item/nom de la section à mapper
    * @param {number} id - id correspondant
    */
-  mapAdminNavListItemToId(item: string, id: number): void {
-    this._adminNavListItemToIdMap.set(item.toLowerCase(), id);
+  mapNavListItemToId(navListName:string, item: string, id: number): void {
+    this._navListItemToIdMap[this.getNavListId(navListName)].set(item.toLowerCase(), id);
   }
 
   /**
-   * Vide le mapping du panneau d'admin
+   * Vide le mapping de la nav list dont on a précisé le nom
+   * @param {string} navListName - nom de la nav list
    */
-  clearAdminNavListItemToIdMap(): void {
-    this._adminNavListItemToIdMap.clear();
+  clearNavListItemToIdMap(navListName: string): void {
+    this._navListItemToIdMap[this.getNavListId(navListName)].clear();
   }
 
   /**
-   * Renvoie l'id correspondant au nom de section (item) du panneau d'admin donné en paramètre
+   * Renvoie l'id correspondant au nom de section (item) de la nav list donnée en paramètre
+   * @param {string} navListName - nom de la nav list
    * @param {string} item - item/nom de la section dont on veut l'id
    * @returns {number} - id de la section demandée
    */
-  getAdminNavListItemId(item: string): number {
-    return this._adminNavListItemToIdMap.get(item.toLowerCase());
+  getNavListItemId(navListName: string, item: string): number {
+    return this._navListItemToIdMap[this.getNavListId(navListName)].get(item.toLowerCase());
+  }
+
+  /**
+   * Renvoie l'id de la nav-list dont on a donné le nom.
+   * Crée une entrée pour la nav-list si elle n'a pas encore d'id
+   * @param {string} navListName - nom de la nav list dont on veut l'id
+   * @returns {number} - id de la nav-list
+   */
+  getNavListId(navListName: string): number {  
+    // on met tout en minuscule pour éviter les erreurs débiles
+    navListName = navListName.toLowerCase();
+    
+    // Récupère l'id pour une nav-list existante :
+    if(this._navListNameToIdMap.has(navListName)) {
+      return this._navListNameToIdMap.get(navListName);
+    }
+
+    // NavList inconnue, on crée une nouvelle entrée :
+    let id: number = this._currentNavListId;
+    this._navListNameToIdMap.set(navListName, this._currentNavListId++);
+    this._navListItemToIdMap.push(new Map<string, number>());
+    this._selectedItemId.push(0); // sélection autmatique du premier item de la nav-list ajoutée
+    return id;
   }
 
   /** @property {number} userId - id de l'user courant */

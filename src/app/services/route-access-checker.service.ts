@@ -8,6 +8,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { Observable } from "rxjs/Observable";
 import { Observer } from "rxjs/Observer";
 import { Subscription } from "rxjs/Subscription";
+import { SessionService } from "app/services/session.service";
 import { RestApiService } from "app/services/rest-api.service";
 import { AuthorizationChecker } from "app/services/authorization-checker";
 import { RoleChecker, AdminRoleChecker, RoleCheckerService, EmptyRoleChecker } from "app/services/role-checker";
@@ -223,5 +224,37 @@ export class EmptyRouteAccessChecker extends RouteAccessChecker implements CanAc
 export class AdminRouteAccessChecker extends ConjunctiveRouteAccessChecker {
   constructor(router: Router, restService: RestApiService, roleCheckerService: RoleCheckerService) {
     super(router, new AdminRoleChecker(restService, roleCheckerService));
+  }
+}
+
+export class LoggedAccessChecker extends RouteAccessChecker implements CanActivate {
+  constructor(
+    private _session: SessionService,
+    restService: RestApiService,
+    router: Router,
+    roleCheckerService: RoleCheckerService
+  ) {
+    super(router, new EmptyRoleChecker(restService, roleCheckerService));
+  }
+
+  /**
+   * Teste si connecté ou pas
+   * @override
+   */ 
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return Observable.create((observer: Observer<boolean>) => {
+      // disjonction (OU logique) des clauses (role et rights checker)
+      let sub: Subscription = this.isAuthorized(false).finally(() => {
+        sub.unsubscribe();      // libère ressources
+      }).subscribe(
+        (res: boolean) => {     // on attend le résultat (juste pour mettre à jour les rôles dans ce cas-ci)
+          observer.next(this._session.logged);
+          observer.complete();
+        },
+        (error: any) => {
+          // erreur éventuelle : pas d'erreur envoyée par l'observer pour l'instant
+        }
+      );
+    });
   }
 }

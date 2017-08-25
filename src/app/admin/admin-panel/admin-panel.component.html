@@ -8,30 +8,30 @@
 
 <!-- utilisateurs -->
 <section *ngIf="selectedItemId === getItemId('Utilisateurs')">
-  <md-tab-group [(selectedIndex)]="usersTabIndex">
+  <md-tab-group [selectedIndex]="getTabIndex('users')" (selectedIndexChange)="setTabIndex('users', $event)">
     <md-tab label="Utilisateurs">   <!-- Onglet Utilisateurs -->
-      <app-users-section *ngIf="usersTabIndex === 0" [stateName]="'List'"></app-users-section>
+      <app-users-section *ngIf="getTabIndex('users') === 0" [stateName]="'List'"></app-users-section>
     </md-tab>
     <md-tab label="Rôles">          <!-- Onglet Roles -->
-      <app-users-section *ngIf="usersTabIndex === 1" [stateName]="'Roles'"></app-users-section>
+      <app-users-section *ngIf="getTabIndex('users') === 1" [stateName]="'Roles'"></app-users-section>
     </md-tab>
   </md-tab-group>
 </section>
 
 <!-- projets -->
 <section *ngIf="selectedItemId === getItemId('Projets')">
-  <md-tab-group [(selectedIndex)]="projectsTabIndex">
+  <md-tab-group [selectedIndex]="getTabIndex('projects')" (selectedIndexChange)="setTabIndex('projects', $event)">
     <md-tab label="Projets">    <!-- Onglet Projets -->
-      <app-projects-section *ngIf="projectsTabIndex === 0" [stateName]="'List'"></app-projects-section>
+      <app-projects-section *ngIf="getTabIndex('projects') === 0" [stateName]="'List'"></app-projects-section>
     </md-tab>
   </md-tab-group>
 </section>
 
 <!-- logs -->
 <section *ngIf="selectedItemId === getItemId('Logs')">
-  <md-tab-group [(selectedIndex)]="logsTabIndex">
+  <md-tab-group [selectedIndex]="getTabIndex('logs')" (selectedIndexChange)="setTabIndex('logs', $event)">
     <md-tab label="Logs">   <!-- Onglet Logs -->
-      <p *ngIf="logsTabIndex === 0">Affichage des logs (WIP)</p>
+      <p *ngIf="getTabIndex('logs') === 0">Affichage des logs (WIP)</p>
     </md-tab>
   </md-tab-group>
 </section>

@@ -21,10 +21,15 @@
         [selectedProject]="selectedProject" [update]="updateProjectList" (loaded)="loaded()" sidenav>
     </app-projectlist>
   </sl-sidenav>
+
+  <!-- menu de navigation du panneau compte utilisateur -->
+  <sl-sidenav *ngIf="showAccountNavList()">
+    <app-account-nav-list [selectedItem]="session.getSelectedItemId('Account')" sidenav></app-account-nav-list>
+  </sl-sidenav>
   
   <!-- menu de navigation du panneau d'admin -->
   <sl-sidenav *ngIf="showAdminNavList()">
-    <app-admin-nav-list [selectedAdminItem]="selectedAdminItem" sidenav></app-admin-nav-list>
+    <app-admin-nav-list [selectedItem]="session.getSelectedItemId('Admin')" sidenav></app-admin-nav-list>
   </sl-sidenav>
 
   <!-- contenu de la page -->
