@@ -227,6 +227,10 @@ export class AdminRouteAccessChecker extends ConjunctiveRouteAccessChecker {
   }
 }
 
+/**
+ * Service qui vérifie que l'utilisateur est bien connecté (authentifié) avant d'activer la route
+ */
+@Injectable()
 export class LoggedAccessChecker extends RouteAccessChecker implements CanActivate {
   constructor(
     private _session: SessionService,
@@ -250,6 +254,9 @@ export class LoggedAccessChecker extends RouteAccessChecker implements CanActiva
         (res: boolean) => {     // on attend le résultat (juste pour mettre à jour les rôles dans ce cas-ci)
           observer.next(this._session.logged);
           observer.complete();
+          if(! this._session.logged) {
+            this.router.navigate(['/']); // faux, on va à l'accueil
+          }
         },
         (error: any) => {
           // erreur éventuelle : pas d'erreur envoyée par l'observer pour l'instant
