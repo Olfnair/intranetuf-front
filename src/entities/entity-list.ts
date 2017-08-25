@@ -225,8 +225,11 @@ export abstract class AbstractEntityList<T extends Entity> {
    */
   select(whereParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<T>> {
     return Observable.create((observer: Observer<FlexQueryResult<T>>) => {
+      console.log('select');
       let selectResults: T[] = this.sort(this.search(new ParamsParser(whereParams).parse()),
         new ParamsParser(orderParams).parse());
+      console.log(new FlexQueryResult<T>(selectResults.slice(index, (limit > 0 ? index + limit : undefined)),
+        selectResults.length));
       observer.next(new FlexQueryResult<T>(selectResults.slice(index, (limit > 0 ? index + limit : undefined)),
         selectResults.length));
       observer.complete();

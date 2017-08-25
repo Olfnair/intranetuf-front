@@ -1,20 +1,24 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { RestApiService } from "app/services/rest-api.service";
 import { GuiForm } from "app/gui/gui-form";
-import { DatatableContentManager } from "app/gui/datatable";
+import { DatatableContentManager, DatatableQueryParams } from "app/gui/datatable";
 import { User } from "entities/user";
 import { RestLong } from "objects/rest-long";
 import { EntityList } from "entities/entity-list";
 
 class SelectedUsersDatatable extends DatatableContentManager<User, EntityList<User>> { 
   
-  constructor(private _userList: EntityList<User>) {
+  constructor(private _userList: EntityList<User>, private _title: string = '') {
     super(
       _userList,
       'select',
       false
     );
+  }
+
+  get title(): string {
+    return this._title;
   }
 
   get userList(): EntityList<User> {
@@ -31,7 +35,10 @@ class AvailableUsersDatatable extends DatatableContentManager<User, RestApiServi
     super(
       _restService,
       'fetchUsersExcludeIds',
-      false
+      false,
+      () => {
+        this.reload = false;
+      }
     );
   }
 
@@ -53,8 +60,10 @@ class AvailableUsersDatatable extends DatatableContentManager<User, RestApiServi
   /**
    * Ajoute les utilisateurs sélectionnés
    */
-  submit(): void {
-
+  save(): void {
+    this._selectedUsers.forEach((user: User) => {
+      this._unavailableUsers.userList.add(user);
+    });
   }
   
 }
@@ -64,12 +73,14 @@ class AvailableUsersDatatable extends DatatableContentManager<User, RestApiServi
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.css']
 })
-export class AddProjectComponent extends GuiForm {
+export class AddProjectComponent extends GuiForm implements OnInit {
 
   private _close$: EventEmitter<void> = new EventEmitter<void>();
 
-  private _selectedControllers: SelectedUsersDatatable = new SelectedUsersDatatable(new EntityList<User>());
-  private _selectedValidators: SelectedUsersDatatable = new SelectedUsersDatatable(new EntityList<User>());
+  private _selectedControllers: SelectedUsersDatatable =
+      new SelectedUsersDatatable(new EntityList<User>(), 'Contrôleurs');
+  private _selectedValidators: SelectedUsersDatatable =
+      new SelectedUsersDatatable(new EntityList<User>(), 'Valideurs');
   private _availableControllers: AvailableUsersDatatable;
   private _availableValidators: AvailableUsersDatatable;
 
@@ -84,10 +95,12 @@ export class AddProjectComponent extends GuiForm {
     this._availableValidators = new AvailableUsersDatatable(_restService, this._selectedValidators);
     this._selectedUsers.push(this._selectedControllers, this._selectedValidators);
     this._availableUsers.push(this._availableControllers, this._availableValidators);
-    
+  }
 
-    // TODO : enlever (pour test) :
-    this._availableUsers[0].load();
+  ngOnInit(): void {  
+    this._selectedUsers.forEach((selectedTable: SelectedUsersDatatable) => {
+      selectedTable.load();
+    });
   }
 
   @Output('close')
@@ -107,12 +120,19 @@ export class AddProjectComponent extends GuiForm {
     return this._selectUsersMode;
   }
 
-  isSelectUsersMode(index: number): boolean {
-    return this._selectUsersMode[index];
+  addUsersTo(index: number): void {
+    this.switchMode(index);
+    this._availableUsers[index].reload = true;
+    this._availableUsers[index].load();
   }
 
   switchMode(index: number): void {
     this._selectUsersMode[index] = ! this._selectUsersMode[index];
+  }
+
+  save(index: number): void {
+    this._availableUsers[index].save();
+    this.switchMode(index);
   }
 
   close(): void {
