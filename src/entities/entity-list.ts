@@ -12,7 +12,7 @@ import { Observer } from "rxjs/Observer";
  * Classe pour contenir un string
  */
 class ParamsString {
-  public str: string;
+  public str: string = '';
 }
 
 /**
@@ -41,16 +41,16 @@ export class ParamsParser {
    */
   public parse(): Map<string, string> {
     let resmap: Map<string, string> = new Map<string, string>();
-    let col: ParamsString = new ParamsString();
-    let param: ParamsString = new ParamsString();
+    let col: ParamsString;
+    let param: ParamsString;
     // valeur par défaut :
     if (this._params == 'default' || this._params == '') {
       return resmap; // map vide
     }
     // on crée un map (colonne, param) :
-    for (let i: number = 0; i < this._params.length && (i = this.extractNextValue(i, ParamsParser.COL, col)) >= 0;) {
+    for (let i: number = 0; i < this._params.length && (i = this.extractNextValue(i, ParamsParser.COL, col = new ParamsString())) >= 0;) {
       // pour chaque colonne, on extrait la valeur de param :
-      if ((i = this.extractNextValue(i, ParamsParser.PARAM, param)) < 0) {
+      if ((i = this.extractNextValue(i, ParamsParser.PARAM, param = new ParamsString())) < 0) {
         // valeur introuvable => erreur : on arrête ici et renvoie ce qu'on a déjà trouvé
         return resmap;
       }
@@ -225,11 +225,8 @@ export abstract class AbstractEntityList<T extends Entity> {
    */
   select(whereParams: string, orderParams: string, index: number, limit: number): Observable<FlexQueryResult<T>> {
     return Observable.create((observer: Observer<FlexQueryResult<T>>) => {
-      console.log('select');
       let selectResults: T[] = this.sort(this.search(new ParamsParser(whereParams).parse()),
         new ParamsParser(orderParams).parse());
-      console.log(new FlexQueryResult<T>(selectResults.slice(index, (limit > 0 ? index + limit : undefined)),
-        selectResults.length));
       observer.next(new FlexQueryResult<T>(selectResults.slice(index, (limit > 0 ? index + limit : undefined)),
         selectResults.length));
       observer.complete();
