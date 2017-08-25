@@ -29,12 +29,11 @@
         }"
         [data]="availableUsers[0].dataObs"
         [columns]="[
-          { label: 'Identifiant', query: 'login',     sort: true, search: true, width: '14%' },
-          { label: 'Email',       query: 'email',     sort: true, search: true, width: '22%' },
-          { label: 'Prénom',      query: 'firstname', sort: true, search: true, width: '18%' },
-          { label: 'Nom',         query: 'name',      sort: true, search: true, width: '18%' },
-          { label: 'Actif',       query: 'active',    sort: true,               width: '12%' },
-          { label: 'En Attente',  query: 'pending',   sort: true,               width: '12%' }
+          { label: 'Identifiant', query: 'login',     sort: true, search: true, width: '20%' },
+          { label: 'Prénom',      query: 'firstname', sort: true, search: true, width: '22%' },
+          { label: 'Nom',         query: 'name',      sort: true, search: true, width: '22%' },
+          { label: 'Actif',       query: 'active',    sort: true,               width: '16%' },
+          { label: 'En Attente',  query: 'pending',   sort: true,               width: '16%' }
         ]"
         (selectedDataUpdate)="availableUsers[0].selectedUsers = $event"
         (queryParams)="availableUsers[0].update($event)">
@@ -49,7 +48,6 @@
     <ng-template let-user="item">   
       <!-- Infos sur l'utilisateur -->
       <td>{{user.login}}</td>
-      <td>{{user.email}}</td>
       <td>{{user.firstname}}</td>
       <td>{{user.name}}</td>
       <td>{{user.active | boolToString}}</td>

@@ -52,7 +52,13 @@
       <datatable
           [options]="{displayToggle: true, emptyMessage: 'Pas d\'action sur ce fichier.'}"
           [data]="container.checksObs"
-          [columns]="['Ordre', 'Nom', 'Prénom', 'Statut', 'Commentaire']">
+          [columns]="[
+            { label: 'Ordre',       width:  '8%'},
+            { label: 'Nom',         width: '15%'},
+            { label: 'Prénom',      width: '15%'},
+            { label: 'Statut',      width: '10%'},
+            { label: 'Commentaire', width: '52%'}
+          ]">
         <datatable-title>
           <h2>{{container.title}} <status-icon [status]="checksStatus(container)"></status-icon></h2>
         </datatable-title>
@@ -61,7 +67,7 @@
           <td>{{check.user.name}}</td>
           <td>{{check.user.firstname}}</td>
           <td>{{check.status | checkStatus}}</td>
-          <td class="commentCell">
+          <td>
             <p>{{check.comment}}</p>
           </td>
         </ng-template>
