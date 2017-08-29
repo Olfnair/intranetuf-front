@@ -18,7 +18,7 @@
 
 <section class="container margin">
   <ng-container *ngFor="let selectMode of selectUsersMode; let i = index">
-    <datatable *ngIf="! selectMode"
+    <datatable *ngIf="! selectMode" class="margin"
         [options]="{
           addButton: true,
           addButtonTooltip: 'Ajouter un utilisateur',
@@ -47,11 +47,16 @@
         <td>{{user.login}}</td>
         <td>{{user.firstname}}</td>
         <td>{{user.name}}</td>
-        <td></td>
+        <td class="tdRight">
+          <button md-raised-button class="smallButton" type="button" color="warn"
+              (click)="removeUserFrom(user, i)" mdTooltip="Supprimer" mdTooltipPosition="above">
+            <md-icon>clear</md-icon>
+          </button>
+        </td>
       </ng-template>
     </datatable>
   
-    <datatable *ngIf="selectMode"
+    <datatable *ngIf="selectMode" class="margin"
         [options]="{
           selectionCol: true,
           displayFooter: true,
@@ -102,17 +107,19 @@
     </datatable>
   </ng-container>
   
-  <!-- Bouton pour Valider -->
-  <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit"
-      [disabled]="!form.valid" (click)="submit()">
-    Créer le Projet
-  </button>
+  <md-card class="margin">
+    <!-- Bouton pour Valider -->
+    <button md-raised-button gui-form-action class="submitButton2" color="primary" type="submit"
+        [disabled]="!form.valid" (click)="submit()">
+      Créer le Projet
+    </button>
 
-  <!-- Espace -->
-  <span style="min-width: 0.3em;"></span>
+    <!-- Espace -->
+    <span style="min-width: 0.3em;"></span>
 
-  <!-- Bouton pour Annuler -->
-  <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button" (click)="close()">
-    Annuler
-  </button>
+    <!-- Bouton pour Annuler -->
+    <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button" (click)="close()">
+      Annuler
+    </button>
+  </md-card>
 </section>

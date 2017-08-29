@@ -18,9 +18,9 @@ export class DatePipe implements PipeTransform {
    * @param {number} epoch - epoch (en secondes) à transforer en chaine de caratères
    * @returns {string} la chaine de caractères qui correspond à l'epoch
    */
-  transform(epoch: number): string {
+  transform(epoch: number, defaultValue: string = ''): string {
     if(! epoch) {
-      return "inconnue";
+      return defaultValue;
     }
     let date: Date = new Date(epoch * 1000);
     let day: string = date.getDate().toString();

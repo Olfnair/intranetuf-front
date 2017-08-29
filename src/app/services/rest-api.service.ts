@@ -356,6 +356,22 @@ export class RestApiService {
   }
 
   /**
+   * Crée ou édite (s'ils existent déjà) les droits passés en paramètre pour le projet dont l'id est spécifié
+   * @param {number} projectId - id du projet
+   * @param {ProjectRight[]} rights - droits à créer ou éditer
+   * @returns {Observable<number>} - statut de la réponse http
+   */
+  createOrEditRightsForProject(projectId: number, rights: ProjectRight[]): Observable<number> {
+    return this._http.put(
+      this._backendURL.projectRight + '/project/' + projectId,
+      {projectRight: rights},
+      this.options()
+    ).map((res: Response) => {
+      return res.status;
+    });
+  }
+
+  /**
    * Récupère les droits de l'utilisateur courant sur le projet dont l'id est donné en paramètre
    * @param {number} projectId - id du projet dont on veut les droits pour l'utilisateur courant
    * @returns {Observable<ProjectRight[]>} Observable sur les droits de l'utilisateur

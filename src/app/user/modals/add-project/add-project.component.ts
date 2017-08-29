@@ -6,8 +6,11 @@ import { DatatableContentManager, DatatableQueryParams } from "app/gui/datatable
 import { User } from "entities/user";
 import { RestLong } from "objects/rest-long";
 import { EntityList } from "entities/entity-list";
+import { Subscription } from "rxjs/Subscription";
+import { Project } from "entities/project";
+import { ProjectRight, Right } from "entities/project-right";
 
-class SelectedUsersDatatable extends DatatableContentManager<User, EntityList<User>> { 
+class SelectedUsersDatatable extends DatatableContentManager<User, EntityList<User>> {
   
   constructor(private _userList: EntityList<User>, private _title: string = '') {
     super(
@@ -89,7 +92,7 @@ export class AddProjectComponent extends GuiForm implements OnInit {
 
   private _selectUsersMode: boolean[] = [false, false];
 
-  constructor(_restService: RestApiService) {
+  constructor(private _restService: RestApiService) {
     super();
     this._availableControllers = new AvailableUsersDatatable(_restService, this._selectedControllers);
     this._availableValidators = new AvailableUsersDatatable(_restService, this._selectedValidators);
@@ -97,7 +100,7 @@ export class AddProjectComponent extends GuiForm implements OnInit {
     this._availableUsers.push(this._availableControllers, this._availableValidators);
   }
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this._selectedUsers.forEach((selectedTable: SelectedUsersDatatable) => {
       selectedTable.load();
     });
@@ -126,6 +129,11 @@ export class AddProjectComponent extends GuiForm implements OnInit {
     this._availableUsers[index].load();
   }
 
+  removeUserFrom(user: User, index: number): void {
+    this._selectedUsers[index].userList.remove(user.id);
+    this._selectedUsers[index].load();
+  }
+
   switchMode(index: number): void {
     this._selectUsersMode[index] = ! this._selectUsersMode[index];
   }
@@ -139,11 +147,58 @@ export class AddProjectComponent extends GuiForm implements OnInit {
     this._close$.emit();
   }
 
+  private convertSelectedUsersToRights(
+    rightsMap: Map<number, ProjectRight>,
+    index: number,
+    rightToAdd: Right,
+    project: Project
+  ): void {
+    this.selectedUsers[index].userList.listMap.forEach((user: User) => {
+      let right: ProjectRight;
+      if(rightsMap.has(user.id)) {
+        right = rightsMap.get(user.id);
+      }
+      else {
+        right = new ProjectRight();
+      }
+      right.rights |= rightToAdd;
+      right.user = user;
+      right.project = project;
+      rightsMap.set(user.id, right);
+    });
+  }
+
   /**
    * Enregistre le nouveau projet
    */
   submit(): void {
-    this.close();
+    let sub: Subscription = this._restService.createProject(this.form.controls.name.value).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (project: Project) => {
+        let rightsMap: Map<number, ProjectRight> = new Map<number, ProjectRight>();
+        this.convertSelectedUsersToRights(rightsMap, 0, Right.CONTROLFILE, project);
+        this.convertSelectedUsersToRights(rightsMap, 1, Right.VALIDATEFILE, project);
+        let rightsTab: ProjectRight[] = [];
+        rightsMap.forEach((right: ProjectRight) => {
+          rightsTab.push(right);
+        });
+        let sub: Subscription = this._restService.createOrEditRightsForProject(project.id, rightsTab).finally(() => {
+          sub.unsubscribe(); 
+        }).subscribe(
+          (status: number) => {
+            // OK
+            this.close();
+          },
+          (error: Response) => {
+            // TODO : afficher message d'erreur
+          }
+        );
+      },
+      (error: Response) => {
+        // TODO : message d'erreur
+      }
+    )
   }
 
   /**

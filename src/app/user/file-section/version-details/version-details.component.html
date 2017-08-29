@@ -53,11 +53,13 @@
           [options]="{displayToggle: true, emptyMessage: 'Pas d\'action sur ce fichier.'}"
           [data]="container.checksObs"
           [columns]="[
-            { label: 'Ordre',       width:  '8%'},
-            { label: 'Nom',         width: '15%'},
-            { label: 'Prénom',      width: '15%'},
-            { label: 'Statut',      width: '10%'},
-            { label: 'Commentaire', width: '52%'}
+            { label: 'Ordre',         width:  '8%'},
+            { label: 'Nom',           width: '15%'},
+            { label: 'Prénom',        width: '15%'},
+            { label: 'Statut',        width: '10%'},
+            { label: 'Date Init',     width: '10%'},
+            { label: 'Date Contrôle', width: '10%'},
+            { label: 'Commentaire',   width: '32%'}
           ]">
         <datatable-title>
           <h2>{{container.title}} <status-icon [status]="checksStatus(container)"></status-icon></h2>
@@ -67,6 +69,8 @@
           <td>{{check.user.name}}</td>
           <td>{{check.user.firstname}}</td>
           <td>{{check.status | checkStatus}}</td>
+          <td>{{check.date_init | date}}</td>
+          <td>{{check.date_checked | date}}</td>
           <td>
             <p>{{check.comment}}</p>
           </td>
