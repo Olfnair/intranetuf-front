@@ -23,7 +23,6 @@ import { AdminPanelComponent } from "./admin-panel/admin-panel.component";
 import { ProjectlistComponent } from './projects-section/projectlist/projectlist.component';
 import { ProjectRightslistComponent } from './projects-section/project-rightslist/project-rightslist.component';
 import { ProjectsSectionComponent } from './projects-section/projects-section.component';
-import { UserFormComponent } from "./users-section/user-form/user-form.component";
 import { UserlistComponent } from "./users-section/userlist/userlist.component";
 import { UserRightslistComponent } from "./users-section/user-rightslist/user-rightslist.component";
 import { UserRolesComponent } from './users-section/user-roles/user-roles.component';
@@ -39,7 +38,6 @@ import { UsersSectionComponent } from './users-section/users-section.component';
     ProjectlistComponent,
     ProjectRightslistComponent,
     ProjectsSectionComponent,
-    UserFormComponent,
     UserlistComponent,
     UserRightslistComponent,
     UserRolesComponent,
@@ -62,7 +60,6 @@ import { UsersSectionComponent } from './users-section/users-section.component';
     ProjectlistComponent,
     ProjectRightslistComponent,
     ProjectsSectionComponent,
-    UserFormComponent,
     UserlistComponent,
     UserRightslistComponent,
     UserRolesComponent,

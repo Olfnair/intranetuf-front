@@ -7,7 +7,7 @@
 
 <section class="container margin">
   <gui-form [formGroup]="form"
-      [title]="(userToEdit != undefined ? 'Modification de '
+      [title]="(userToEdit != undefined ? 'Informations de '
         + userToEdit.firstname + ' ' + userToEdit.name : 'Créer un compte')"
       submitOnEnter="true" (formSubmit)="submit()">
     
@@ -15,7 +15,7 @@
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Prénom" formControlName="firstname" required/>
       <!-- Erreurs prévues dans le modèle : -->
-      <md-error *ngIf="form.controls.firstname.errors?.required">Veuillez indiquer votre prénom</md-error>
+      <md-error *ngIf="form.controls.firstname.errors?.required">Veuillez indiquer le prénom de l'utilisateur</md-error>
       <md-error *ngIf="form.controls.firstname.errors?.minlength">Au moins 2 caractères</md-error>
     </md-input-container>
     
@@ -23,7 +23,7 @@
     <md-input-container gui-form-input>
       <input mdInput type="text" placeholder="Nom" formControlName="name" required/>
       <!-- Erreurs prévues dans le modèle : -->
-      <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer votre nom</md-error>
+      <md-error *ngIf="form.controls.name.errors?.required">Veuillez indiquer le nom de l'utilisateur</md-error>
       <md-error *ngIf="form.controls.name.errors?.minlength">Au moins 2 caractères</md-error>
     </md-input-container>
     
@@ -44,7 +44,7 @@
       <md-error *ngIf="form.controls.email.errors?.email">Veuillez entrer une adresse e-mail valide</md-error>
     </md-input-container>
 
-    <md-input-container gui-form-input>
+    <md-input-container gui-form-input *ngIf="isAdminMode">
       <input mdInput class="hiddenInput" type="text" placeholder="Rôles" formControlName="role"/>
       <table class="rolesTable">
         <tr>
@@ -67,7 +67,7 @@
       <label *ngIf="userToEdit">Enregistrer les modifications</label>
     </button>
     <!-- Annuler -->
-    <button md-raised-button gui-form-action class="cancelButton" color="warn" type="button"
+    <button *ngIf="isAdminMode" md-raised-button gui-form-action class="cancelButton" color="warn" type="button"
         (click)="cancel()">
       Annuler
     </button>

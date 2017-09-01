@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Inject, Optional } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { MD_DIALOG_DATA } from "@angular/material";
 import { RestApiService } from "app/services/rest-api.service";
+import { ModalService } from "app/gui/modal.service";
 import { GuiForm } from "app/gui/gui-form";
 import { DatatableContentManager, DatatableQueryParams } from "app/gui/datatable";
 import { User } from "entities/user";
@@ -9,6 +11,12 @@ import { EntityList } from "entities/entity-list";
 import { Subscription } from "rxjs/Subscription";
 import { Project } from "entities/project";
 import { ProjectRight, Right } from "entities/project-right";
+
+class Options {
+  constructor(
+    public isModal: boolean = undefined
+  ) { }
+}
 
 class SelectedUsersDatatable extends DatatableContentManager<User, EntityList<User>> {
   
@@ -92,7 +100,11 @@ export class AddProjectComponent extends GuiForm implements OnInit {
 
   private _selectUsersMode: boolean[] = [false, false];
 
-  constructor(private _restService: RestApiService) {
+  constructor(
+    private _restService: RestApiService,
+    private _modal: ModalService,
+    @Optional() @Inject(MD_DIALOG_DATA) private _options: Options = undefined
+  ) {
     super();
     this._availableControllers = new AvailableUsersDatatable(_restService, this._selectedControllers);
     this._availableValidators = new AvailableUsersDatatable(_restService, this._selectedValidators);
@@ -123,6 +135,13 @@ export class AddProjectComponent extends GuiForm implements OnInit {
     return this._selectUsersMode;
   }
 
+  get isModal(): boolean {
+    if(! this._options) {
+      return false;
+    }
+    return this._options.isModal;
+  }
+
   addUsersTo(index: number): void {
     this.switchMode(index);
     this._availableUsers[index].reload = true;
@@ -143,7 +162,10 @@ export class AddProjectComponent extends GuiForm implements OnInit {
     this.switchMode(index);
   }
 
-  close(): void {
+  close(project: Project = undefined): void {
+    if(this.isModal) {
+      this._modal.close(project);
+    }
     this._close$.emit();
   }
 
@@ -177,8 +199,8 @@ export class AddProjectComponent extends GuiForm implements OnInit {
     }).subscribe(
       (project: Project) => {
         let rightsMap: Map<number, ProjectRight> = new Map<number, ProjectRight>();
-        this.convertSelectedUsersToRights(rightsMap, 0, Right.CONTROLFILE, project);
-        this.convertSelectedUsersToRights(rightsMap, 1, Right.VALIDATEFILE, project);
+        this.convertSelectedUsersToRights(rightsMap, 0, Right.VIEWPROJECT | Right.CONTROLFILE, project);
+        this.convertSelectedUsersToRights(rightsMap, 1, Right.VIEWPROJECT | Right.VALIDATEFILE, project);
         let rightsTab: ProjectRight[] = [];
         rightsMap.forEach((right: ProjectRight) => {
           rightsTab.push(right);
@@ -188,15 +210,15 @@ export class AddProjectComponent extends GuiForm implements OnInit {
         }).subscribe(
           (status: number) => {
             // OK
-            this.close();
+            this.close(project);
           },
           (error: Response) => {
-            // TODO : afficher message d'erreur
+            this._modal.info('Erreur', 'Erreur pendant l\'ajout des contrôleurs et valideurs', false);
           }
         );
       },
       (error: Response) => {
-        // TODO : message d'erreur
+        this._modal.info('Erreur', 'Erreur lors de la création du projet', false);
       }
     )
   }

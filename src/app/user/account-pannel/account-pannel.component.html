@@ -10,7 +10,9 @@
 <section *ngIf="selectedItemId === getItemId('Informations')">
   <md-tab-group [selectedIndex]="getTabIndex('info')" (selectedIndexChange)="setTabIndex('info', $event)">
     <md-tab label="Informations">   <!-- Onglet Informations -->
-      <p *ngIf="getTabIndex('info') === 0">Informations (WIP)</p>
+      <!-- formulaire d'édition d'un utilisateur -->
+      <app-user-form *ngIf="getTabIndex('info') === 0" [userToEdit]="currentUser">
+      </app-user-form>
     </md-tab>
   </md-tab-group>
 </section>
@@ -19,7 +21,7 @@
 <section *ngIf="selectedItemId === getItemId('Fichiers')">
   <md-tab-group [selectedIndex]="getTabIndex('files')" (selectedIndexChange)="setTabIndex('files', $event)">
     <md-tab label="Fichiers">      <!-- Onglet Fichiers -->
-      <p *ngIf="getTabIndex('files') === 0">Fichiers (WIP)</p>
+      <app-user-file-section *ngIf="getTabIndex('files') === 0"></app-user-file-section>
     </md-tab>
   </md-tab-group>
 </section>

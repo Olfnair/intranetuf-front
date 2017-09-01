@@ -121,6 +121,31 @@ export class RestApiService {
   }
 
   /**
+   * Récupère la liste des fichiers pour un utilisateur en fonction des paramètres
+   * @param {number} userId - l'id de l'utilisateur
+   * @param {string} searchParams - paramètres de recherche
+   * @param {string} orderParams - paramètres de tri
+   * @param {number} index - index du début pour la pagination
+   * @param {number} limit - nombre max d'items pour la pagination
+   * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
+   */
+  fetchFilesByUser(
+    userId: number,
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<File>> {
+    return this._http.get(
+      this._backendURL.file + '/user/' + userId + '/query/'
+      + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      this.options()
+    ).map((res: Response) => {
+      return res.json().flexQueryResult;
+    });
+  }
+
+  /**
    * Crée l'entité d'un fichier
    * @param {File} file - le fichier à créer
    * @returns {Observable<File>} - le fichier créé 
@@ -199,6 +224,17 @@ export class RestApiService {
       {restLong: RestApiService.listIds(projects)},
       this.options()
     );
+  }
+
+  /**
+   * Récupère l'utlisateur dont l'id est spécifié
+   * @param {number} userId - id de l'utilisateur à récupérer
+   * @returns {Observable<User>} - utilisateur demandé
+   */
+  fetchUser(userId: number): Observable<User> {
+    return this._http.get(this._backendURL.user + '/' + userId, this.options()).map((res: Response) => {
+      return res.json().user;
+    });
   }
 
   /**
@@ -509,6 +545,21 @@ export class RestApiService {
     return this._http.put(
       this._backendURL.workflowCheck + '/' + check.id,
       {workflowCheck: check},
+      this.options()
+    ).map((res: Response) => {
+      return res.status;
+    });
+  }
+
+  /**
+   * Envoie un rappel pour effectuer le check à l'utilisateur responsable du check passé en paramètre
+   * @param {WorkflowCheck} check - check pour lequel il faut envoyer un rappel
+   * @returns {Observable<number>} - statut de la réponse http
+   */
+  workflowCheckSendReminder(check: WorkflowCheck): Observable<number> {
+    return this._http.post(
+      this._backendURL.workflowCheck + '/sendReminder/' + check.id,
+      {},
       this.options()
     ).map((res: Response) => {
       return res.status;

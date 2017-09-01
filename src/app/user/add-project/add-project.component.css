@@ -1,0 +1,13 @@
+.margin {
+  margin: 1em auto;
+}
+
+.tdRight {
+  text-align: right;
+}
+
+.modalContainer {
+  overflow: auto;
+  min-width: 70vw;
+  max-height: 80vh;
+}

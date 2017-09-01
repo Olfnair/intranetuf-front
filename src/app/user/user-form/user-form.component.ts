@@ -27,6 +27,9 @@ export class UserFormComponent extends GuiForm {
   /** Utilisateur à éditer, undefined pour créer un nouvel utilisateur */
   private _userToEdit: User = undefined;
 
+  /** mode admin ou non */
+  private _isAdminMode: boolean = false;
+
   /** Rôles courants définis pour l'utilisateur dans le form */
   private _roles: number = 0;
 
@@ -63,6 +66,19 @@ export class UserFormComponent extends GuiForm {
       this._initialValue = this.form.value;
     }
     this._userToEdit = userToEdit;
+  }
+
+  /**
+   * @property {boolean} isAdminMode - indique si on édite du point de vue d'un admin (true)
+   *                                   ou de celui d'un utilisateur (false)
+   */
+  get isAdminMode(): boolean {
+    return this._isAdminMode;
+  }
+
+  @Input()
+  set isAdminMode(isAdminMode: boolean) {
+    this._isAdminMode = isAdminMode;
   }
 
   /** @property {BasicRoleChecker} roleChecker - roleChecker permettant de vérifier le role de l'utiliseur courant */
@@ -114,6 +130,7 @@ export class UserFormComponent extends GuiForm {
   submit(): void {
     // Création d'une instance user en fonction des informations du formulaire :
     let user: User = new User();
+    Object.keys(this._userToEdit).forEach((k: string) => { user[k] = this._userToEdit[k]});
     user.name = this.form.value.name;
     user.firstname = this.form.value.firstname;
     user.login = this.form.value.login;
@@ -147,8 +164,10 @@ export class UserFormComponent extends GuiForm {
     }).subscribe(
       (res: any) => {           // OK : utilisateur créé/modifié avec succès
         let sub: Subscription = this._modal.info(modalTitle, modalText, true).finally(() => {
-          sub.unsubscribe()
+          sub.unsubscribe();
         }).subscribe();
+        this._userToEdit = user;
+        this._initialValue = this.form.value;
         this._close$.emit(true);
       },
       (error: Response) => {    // Erreur :

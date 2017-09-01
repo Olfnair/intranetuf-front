@@ -199,7 +199,7 @@ export class AddFileComponent extends GuiForm {
     
     // Ajout des contrôleurs et valideurs de cette version :
     this._userContainers.forEach((container: UserContainer) => {
-      container.addAsChecksToVersion(version);
+      container.addAsChecksToVersionAndProject(version, this._project);
     });
 
     if (this._newVersionMode) {   // Mode nouvelle version :

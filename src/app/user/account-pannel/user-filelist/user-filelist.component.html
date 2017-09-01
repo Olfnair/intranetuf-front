@@ -1,0 +1,37 @@
+<datatable
+    [options]="{
+      emptyMessage: 'Vous n\'avez pas encore uploadé de fichier.',
+      emptySearchMessage: 'Aucun fichier ne correspond à votre recherche.'
+    }"
+    [data]="dataObs"
+    [columns]="[
+      { label: 'Fichier',        query: 'version.filename',    sort: true, search: true, width: '35%' },
+      { label: 'Projet',         query: 'project.name',        sort: true, search: true, width: '30%' },
+      { label: 'Version',        query: 'version.num',         sort: true, search: true, width: '10%' },
+      { label: 'Date d\'upload', query: 'version.date_upload', sort: true,               width: '13%' },
+      { label: 'Statut',         query: 'version.status',      sort: true, search: true, width: '12%' }
+    ]"
+    (queryParams)="update($event, [userId])">
+  
+  <!-- Titre -->
+  <datatable-title>
+    <h2>Liste de vos fichiers</h2>   
+  </datatable-title>
+  
+  <!-- Template pour l'affichage des fichiers : -->
+  <ng-template let-file="item">
+    <!-- Infos du fichier -->
+    <td>
+      <a
+          href="javascript:void(0)"
+          mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0"
+          (click)="versionDetails(file)">
+        {{file.version?.filename | truncate:30}}
+      </a>
+    </td>
+    <td>{{file.project?.name}}</td>
+    <td>{{file.version?.num}}</td>
+    <td>{{file.version?.date_upload | date:'inconnue'}}</td>
+    <td>{{file.version?.status | versionStatus}}</td>
+  </ng-template>
+</datatable>

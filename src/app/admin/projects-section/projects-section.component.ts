@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GenericEntitySection } from "../generic-entity-section";
+import { GenericEntitySection } from "app/shared/generic-entity-section";
 import { Project } from "entities/project";
 
 /**

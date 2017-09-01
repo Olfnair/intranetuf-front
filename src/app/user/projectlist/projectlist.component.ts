@@ -11,7 +11,8 @@ import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
 import { BasicRoleChecker, RoleCheckerService } from "app/services/role-checker";
-import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
+//import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
+import { AddProjectComponent } from "app/user/add-project/add-project.component";
 import { NavList, NavListSelectable } from "app/gui/nav-list";
 import { Project } from "entities/project";
 import { FlexQueryResult } from "objects/flex-query-result";
@@ -179,39 +180,16 @@ export class ProjectlistComponent extends NavList implements OnInit {
   }
 
   /**
-   * Crée le projet dont le nom est donné en paramètre
-   * @private
-   * @param {string} projectName - nom du projet à créer
-   */
-  private createProject(projectName: string): void {
-    let sub: Subscription = this._restService.createProject(projectName).finally(() => {
-      sub.unsubscribe();      // libération des ressources
-    }).subscribe(
-      (project: Project) => { // OK : projet créé
-        this._selectedProject = project; // on sélectionne le projet créé
-        this.loadProjects();             // on recharge la liste des projets
-      },
-      (error: Response) => {  // Erreur lors de la création du projet
-        // TODO : afficher un message d'erreur (Utiliser ModalService)
-      }
-    );
-  }
-
-  /**
-   * Ouvre une fenêtre modale pour ajouter un projet
+   * Ouvre une fenêtre modale qui permet de créer un projet
    */
   add(): void {
-    let sub : Subscription = this._modal.popup(ChoseProjectNameComponent, {
-      title: "Nouveau Projet",
-      errorText: "Veuillez choisir un nom de projet",
-      submitText: "Créer le projet",
-      cancelText: "Annuler"
-    }).finally(() => {
+    let sub : Subscription = this._modal.popup(AddProjectComponent, {isModal: true}).finally(() => {
       sub.unsubscribe();
     }).subscribe(
-      (projectName: string) => {
-        if(projectName) {
-          this.createProject(projectName);
+      (project: Project) => {
+        if(project != undefined) {
+          this._selectedProject = project; // on sélectionne le projet créé
+          this.loadProjects();             // on recharge la liste des projets
         }
       },
       (error: any) => {

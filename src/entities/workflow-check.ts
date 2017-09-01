@@ -6,6 +6,7 @@
 import { Entity } from "./entity";
 import { User } from "./user";
 import { Version } from "./version";
+import { Project } from "entities/project";
 
 /**
  * Enumération des types possibles pour un check
@@ -55,6 +56,9 @@ export class WorkflowCheck extends Entity {
   
   /** utilisateur responsable du check */
   user: User = undefined;
+
+  /** projet relatif à ce check */
+  project: Project = undefined;
 
   /**
    * @constructor

@@ -15,10 +15,14 @@
 </app-userlist>
 
 <!-- formulaire d'ajout d'un utilisateur -->
-<app-user-form *ngIf="state == State.Add" (close)="state = State.List" [userToEdit]="undefined"></app-user-form>
+<app-user-form *ngIf="state == State.Add" (close)="state = State.List"
+    [userToEdit]="undefined" [isAdminMode]=true>
+</app-user-form>
 
 <!-- formulaire d'édition d'un utilisateur -->
-<app-user-form *ngIf="state == State.Edit" (close)="state = State.List" [userToEdit]="entity"></app-user-form>
+<app-user-form *ngIf="state == State.Edit" (close)="state = State.List"
+    [userToEdit]="entity" [isAdminMode]=true>
+</app-user-form>
 
 <!-- Gestion des droits d'un utilisateur -->
 <app-user-rightslist *ngIf="state == State.Rights" [entity]="entity" (close)="state = State.List">

@@ -1,0 +1,16 @@
+<!--
+  Auteur : Florian
+  License :
+  
+  Section qui gère les informations relatives aux fichiers de l'utilisateur courant
+-->
+
+<!-- Liste des fichiers de l'utilisateur -->
+<app-user-filelist *ngIf="state == State.Filelist"
+    (versionDetails)="setStateAndEntity(State.VersionDetails, $event)">
+</app-user-filelist>
+
+<!-- Details de version d'un fichier -->
+<app-version-details *ngIf="state == State.VersionDetails"
+    [file]="entity" (close)="state = State.Filelist">
+</app-version-details>

@@ -24,9 +24,12 @@ import { ChoseProjectNameComponent } from "./modals/chose-project-name/chose-pro
 import { CheckVersionComponent } from './file-section/check-version/check-version.component';
 import { VersionDetailsComponent } from './file-section/version-details/version-details.component';
 import { FileSectionComponent } from './file-section/file-section.component';
-import { AddProjectComponent } from './modals/add-project/add-project.component';
+import { AddProjectComponent } from './add-project/add-project.component';
 import { AccountNavListComponent } from './account-nav-list/account-nav-list.component';
 import { AccountPannelComponent } from './account-pannel/account-pannel.component';
+import { UserFormComponent } from "./user-form/user-form.component";
+import { UserFilelistComponent } from './account-pannel/user-filelist/user-filelist.component';
+import { UserFileSectionComponent } from './account-pannel/user-file-section/user-file-section.component';
 
 
 @NgModule({
@@ -44,9 +47,13 @@ import { AccountPannelComponent } from './account-pannel/account-pannel.componen
     FileSectionComponent,
     AddProjectComponent,
     AccountNavListComponent,
-    AccountPannelComponent
+    AccountPannelComponent,
+    UserFormComponent,
+    UserFilelistComponent,
+    UserFileSectionComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
+    AddProjectComponent,
     ChoseProjectNameComponent
   ],
   imports: [ // modules importés
@@ -72,7 +79,10 @@ import { AccountPannelComponent } from './account-pannel/account-pannel.componen
     FileSectionComponent,
     AddProjectComponent,
     AccountNavListComponent,
-    AccountPannelComponent
+    AccountPannelComponent,
+    UserFormComponent,
+    UserFilelistComponent,
+    UserFileSectionComponent
   ]
 })
 export class UserModule {}

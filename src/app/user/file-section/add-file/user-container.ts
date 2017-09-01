@@ -356,13 +356,14 @@ export class UserContainer {
    * Transforme les utilisateurs choisis en checks du type correspondant à celui du conteneur
    * @param {Version} version - version à laquelle il faut ajouter ces checks
    */
-  addAsChecksToVersion(version: Version): void {
+  addAsChecksToVersionAndProject(version: Version, project: Project): void {
     let checks: WorkflowCheck[] = [];
     for(let index: number = 0; index < this._users.length; ++index) {
       let check: WorkflowCheck = new WorkflowCheck();
       check.type = this._type;
       check.order_num = this.countOrderValue(index) - 1;
       check.user = this._users[index];
+      check.project = project;
       version.workflowChecks.push(check);
     }
   }

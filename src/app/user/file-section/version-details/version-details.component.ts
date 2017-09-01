@@ -10,6 +10,7 @@ import { Observer } from "rxjs/Observer";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { RoleCheckerService } from "app/services/role-checker";
+import { ModalService } from "app/gui/modal.service";
 import { environment } from "environments/environment";
 import { File } from "entities/file";
 import { Status as VersionStatus } from "entities/version";
@@ -96,11 +97,13 @@ export class VersionDetailsComponent {
    * @param {RestApiService} _restService - service REST 
    * @param {SessionService} _session - données globales de session
    * @param {RoleCheckerService} _roleCheckerService - service global de vérification des rôles de l'utilisateur
+   * @param {MdoalService} _modal - service pour l'affichage des modales
    */
   constructor(
     private _restService: RestApiService,
     private _session: SessionService,
-    private _roleCheckerService: RoleCheckerService
+    private _roleCheckerService: RoleCheckerService,
+    private _modal: ModalService
   ) {
     // initialisation des conteneurs :
     this._checkContainers.push(new CheckContainer(CheckType.CONTROL, 'Contrôles'));
@@ -149,6 +152,40 @@ export class VersionDetailsComponent {
   @Output('close')
   get close$() : EventEmitter<void> {
     return this._close$;
+  }
+
+  /**
+   * Indique si oui ou non l'utilisateur courant est admin (ou superadmin)
+   * @returns {boolean} - true si l'utilisateur est admin, sinon false
+   */
+  userIsAdmin(): boolean {
+    return this._roleCheckerService.userIsAdmin();
+  }
+
+  /**
+   * Indique si oui ou non le statut donné en paramètre est le statut "à effectuer" ou non
+   * @param {CheckStatus} status - le statut à tester
+   * @returns {boolean} - true si le statu donné en paramètre correspond à "à effectuer", false sinon
+   */
+  statusIsToCheck(status: CheckStatus): boolean {
+    return status == CheckStatus.TO_CHECK;
+  }
+
+  /**
+   * Envoie un rappel à l'utilisateur qui doit effectuer le check passé en paramètre
+   * @param {WorkflowCheck} check - le check dont l'utilisateur responsable doit recevoir un rappel
+   */
+  remind(check: WorkflowCheck): void {
+    let sub: Subscription = this._restService.workflowCheckSendReminder(check).finally(() => {
+      sub.unsubscribe();
+    }).subscribe(
+      (res: number) => {      // OK :
+        this._modal.info('Mail envoyé', 'Mail de rappel envoyé.', true);
+      },
+      (error: Response) => {  // Erreur :
+        this._modal.info('Erreur', 'Erreur lors de la tentative d\'envoi du mail de rappel', false);
+      }
+    );
   }
 
   /**
