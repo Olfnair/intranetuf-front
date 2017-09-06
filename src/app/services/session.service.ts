@@ -23,7 +23,7 @@ export class SessionService {
 
   // app :
   /** Indique que la page est prête à afficher du contenu */
-  private _readyForContent: boolean = true;
+  private _readyForContent: boolean = false;
   /** projet sélectionné dans la nav-list des projets (côté utilisateur) */
   private _selectedProject: Project = undefined;
   /** id des items sélectionnés dans les nav list (sauf projets) */

@@ -11,7 +11,6 @@ import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
 import { ModalService } from "app/gui/modal.service";
 import { BasicRoleChecker, RoleCheckerService } from "app/services/role-checker";
-//import { ChoseProjectNameComponent } from "app/user/modals/chose-project-name/chose-project-name.component";
 import { AddProjectComponent } from "app/user/add-project/add-project.component";
 import { NavList, NavListSelectable } from "app/gui/nav-list";
 import { Project } from "entities/project";
@@ -92,6 +91,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
    */
   private loadProjects(): void {
     // chargement des projets :
+    this._session.readyForContent = false; // on empêche le chargmeent de la page tant que ce n'est pas fait.
     let sub: Subscription = this._restService.fetchProjects(this.buildSearchParams(), "default", 0, 0).finally(() => {
       sub.unsubscribe();
     }).subscribe(

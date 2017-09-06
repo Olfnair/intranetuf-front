@@ -30,7 +30,7 @@
 <section *ngIf="selectedItemId === getItemId('Contrôles')">
   <md-tab-group [selectedIndex]="getTabIndex('controls')" (selectedIndexChange)="setTabIndex('controls', $event)">
     <md-tab label="Contrôles">     <!-- Onglet Contrôles -->
-      <p *ngIf="getTabIndex('controls') === 0">Contrôles (WIP)</p>
+      <app-checkslist *ngIf="getTabIndex('controls') === 0"></app-checkslist>
     </md-tab>
   </md-tab-group>
 </section>

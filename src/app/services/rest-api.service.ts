@@ -487,6 +487,31 @@ export class RestApiService {
   }
 
   /**
+   * Récupère la liste des checks pour un utilisateur en fonction des paramètres
+   * @param {number} userId - l'id de l'utilisateur
+   * @param {string} searchParams - paramètres de recherche
+   * @param {string} orderParams - paramètres de tri
+   * @param {number} index - index du début pour la pagination
+   * @param {number} limit - nombre max d'items pour la pagination
+   * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
+   */
+  fetchWorkflowChecksByUser(
+    userId: number,
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<File>> {
+    return this._http.get(
+      this._backendURL.workflowCheck + '/user/' + userId + '/query/'
+      + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      this.options()
+    ).map((res: Response) => {
+      return res.json().flexQueryResult;
+    });
+  }
+
+  /**
    * Récupère tous les checks sur une liste de fichier en fonction du statut et de l'id utilisateur
    * donnés en paramètres.
    * @param {Status} status - le statut à vérifier 

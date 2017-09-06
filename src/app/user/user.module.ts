@@ -30,6 +30,7 @@ import { AccountPannelComponent } from './account-pannel/account-pannel.componen
 import { UserFormComponent } from "./user-form/user-form.component";
 import { UserFilelistComponent } from './account-pannel/user-filelist/user-filelist.component';
 import { UserFileSectionComponent } from './account-pannel/user-file-section/user-file-section.component';
+import { CheckslistComponent } from './account-pannel/checkslist/checkslist.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { UserFileSectionComponent } from './account-pannel/user-file-section/use
     AccountPannelComponent,
     UserFormComponent,
     UserFilelistComponent,
-    UserFileSectionComponent
+    UserFileSectionComponent,
+    CheckslistComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     AddProjectComponent,

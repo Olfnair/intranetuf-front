@@ -140,7 +140,7 @@ export class DatatablePaginator<T, RestService> {
    * Se déplacer vers l'index spécifié
    * @param {number} index - index de destination 
    * @param {T[]} content - contenu qui va remplacer le contenu actuel
-   * @param totalItemsCount - nombre total d'éléments total de contenu (pas uniquement celui de la page)
+   * @param totalItemsCount - nombre d'éléments total de contenu (pas uniquement celui de la page)
    * @returns {boolean} - true si déplacement réussi, false sinon 
    */
   public goToIndex(index: number, content: T[] = this.content, totalItemsCount: number = this._totalItemsCount): boolean {
@@ -155,8 +155,8 @@ export class DatatablePaginator<T, RestService> {
    * Se déplacer vers la page spécifiée
    * @param {number} pageNum - numéro de page de destination
    * @param {T[]} content - contenu qui va remplacer le contenu actuel
-   * @param totalItemsCount - nombre total d'éléments total de contenu (pas uniquement celui de la page)
-   * @returns {boolean} - true si déplacement réussi, false sinon 
+   * @param {number} totalItemsCount - nombre total d'éléments total de contenu (pas uniquement celui de la page)
+   * @returns {boolean} - true si déplacement réussi, false sinon
    */
   public goToPage(pageNum: number, content: T[] = this.content, totalItemsCount: number = this._totalItemsCount): boolean { 
     return this.goToIndex(this.pageToIndex(pageNum), content, totalItemsCount);
@@ -222,7 +222,7 @@ export class DatatablePaginator<T, RestService> {
             return;
           }
           // on se déplace vers la bonne page :
-          if(result.list != undefined || result.totalCount != undefined) {
+          if(result.list != undefined || result.totalCount != undefined) {   
             this.goToIndex(index, result.list ? result.list : [], result.totalCount ? result.totalCount : 0);
           }
           else {
