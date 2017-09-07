@@ -130,7 +130,9 @@ export class UserFormComponent extends GuiForm {
   submit(): void {
     // Création d'une instance user en fonction des informations du formulaire :
     let user: User = new User();
-    Object.keys(this._userToEdit).forEach((k: string) => { user[k] = this._userToEdit[k]});
+    if(this._userToEdit != undefined) {
+      Object.keys(this._userToEdit).forEach((k: string) => { user[k] = this._userToEdit[k]});
+    }
     user.name = this.form.value.name;
     user.firstname = this.form.value.firstname;
     user.login = this.form.value.login;
