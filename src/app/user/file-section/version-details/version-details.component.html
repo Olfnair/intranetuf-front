@@ -66,15 +66,17 @@
           <h2>{{container.title}} <status-icon [status]="checksStatus(container)"></status-icon></h2>
         </datatable-title>
         <ng-template let-check="item">
-          <td>{{check.order_num + 1}}</td>
-          <td>{{check.user.name}}</td>
-          <td>{{check.user.firstname}}</td>
-          <td>{{check.status | checkStatus}}</td>
-          <td>{{check.date_init | date}}</td>
-          <td>{{check.date_checked | date}}</td>
-          <td>
-            <p>{{check.comment}}</p>
-          </td>
+          
+          <!--Infos sur le check -->
+          <td><cell-content [content]="check.order_num + 1"></cell-content></td>
+          <td><cell-content [content]="check.user.name"></cell-content></td>
+          <td><cell-content [content]="check.user.firstname"></cell-content></td>
+          <td><cell-content [content]="check.status | checkStatus"></cell-content></td>
+          <td><cell-content [content]="check.date_init | date"></cell-content></td>
+          <td><cell-content [content]="check.date_checked | date"></cell-content></td>
+          <td><cell-content [content]="check.comment"></cell-content></td>
+          
+          <!-- Actions -->
           <td>
             <!-- Envoyer un mail de rappel -->
             <button *ngIf="userIsAdmin() && statusIsToCheck(check.status)" class="smallButton"

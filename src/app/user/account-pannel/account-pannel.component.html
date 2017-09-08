@@ -29,8 +29,20 @@
 <!-- Contrôles -->
 <section *ngIf="selectedItemId === getItemId('Contrôles')">
   <md-tab-group [selectedIndex]="getTabIndex('controls')" (selectedIndexChange)="setTabIndex('controls', $event)">
-    <md-tab label="Contrôles">     <!-- Onglet Contrôles -->
-      <app-checkslist *ngIf="getTabIndex('controls') === 0"></app-checkslist>
+    <md-tab label="A effectuer">  <!-- Onglet Contrôles -->
+      <app-checkslist *ngIf="getTabIndex('controls') === 0"
+          [whereParams]="[['type', '0'], ['status', '1']]" title="Contrôles à effectuer">
+      </app-checkslist>
+    </md-tab>
+    <md-tab label="Effectués">    <!-- Onglet Contrôles -->
+      <app-checkslist *ngIf="getTabIndex('controls') === 1"
+          [whereParams]="[['type', '0'], ['status_greater_than', '1']]" title="Contrôles Effectués">
+      </app-checkslist>
+    </md-tab>
+    <md-tab label="Futurs">       <!-- Onglet Contrôles -->
+      <app-checkslist *ngIf="getTabIndex('controls') === 2"
+          [whereParams]="[['type', '0'], ['status', '0']]" title="Contrôles futurs">
+      </app-checkslist>
     </md-tab>
   </md-tab-group>
 </section>
@@ -38,8 +50,20 @@
 <!-- Validations -->
 <section *ngIf="selectedItemId === getItemId('Validations')">
   <md-tab-group [selectedIndex]="getTabIndex('validations')" (selectedIndexChange)="setTabIndex('validations', $event)">
-    <md-tab label="Validations">   <!-- Onglet Validations -->
-      <p *ngIf="getTabIndex('validations') === 0">Validations (WIP)</p>
+    <md-tab label="A effectuer">  <!-- Onglet Validations -->
+      <app-checkslist *ngIf="getTabIndex('validations') === 0"
+          [whereParams]="[['type', '1'], ['status', '1']]" title="Validations à effectuer">
+      </app-checkslist>
+    </md-tab>
+    <md-tab label="Effectuées">   <!-- Onglet Validations -->
+      <app-checkslist *ngIf="getTabIndex('validations') === 1"
+          [whereParams]="[['type', '1'], ['status_greater_than', '1']]" title="Validations Effectuées">
+      </app-checkslist>
+    </md-tab>
+    <md-tab label="Futures">      <!-- Onglet Validations -->
+      <app-checkslist *ngIf="getTabIndex('validations') === 2"
+          [whereParams]="[['type', '1'], ['status', '0']]" title="Validations Futures">
+      </app-checkslist>
     </md-tab>
   </md-tab-group>
 </section>

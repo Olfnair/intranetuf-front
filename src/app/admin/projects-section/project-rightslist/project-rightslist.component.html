@@ -38,8 +38,8 @@
   <!-- Template pour l'affichage des lignes de contenu : -->
   <ng-template let-right="item" let-checked="checked">
     <!-- infos de l'utilisateur : -->
-    <td>{{right.user.login | truncate:30}}</td>
-    <td>{{right.user.active | boolToString}}</td>
+    <td><cell-content [content]="right.user.login"></cell-content></td>
+    <td><cell-content [content]="right.user.active | boolToString"></cell-content></td>
     
     <!-- une case à cocher par droit possible sur le projet -->
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event.checked, right, 1, checked)"></md-checkbox></td>

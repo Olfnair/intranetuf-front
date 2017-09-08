@@ -13,7 +13,7 @@ import { DatatablePaginator, DatatableQueryParams } from ".";
 export class DatatableContentManager<T, RestService> {
   
   /** @static Nombre d'éléments par page par défaut */
-  private static readonly PAGE_SIZE = 10;
+  protected static readonly PAGE_SIZE = 10;
 
   /** Paginateur (Gère contenu et pages) */
   private _paginator: DatatablePaginator<T, RestService> =
@@ -89,7 +89,7 @@ export class DatatableContentManager<T, RestService> {
       this._args,        // arguments compléentaires à passer à la méthode
       this._reload,      // spinner de chargement ?
       () => {            // callback des actions à effectuer après le chargement
-        if(this._params && this.paginator.currentPageNum > this.paginator.totalPages) {
+        if(this._params && this.paginator.currentPageNum > this.paginator.totalPages && this.paginator.currentPageNum > 1) {
           this._params.index = this.paginator.pageToIndex(this.paginator.currentPageNum - 1);
           this.load(args);
         }

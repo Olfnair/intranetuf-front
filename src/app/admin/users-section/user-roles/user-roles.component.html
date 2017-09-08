@@ -37,8 +37,8 @@
   <!-- template d'affichage pour une ligne : -->
   <ng-template let-user="item" let-checked="checked">
     <!-- Infos sur le projet -->
-    <td>{{user.login | truncate:30}}</td>
-    <td>{{user.active | boolToString}}</td>
+    <td><cell-content [content]="user.login"></cell-content></td>
+    <td><cell-content [content]="user.active | boolToString"></cell-content></td>
 
     <!-- une case à cocher pour chaque rôle possible des utilisateurs -->
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(user, 1)" (change)="grid.setBit($event.checked, user, 1, checked)"></md-checkbox></td>

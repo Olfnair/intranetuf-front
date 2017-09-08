@@ -22,16 +22,11 @@
   <ng-template let-file="item">
     <!-- Infos du fichier -->
     <td>
-      <a
-          href="javascript:void(0)"
-          mdTooltip="{{file.version?.filename}}" mdTooltipPosition="above" mdTooltipHideDelay="0"
-          (click)="versionDetails(file)">
-        {{file.version?.filename | truncate:30}}
-      </a>
+      <cell-content [content]="file.version?.filename" [link]="true" (click)="versionDetails(file)"></cell-content>
     </td>
-    <td>{{file.project?.name}}</td>
-    <td>{{file.version?.num}}</td>
-    <td>{{file.version?.date_upload | date:'inconnue'}}</td>
-    <td>{{file.version?.status | versionStatus}}</td>
+    <td><cell-content [content]="file.project?.name"></cell-content></td>
+    <td><cell-content [content]="file.version?.num"></cell-content></td>
+    <td><cell-content [content]="file.version?.date_upload | date:'inconnue'"></cell-content></td>
+    <td><cell-content [content]="file.version?.status | versionStatus"></cell-content></td>
   </ng-template>
 </datatable>

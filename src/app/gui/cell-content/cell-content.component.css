@@ -1,0 +1,33 @@
+.field {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  color: #000;
+  font-size: 14px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fieldLink {
+  color: blue;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* visited link */
+.fieldLink:visited {
+  color: #9425F2;
+}
+
+/* mouse over link */
+.fieldLink:hover {
+  text-decoration: underline;
+}
+
+/* selected link */
+.fieldLink:active {
+  text-decoration: underline;
+}

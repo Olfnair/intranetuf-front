@@ -38,8 +38,8 @@
   <!-- template d'affichage pour une ligne : -->
   <ng-template let-right="item" let-checked="checked">
     <!-- Infos sur le projet -->
-    <td>{{right.project.name | truncate:30}}</td>
-    <td>{{right.project.active | boolToString}}</td>
+    <td><cell-content [content]="right.project.name"></cell-content></td>
+    <td><cell-content [content]="right.project.active | boolToString"></cell-content></td>
     
     <!-- une case à cocher pour chaque droit possible sur le projet -->
     <td><md-checkbox color="primary" [checked]="grid.isBitBoxChecked(right, 1)" (change)="grid.setBit($event.checked, right, 1, checked)"></md-checkbox></td>

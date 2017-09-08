@@ -10,6 +10,7 @@ import { MaterialModule } from '@angular/material';
 import { ModalService } from "app/gui/modal.service";
 
 // Gui
+import { CellContentComponent } from './cell-content';
 import { ColumnHeaderComponent } from "./column-header";
 import {
   DatatableComponent,
@@ -30,6 +31,7 @@ import { UpDownComponent } from "./up-down";
 
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
+    CellContentComponent,
     ColumnHeaderComponent,
     DatatableComponent, DatatableHeader, DatatableTitle, DatatableFinalRow, DatatableFooter,
     GuiCheckboxComponent,
@@ -55,6 +57,7 @@ import { UpDownComponent } from "./up-down";
     ModalService
   ],
   exports: [ // tous les composants, pipes, directives pour un module qui importe celui-ci
+    CellContentComponent,
     ColumnHeaderComponent,
     DatatableComponent, DatatableHeader, DatatableTitle, DatatableFinalRow, DatatableFooter,
     GuiCheckboxComponent,

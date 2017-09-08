@@ -33,8 +33,8 @@
   <!-- template d'affichage du contenu pour une ligne de la datatable : -->
   <ng-template let-project="item">
     <!-- infos sur le projet -->
-    <td><a href="javascript:void(0)" (click)="filelist(project)">{{project.name | truncate:30}}</a></td>
-    <td>{{project.active | boolToString}}</td>
+    <td><cell-content [content]="project.name" [link]="true" (click)="filelist(project)"></cell-content></td>
+    <td><cell-content [content]="project.active | boolToString"></cell-content></td>
     
     <!-- actions : -->
     <td>

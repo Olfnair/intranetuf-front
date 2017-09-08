@@ -38,12 +38,12 @@
   <!-- Template pour l'affichage d'une ligne de la datatable : -->
   <ng-template let-user="item">   
     <!-- Infos sur l'utilisateur -->
-    <td>{{user.login}}</td>
-    <td>{{user.email}}</td>
-    <td>{{user.firstname}}</td>
-    <td>{{user.name}}</td>
-    <td>{{user.active | boolToString}}</td>
-    <td>{{user.pending | boolToString}}</td>
+    <td><cell-content [content]="user.login"></cell-content></td>
+    <td><cell-content [content]="user.email"></cell-content></td>
+    <td><cell-content [content]="user.firstname"></cell-content></td>
+    <td><cell-content [content]="user.name"></cell-content></td>
+    <td><cell-content [content]="user.active | boolToString"></cell-content></td>
+    <td><cell-content [content]="user.pending | boolToString"></cell-content></td>
     
     <!-- Actions : -->
     <td>

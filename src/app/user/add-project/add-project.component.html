@@ -45,9 +45,9 @@
         <!-- Template pour l'affichage d'une ligne de la datatable : -->
         <ng-template let-user="item">   
           <!-- Infos sur l'utilisateur -->
-          <td>{{user.login}}</td>
-          <td>{{user.firstname}}</td>
-          <td>{{user.name}}</td>
+          <td><cell-content [content]="user.login"></cell-content></td>
+          <td><cell-content [content]="user.firstname"></cell-content></td>
+          <td><cell-content [content]="user.name"></cell-content></td>
           <td class="tdRight">
             <button md-raised-button class="smallButton" type="button" color="warn"
                 (click)="removeUserFrom(user, i)" mdTooltip="Supprimer" mdTooltipPosition="above">
@@ -84,11 +84,11 @@
         <!-- Template pour l'affichage d'une ligne de la datatable : -->
         <ng-template let-user="item">
           <!-- Infos sur l'utilisateur -->
-          <td>{{user.login}}</td>
-          <td>{{user.firstname}}</td>
-          <td>{{user.name}}</td>
-          <td>{{user.active | boolToString}}</td>
-          <td>{{user.pending | boolToString}}</td>
+          <td><cell-content [content]="user.login"></cell-content></td>
+          <td><cell-content [content]="user.firstname"></cell-content></td>
+          <td><cell-content [content]="user.name"></cell-content></td>
+          <td><cell-content [content]="user.active | boolToString"></cell-content></td>
+          <td><cell-content [content]="user.pending | boolToString"></cell-content></td>
         </ng-template>
     
         <!-- Footer pour des actions globales sur les utilisateurs sélectionnés dans la datatable : -->

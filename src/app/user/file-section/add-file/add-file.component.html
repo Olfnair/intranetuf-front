@@ -37,8 +37,8 @@
         </datatable-title>
         <ng-template let-user="item" let-index="index" let-last="last">
           <td *ngIf="container.size > 1">{{container.countOrderValue(index)}}</td>
-          <td>{{user.name}}</td>
-          <td>{{user.firstname}}</td>
+          <td><cell-content [content]="user.name"></cell-content></td>
+          <td><cell-content [content]="user.firstname"></cell-content></td>
         </ng-template>
       </datatable>
       
@@ -68,9 +68,11 @@
               <md-icon *ngIf="! container.isChained(index)">link</md-icon> 
             </button>
           </td>
-          <td *ngIf="container.size > 1">{{container.countOrderValue(index)}}</td>
-          <td>{{user.name}}</td>
-          <td>{{user.firstname}}</td>
+          <td *ngIf="container.size > 1">
+            <cell-content [content]="container.countOrderValue(index)"></cell-content>
+          </td>
+          <td><cell-content [content]="user.name"></cell-content></td>
+          <td><cell-content [content]="user.firstname"></cell-content></td>
           <td class="alignRight">
             <button md-raised-button class="smallButton" color="warn" type="button"
               (click)="container.delete(index)" mdTooltip="Supprimer" mdTooltipPosition="above">
@@ -88,15 +90,14 @@
           emptyMessage: 'Il ny a pas de ' + container.name + ' à ajouter.'
         }"
         [data]="container.availableUsers"
-        [columns]="['Nom', 'Prénom', '']"
+        [columns]="['Nom', 'Prénom']"
         (selectedDataUpdate)="updateUsersToAdd(container, $event)">
         <datatable-title>
           <h3>{{container.title}}</h3>
         </datatable-title>
         <ng-template let-user="item">
-          <td>{{user.name}}</td>
-          <td>{{user.firstname}}</td>
-          <td></td>
+          <td><cell-content [content]="user.name"></cell-content></td>
+          <td><cell-content [content]="user.firstname"></cell-content></td>
         </ng-template>
         <datatable-footer>
           <button md-raised-button color="primary" type="button"
