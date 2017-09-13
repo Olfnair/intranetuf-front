@@ -34,12 +34,6 @@ export class FileSectionComponent extends AppSection {
   /** ignorer le projet de session pour afficher les fichiers ? (sert dans le panneau d'admin) */
   private _ignoreSessionProject: boolean = false;
 
-  /** indique si on peut revenir à l'écran précedant */
-  private _canNavBack: boolean = false;
-  
-  /** @event - demande pour revenir à l'écran précédent */
-  private _navback$: EventEmitter<void> = new EventEmitter<void>();
-
   /**
    * @constructor
    * @param {SessionService} _session - données globales de session
@@ -112,25 +106,6 @@ export class FileSectionComponent extends AppSection {
     this._check = check;
   }
 
-  /** @property {boolean} canNavBack - indique s'il faut afficher le bouton permettant de revenir à l'écran précédent */
-  get canNavBack(): boolean {
-    return this._canNavBack;
-  }
-
-  @Input()
-  set canNavBack(canNavBack: boolean) {
-    this._canNavBack = canNavBack;
-  }
-
-  /**
-   * @event navback - retour à l'écran précédent
-   * @returns {EventEmitter<void>}
-   */
-  @Output('navback')
-  get navback$(): EventEmitter<void> {
-    return this._navback$;
-  }
-
   /** @property {Project} project - projet sélectionné dans la projectlist */
   get selectedProject(): Project {
     return this._session.selectedProject;
@@ -166,15 +141,4 @@ export class FileSectionComponent extends AppSection {
     this._check = check;
   }
 
-  /**
-   * @emits navback - event de demande pour revenir à l'écran précédent
-   */
-  navback(): void {
-    if(this.state == this.State.Filelist) {
-      this._navback$.emit();
-      return;
-    }
-
-    this.state = this.State.Filelist;
-  }
 }

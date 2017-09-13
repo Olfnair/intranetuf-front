@@ -5,6 +5,13 @@
   Section qui gère les informations relatives aux fichiers de l'utilisateur courant
 -->
 
+<!-- Bouton retour -->
+<button *ngIf="canNavBack && state != State.Filelist"
+    md-raised-button class="navBackButton" type="button" color="primary"
+    mdTooltip="Retour" mdTooltipPosition="above" (click)="navback()">
+  <md-icon>arrow_back</md-icon>&nbsp;Retour
+</button>
+
 <!-- Liste des fichiers de l'utilisateur -->
 <app-user-filelist *ngIf="state == State.Filelist"
     (versionDetails)="setStateAndEntity(State.VersionDetails, $event)">

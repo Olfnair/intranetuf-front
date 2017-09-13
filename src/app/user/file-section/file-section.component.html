@@ -7,7 +7,7 @@
 
 <!-- Bouton retour -->
 <button *ngIf="canNavBack && (stateToActivate() != State.Filelist || route != '/home')"
-    md-raised-button class="backButton" type="button" color="primary"
+    md-raised-button class="navBackButton" type="button" color="primary"
     mdTooltip="Retour" mdTooltipPosition="above" (click)="navback()">
   <md-icon>arrow_back</md-icon>&nbsp;Retour
 </button>

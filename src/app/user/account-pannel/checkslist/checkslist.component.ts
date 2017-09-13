@@ -1,8 +1,9 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { WorkflowCheck } from "entities/workflow-check";
+import { WorkflowCheck, Status } from "entities/workflow-check";
 import { DatatableContentManager, DatatableQueryParams } from "app/gui/datatable";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { Version } from "entities/version";
 
 @Component({
   selector: 'app-checkslist',
@@ -11,9 +12,15 @@ import { SessionService } from "app/services/session.service";
 })
 export class CheckslistComponent extends DatatableContentManager<WorkflowCheck, RestApiService> implements OnInit {
 
+  public CheckStatus = Status; 
+
+  private _checkVersion$: EventEmitter<WorkflowCheck> = new EventEmitter<WorkflowCheck>();
+
   private _whereParams: [string, string][] = [];
 
   private _title: string = '';
+
+  private _versionDetails$: EventEmitter<Version> = new EventEmitter<Version>();
   
   /**
    * @constructor
@@ -53,6 +60,16 @@ export class CheckslistComponent extends DatatableContentManager<WorkflowCheck, 
     this._whereParams = whereParams;
   }
 
+  @Output('checkVersion')
+  get checkVersion$(): EventEmitter<WorkflowCheck> {
+    return this._checkVersion$;
+  }
+
+  @Output('versionDetails')
+  get versionDetails$(): EventEmitter<Version> {
+    return this._versionDetails$;
+  }
+
   get userId(): number {
     return this._session.userId;
   }
@@ -67,8 +84,17 @@ export class CheckslistComponent extends DatatableContentManager<WorkflowCheck, 
     this._whereParams.forEach((entry: [string, string]) => {
       params.searchParams.set(entry[0], entry[1]);
     });
-    console.log(params.index);
     super.update(params, args);
+  }
+
+  checkVersion(check: WorkflowCheck): void {
+    this._checkVersion$.emit(check);
+  }
+
+  versionDetails(version: Version): void {
+    if(version != undefined) {
+      this._versionDetails$.emit(version);
+    }
   }
 
 }

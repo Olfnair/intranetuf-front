@@ -5,7 +5,7 @@
 
 import { Component, Inject } from '@angular/core';
 import { MD_DIALOG_DATA } from '@angular/material';
-import { GuiModalData } from "app/gui/gui-modal";
+import { GuiModalData } from "./gui-modal-data";
 
 /**
  * Composant générique pour afficher une modale

@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { DatatableContentManager } from "app/gui/datatable";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
+import { File } from "entities/file";
 
 @Component({
   selector: 'app-user-filelist',

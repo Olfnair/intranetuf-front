@@ -6,7 +6,7 @@
   Affiche le titre de la colonne et permet les recherches et tris éventuels sur cette colonne
 -->
 
-<section class="tableRow" [class.pointerCursor]="! column.search && column.label">
+<section class="tableRow" [class.pointerCursor]="! column.search && column.label != undefined">
   
   <!-- recherche possible : -->
   <ng-container *ngIf="column.search && column.label != undefined">

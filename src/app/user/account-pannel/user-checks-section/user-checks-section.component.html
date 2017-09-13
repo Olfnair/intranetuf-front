@@ -1,0 +1,30 @@
+<!--
+  Auteur : Florian
+  License :
+  
+  Section qui gère les informations relatives aux contrôles/validations de l'utilisateur courant
+-->
+
+<!-- Bouton retour -->
+<button *ngIf="canNavBack && state != State.List"
+    md-raised-button class="navBackButton" type="button" color="primary"
+    mdTooltip="Retour" mdTooltipPosition="above" (click)="navback()">
+  <md-icon>arrow_back</md-icon>&nbsp;Retour
+</button>
+
+<!-- Liste des contrôles/validations de l'utilisateur -->
+<app-checkslist *ngIf="state == State.List"
+    [whereParams]="whereParams" [title]="title"
+    (checkVersion)="setStateAndEntity(State.Check, $event)"
+    (versionDetails)="viewDetails($event)">
+</app-checkslist>
+
+<!-- Contrôle / Validation d'une version d'un fichier -->
+<app-check-version *ngIf="state == State.Check"
+    [check]="entity" (close)="state = State.List">
+</app-check-version>
+
+<!-- Details de version d'un fichier -->
+<app-version-details *ngIf="state == State.VersionDetails"
+    [file]="entity" (close)="state = State.List">
+</app-version-details>

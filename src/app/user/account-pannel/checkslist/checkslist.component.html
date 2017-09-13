@@ -25,7 +25,10 @@
   <!-- Template pour l'affichage des checks : -->
   <ng-template let-check="item">
     <!-- Infos du check -->
-    <td><cell-content [content]="check.version?.filename"></cell-content></td>
+    <td>
+      <cell-content [content]="check.version?.filename" [link]="true" (click)="versionDetails(check.version)">
+      </cell-content>
+    </td>
     <td><cell-content [content]="check.project?.name"></cell-content></td>
     <td><cell-content [content]="check.version?.num"></cell-content></td>
     <td><cell-content [content]="check.version?.date_upload | date:''"></cell-content></td>
@@ -33,6 +36,12 @@
     <td><cell-content [content]="check.status | checkStatus"></cell-content></td>
     <td><cell-content [content]="check.date_init | date:''"></cell-content></td>
     <td><cell-content [content]="check.date_checked | date:''"></cell-content></td>
-    <td></td>
+    <td>
+      <a *ngIf="check.status == CheckStatus.TO_CHECK" md-raised-button class="smallButton" color="accent"
+          mdTooltip="Effectuer" mdTooltipPosition="above"
+          href="javascript:void(0)" (click)="checkVersion(check)">
+        <md-icon>find_in_page</md-icon>
+      </a>
+    </td>
   </ng-template>
 </datatable>

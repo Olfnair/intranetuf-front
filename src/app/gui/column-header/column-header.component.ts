@@ -5,7 +5,7 @@
 
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DatatableColumn } from "../datatable";
-import { ColumnParam } from ".";
+import { ColumnParam } from "./column-param";
 
 /**
  * Etats possibles pour le tri d'une colonne

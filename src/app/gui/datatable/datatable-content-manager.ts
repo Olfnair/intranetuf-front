@@ -4,7 +4,8 @@
  */
 
 import { Observable } from "rxjs/Observable";
-import { DatatablePaginator, DatatableQueryParams } from ".";
+import { DatatablePaginator } from "./datatable-paginator";
+import { DatatableQueryParams } from "./datatable-query-params";
 
 /**
  * Gestionnaire de contenu des datatables :

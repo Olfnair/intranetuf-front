@@ -3,7 +3,8 @@
  * License : 
  */
 
-import { DatatablePage, DatatableQueryParams } from ".";
+import { DatatablePage } from "./datatable-page";
+import { DatatableQueryParams } from "./datatable-query-params";
 import { Observer } from "rxjs/Observer";
 import { Observable } from "rxjs/Observable";
 

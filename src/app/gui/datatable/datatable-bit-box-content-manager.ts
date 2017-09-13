@@ -3,7 +3,7 @@
  * License : 
  */
 
-import { DatatableContentManager } from ".";
+import { DatatableContentManager } from "./datatable-content-manager";
 import { BitBoxGridRules, BitsContainer } from "../bit-box-grid-rules";
 
 /**

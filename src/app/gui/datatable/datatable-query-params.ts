@@ -3,7 +3,7 @@
  * License : 
  */
 
-import { DatatableQueryOptions } from ".";
+import { DatatableQueryOptions } from "./datatable-query-options";
 
 /**
  * Paramètres de requête des datatables (tri/recherche/pagination)

@@ -16,13 +16,11 @@ import { MdCheckboxChange } from "@angular/material";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 import { Subscription } from "rxjs/Subscription";
 import { Observable } from "rxjs/Observable";
-import {
-  DatatableColumn,
-  DatatableOptions,
-  DatatableQueryParams,
-  DatatableQueryOptions,
-  DatatablePaginator
-} from ".";
+import { DatatableColumn } from "./datatable-column";
+import { DatatableOptions } from "./datatable-options";
+import { DatatableQueryParams } from "./datatable-query-params";
+import { DatatableQueryOptions } from "./datatable-query-options";
+import { DatatablePaginator } from "./datatable-paginator";
 import { ColumnParam } from "../column-header";
 
 /**

@@ -12,7 +12,7 @@ import { Subscription } from "rxjs/Subscription";
 import { Project } from "entities/project";
 import { ProjectRight, Right } from "entities/project-right";
 
-class Options {
+export class Options {
   constructor(
     public isModal: boolean = undefined
   ) { }

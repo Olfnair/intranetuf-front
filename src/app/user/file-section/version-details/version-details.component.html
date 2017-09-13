@@ -67,14 +67,14 @@
         </datatable-title>
         <ng-template let-check="item">
           
-          <!--Infos sur le check -->
+          <!-- Infos sur le check -->
           <td><cell-content [content]="check.order_num + 1"></cell-content></td>
           <td><cell-content [content]="check.user.name"></cell-content></td>
           <td><cell-content [content]="check.user.firstname"></cell-content></td>
           <td><cell-content [content]="check.status | checkStatus"></cell-content></td>
           <td><cell-content [content]="check.date_init | date"></cell-content></td>
           <td><cell-content [content]="check.date_checked | date"></cell-content></td>
-          <td><cell-content [content]="check.comment"></cell-content></td>
+          <td><cell-content [content]="check.comment ? check.comment : ''"></cell-content></td>
           
           <!-- Actions -->
           <td>

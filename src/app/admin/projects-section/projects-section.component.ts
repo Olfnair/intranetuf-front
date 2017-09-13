@@ -21,7 +21,7 @@ export class ProjectsSectionComponent extends GenericEntitySection<Project> {
       List:     0, // Lister les projets
       Add:      1, // Ajouter un projet
       Rights:   2, // Gérer les droits relatifs à un projet
-      Filelist: 3, // Lister les fichiers d'un projet
+      Filelist: 3  // Lister les fichiers d'un projet
     });
   }
 

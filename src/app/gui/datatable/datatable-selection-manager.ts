@@ -4,7 +4,7 @@
  */
 
 import { Subscription } from "rxjs/Subscription";
-import { DatatableContentManager } from "app/gui/datatable";
+import { DatatableContentManager } from "./datatable-content-manager";
 
 /**
  * Manager de la sélection des datatables : permet d'activer ou désactiver les

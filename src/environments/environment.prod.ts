@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   backend: {
     protocol: 'https',
-    host: 'test.advensys.fr/intrauf',
+    host: 'test.advensys.fr',
     port: '8443',
     endpoints: {
       auth: '/IUF/rest/auth',

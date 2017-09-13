@@ -4,8 +4,8 @@
  */
 
 import { Input, EventEmitter, Output } from '@angular/core';
-import { NavListSelectable } from "app/gui/nav-list";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
+import { NavListSelectable } from "./nav-list-selectable";
 
 /**
  * Menu/Liste de navigation

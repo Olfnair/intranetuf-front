@@ -34,7 +34,7 @@ export class RestApiService {
 
   /**
    * @constructor
-   * @param {Http} _http - Service HTTP qui va servir en envoyer les requêtes au service REST.
+   * @param {Http} _http - Service HTTP qui va servir à envoyer les requêtes au service REST.
    */
   constructor(private _http: Http) {   
     this._backendURL = {};
@@ -92,6 +92,17 @@ export class RestApiService {
       this.options()
     ).map((res: Response) => {
       return res.json().flexQueryResult;
+    });
+  }
+
+  /**
+   * Récupère le fichier duquel on indique l'id de version
+   * @param {number} versionId - id de la version
+   * @returns {Observable<File>} - résultat de la requête
+   */
+  fetchFileByVersion(versionId: number): Observable<File> {
+    return this._http.get(this._backendURL.file + '/version/' + versionId, this.options()).map((res: Response) => {
+      return res.json().file;
     });
   }
 
@@ -616,7 +627,8 @@ export class RestApiService {
   * @returns {RequestOptions} - options/headers de la requête
   */
   private options(accept: string = 'application/json', headerList: Object = {}): RequestOptions {
-    const headers: Headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer ' + JSON.stringify(this._authToken) }, headerList));
+    const headers: Headers = new Headers(Object.assign({ 'Accept': accept, 'Authorization': 'Bearer '
+      + JSON.stringify(this._authToken) }, headerList));
     return new RequestOptions({ headers: headers });
   }
 
