@@ -1,7 +1,7 @@
 .comment {
   border: solid 1px #ccc;
   border-radius: 5px;
-  height: calc(100vh - 350px);
+  height: calc(100vh - 450px);
   min-height: 150px;
   padding: 5px;
   font-family: "Verdana, Tahoma";

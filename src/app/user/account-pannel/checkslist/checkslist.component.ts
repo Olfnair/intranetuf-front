@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { WorkflowCheck, Status } from "entities/workflow-check";
+import { WorkflowCheck, Status, CheckType } from "entities/workflow-check";
 import { DatatableContentManager, DatatableQueryParams } from "app/gui/datatable";
 import { RestApiService } from "app/services/rest-api.service";
 import { SessionService } from "app/services/session.service";
@@ -12,7 +12,8 @@ import { Version } from "entities/version";
 })
 export class CheckslistComponent extends DatatableContentManager<WorkflowCheck, RestApiService> implements OnInit {
 
-  public CheckStatus = Status; 
+  public CheckType = CheckType;
+  public CheckStatus = Status;
 
   private _checkVersion$: EventEmitter<WorkflowCheck> = new EventEmitter<WorkflowCheck>();
 
