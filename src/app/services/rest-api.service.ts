@@ -19,6 +19,7 @@ import { Project } from "entities/project";
 import { ProjectRight, Right } from "entities/project-right";
 import { Status, WorkflowCheck } from "entities/workflow-check";
 import { User } from "entities/user";
+import { Version } from 'entities/version';
 
 /**
  * Service REST : classe reprenant la plupart des appels au backend.
@@ -70,6 +71,15 @@ export class RestApiService {
   /** @property {AuthToken} authToken - token d'authentification de l'user courant */
   set authToken(authToken: AuthToken) {
     this._authToken = authToken;
+  }
+
+  /**
+   * Renvoie le lien de téléchargement de la version donnée en paramètre
+   * @param {Version} version - la version pour laquelle on veut un lien de téléchargement
+   * @returns {string} - le lien de téléchargement de la version
+   */
+  getDownloadLink(version: Version): string {
+    return this.backendURL.download + '/' + version.id;
   }
 
   /**

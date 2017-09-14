@@ -7,7 +7,7 @@ export const environment = {
     endpoints: {
       auth: '/IUF/rest/auth',
       activate: '/IUF/rest/entities.user/activate',
-      download: '/IUF/rest/download/',
+      download: '/IUF/rest/download',
       file: '/IUF/rest/entities.file',
       project: '/IUF/rest/entities.project',
       projectRight: '/IUF/rest/entities.projectright',

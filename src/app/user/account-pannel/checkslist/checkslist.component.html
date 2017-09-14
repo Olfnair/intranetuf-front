@@ -37,11 +37,15 @@
     <td><cell-content [content]="check.date_init | date:''"></cell-content></td>
     <td><cell-content [content]="check.date_checked | date:''"></cell-content></td>
     <td>
-      <a *ngIf="check.status == CheckStatus.TO_CHECK" md-raised-button class="smallButton" color="accent"
-          mdTooltip="Effectuer" mdTooltipPosition="above"
-          href="javascript:void(0)" (click)="checkVersion(check)">
-        <md-icon>find_in_page</md-icon>
-      </a>
+      <ng-container *ngIf="check.status == CheckStatus.TO_CHECK">
+        <app-download-version-button [version]="check.version"></app-download-version-button>
+
+        <button md-raised-button class="smallButton" color="accent"
+            mdTooltip="Effectuer" mdTooltipPosition="above"
+            type="button" (click)="checkVersion(check)">
+          <md-icon>find_in_page</md-icon>
+        </button>
+      </ng-container>
     </td>
   </ng-template>
 </datatable>

@@ -6,8 +6,10 @@
 -->
 
 <section class="container">
-  <gui-form [formGroup]="form" title="{{checkTypeName}} de {{filename}}" submitOnEnter="false">
+  <gui-form [formGroup]="form" title="{{checkTypeName}} de {{filename}}" submitOnEnter="false"> 
     
+    <app-download-version-button head [version]="check.version" text="Télécharger"></app-download-version-button>
+
     <!-- Zone de commentaire -->
     <md-input-container gui-form-input>
       <textarea mdInput class="comment" type="text"

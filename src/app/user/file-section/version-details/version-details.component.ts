@@ -125,7 +125,7 @@ export class VersionDetailsComponent {
       (checks: WorkflowCheck[]) => {
         checks.forEach((check: WorkflowCheck) => {
           this._checkContainers.forEach((checkContainer: CheckContainer) => {
-            if(checkContainer.type == check.type) {
+            if (checkContainer.type == check.type) {
               checkContainer.checks.push(check);
             }
           });
@@ -205,9 +205,9 @@ export class VersionDetailsComponent {
    */
   private hasCheck(type: CheckType): boolean {
     let container: CheckContainer = this.getCheckContainerFromType(type);
-    if(! container) { return false; }
-    for(let check of container.checks) {
-      if(check.user.id == this._session.userId) {
+    if (! container) { return false; }
+    for (let check of container.checks) {
+      if (check.user.id == this._session.userId) {
         return true;
       }
     }
@@ -227,30 +227,14 @@ export class VersionDetailsComponent {
   }
 
   /**
-   * Génère un lien de téléchargement pour la version actuelle du fichier
-   * @returns {string} - lien de téléchargement
-   */
-  downloadLink(): string {
-    return this._url + this._file.version.id;
-  }
-
-  /**
-   * Renvoie le token de session de l'utilisateur courant en base64
-   * @returns {string} - token de session de l'utilisateur courant en base64
-   */
-  getToken(): string {
-    return this._session.base64AuthToken;
-  }
-
-  /**
    * Renvoie le statut du fichier pour pouvoir afficher l'icône qui y correspond
    * @returns {string} - le statut du fichier qui permettra d'afficher une icône qui y correspond
    */
   fileIconStatus(): string {
-    if(this._file.version.status == VersionStatus.VALIDATED) {
+    if (this._file.version.status == VersionStatus.VALIDATED) {
       return 'check';
     }
-    else if(this._file.version.status == VersionStatus.REFUSED) {
+    else if (this._file.version.status == VersionStatus.REFUSED) {
       return 'error';
     }
     return 'warning';
@@ -262,16 +246,19 @@ export class VersionDetailsComponent {
    * @returns {string} le statut du container passé en paramètre
    */
   checksStatus(container: CheckContainer): string {
-    let ret: string = 'check';
-    container.checks.forEach((check: WorkflowCheck) => {
-      if(check.status == CheckStatus.CHECK_KO) {
-        ret = 'error';
+    for (let check of container.checks) {
+      if (check.status == CheckStatus.CHECK_KO) {
+        return 'error';
       }
-      else if(check.status == CheckStatus.WAITING || check.status == CheckStatus.TO_CHECK) {
-        ret = 'warning';
+      else if (
+        check.status == CheckStatus.WAITING ||
+        check.status == CheckStatus.TO_CHECK ||
+        check.status == CheckStatus.CANCELLED
+      ) {
+        return 'warning';
       }
-    });
-    return ret;
+    }
+    return 'check';
   }
 
   /**

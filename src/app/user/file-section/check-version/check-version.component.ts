@@ -38,6 +38,10 @@ export class CheckVersionComponent extends GuiForm {
   ) { super(); }
 
   /** @property {WorkflowCheck} check - le check à refuser ou valider */
+  get check(): WorkflowCheck {
+    return this._check;
+  }
+
   @Input()
   set check(check: WorkflowCheck) {
     this._check = check;

@@ -71,47 +71,42 @@
     <!-- Actions sur le fichier (en fonction des droits sur le projet) -->
     <td>
       <!-- Télécharger -->
-      <span *ngIf="file.version && canDownload(file)">
-        <form ngNoForm class="inlineForm" [action]="downloadLink(file.version.id)" method="POST">
-          <input type="hidden" name="token" [value]="getToken()">
-          <button md-raised-button class="smallButton" type="submit" color="primary" mdTooltip="Télécharger" mdTooltipPosition="above">
-            <md-icon>file_download</md-icon>
-          </button>
-        </form>
-      </span>
+      <ng-container *ngIf="file.version && canDownload(file)">
+        <app-download-version-button [version]="file.version"></app-download-version-button>
+      </ng-container>
 
       <!-- Nouvelle version -->
-      <span *ngIf="file.author && file.author.id == userId && userCanAddFile()">
+      <ng-container *ngIf="file.author && file.author.id == userId && userCanAddFile()">
         <a md-raised-button class="smallButton" color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above"
             href="javascript:void(0)" (click)="addFile(file)">
           <md-icon>file_upload</md-icon>
         </a>
-      </span>
+      </ng-container>
       
       <!-- Contrôler -->
-      <span *ngIf="hasControl(file.version.id)">
+      <ng-container *ngIf="hasControl(file.version.id)">
         <a md-raised-button class="smallButton" color="accent" mdTooltip="Contrôler" mdTooltipPosition="above"
             href="javascript:void(0)" (click)="checkVersion(getControl(file.version.id))">
           <md-icon>find_in_page</md-icon>
         </a>
-      </span>
+      </ng-container>
 
       <!-- Valider -->
-      <span *ngIf="hasValidation(file.version.id)">
+      <ng-container *ngIf="hasValidation(file.version.id)">
         <a md-raised-button class="smallButton" color="warn" mdTooltip="Valider" mdTooltipPosition="above"
             href="javascript:void(0)" (click)="checkVersion(getValidation(file.version.id))">
           <md-icon>find_in_page</md-icon>
         </a>
-      </span>
+      </ng-container>
     </td>
     <td>    
       <!-- Supprimer -->
-      <span *ngIf="userCanDeleteFile()">
+      <ng-container *ngIf="userCanDeleteFile()">
         <button md-raised-button class="smallButton" type="button" color="warn"
             mdTooltip="Supprimer" mdTooltipPosition="above" (click)="deleteFile(file)">
           <md-icon>delete</md-icon>
         </button>
-      </span>
+      </ng-container>
     </td>
   </ng-template>
 </datatable>

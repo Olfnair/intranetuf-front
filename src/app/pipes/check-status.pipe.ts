@@ -22,6 +22,8 @@ export class CheckStatusPipe implements PipeTransform {
    */
   transform(status: Status): string {
     switch(status) {
+      case Status.CANCELLED:
+        return 'Annulé';
       case Status.WAITING:
         return 'En attente';
       case Status.TO_CHECK:

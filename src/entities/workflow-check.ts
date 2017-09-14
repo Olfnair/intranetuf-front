@@ -22,6 +22,7 @@ export enum CheckType {
  * @enum
  */
 export enum Status {
+  CANCELLED = -1,
   WAITING = 0,
   TO_CHECK = 1,
   CHECK_OK = 2,

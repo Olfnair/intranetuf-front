@@ -11,6 +11,9 @@
 
   <md-card-content>
     <form [formGroup]="form" novalidate (ngSubmit)="submit()">
+
+      <!-- Contenu supplémentaire à mettre en tête (Ajouter l'attribut 'head' aux divs qui contiennt le contenu) -->
+      <ng-content select="[head]"></ng-content>
       
       <!-- Affiche les inputs. (Ajouter l'attribut 'gui-form-input' aux divs qui les contiennent.) -->
       <ng-content select="[gui-form-input]"></ng-content>

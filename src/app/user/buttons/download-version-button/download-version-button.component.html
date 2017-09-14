@@ -1,0 +1,6 @@
+<form ngNoForm class="inlineForm" [action]="downloadLink" method="POST">
+  <input type="hidden" name="token" [value]="getToken()">
+  <button md-raised-button [class.smallButton]="text == undefined" type="submit" color="primary" mdTooltip="Télécharger" mdTooltipPosition="above">
+    <md-icon>file_download</md-icon><label *ngIf="text != undefined">{{text}}</label>
+  </button>
+</form>

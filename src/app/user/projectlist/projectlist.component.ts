@@ -127,6 +127,9 @@ export class ProjectlistComponent extends NavList implements OnInit {
           );
         }
 
+        if(! this._session.selectedProject) {
+          this._selectedProject = this.projects.length > 0 ? this.projects[0] : this._session.selectedProject;
+        }
         // tordu mais nécessaire (on appelle la propriété qui fait des traitements en plus)
         this.selectedProject = this._selectedProject;
       },

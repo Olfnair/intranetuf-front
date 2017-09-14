@@ -62,7 +62,7 @@ export class FileSectionComponent extends AppSection {
    * @returns {number} - état correspondant au composant à activer
    */
   stateToActivate(): number {
-    if(! this._ignoreSessionProject && this._project != this.selectedProject) {
+    if (! this._ignoreSessionProject && this._project != this.selectedProject) {
       this.state = this.State.Filelist;
       this._project = this.selectedProject;
     }

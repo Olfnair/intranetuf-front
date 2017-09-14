@@ -294,23 +294,6 @@ export class FilelistComponent extends DatatableContentManager<File, RestApiServ
   }
 
   /**
-   * Génère un lien de téléchargement pour la version (d'un fichier) dont l'id est passé en paramètre
-   * @param {number} versionId - id de version (d'un fichier)
-   * @returns {string} - lien de téléchargement
-   */
-  downloadLink(versionId: number): string {
-    return this._url + versionId;
-  }
-
-  /**
-   * Renvoie le token de session de l'utilisateur courant en base64
-   * @returns {string} - token de session de l'utilisateur courant en base64
-   */
-  getToken(): string {
-    return this._session.base64AuthToken;
-  }
-
-  /**
    * Renvoie le check sur un fichier de type type et dont l'id de version est versionId (pour l'utilisateur courant)
    * @private
    * @param {CheckType} type - type de check voulu

@@ -36,12 +36,7 @@
 
           <!-- Télécharger -->
           <md-list-item *ngIf="canDownload()">
-            <form ngNoForm class="inlineForm" [action]="downloadLink()" method="POST">
-              <input type="hidden" name="token" [value]="getToken()">
-              <button md-raised-button type="submit" color="primary" mdTooltip="Télécharger" mdTooltipPosition="right">
-                <md-icon>file_download</md-icon><label>Télécharger</label>
-              </button>
-            </form>
+            <app-download-version-button [version]="file.version" text="Télécharger"></app-download-version-button>
           </md-list-item>
         </md-list>
       </md-card-content>
