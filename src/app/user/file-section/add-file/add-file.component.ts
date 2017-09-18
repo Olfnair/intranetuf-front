@@ -8,6 +8,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { MdDialogRef, MdDialog } from "@angular/material";
 import { Subscription } from "rxjs/Subscription";
 import { FileUploadService } from "app/services/file-upload.service";
+import { ModalService } from 'app/gui/modal.service';
 import { RestApiService } from "app/services/rest-api.service";
 import { GuiForm } from "app/gui/gui-form";
 import { GuiProgressComponent } from "app/gui/gui-progress";
@@ -80,6 +81,7 @@ export class AddFileComponent extends GuiForm {
   constructor(
     private _uploadService: FileUploadService,
     private _restService: RestApiService,
+    private _modal: ModalService,
     private _dialog: MdDialog
   ) {
     super();
@@ -223,11 +225,12 @@ export class AddFileComponent extends GuiForm {
       (res: void) => {    // OK :
       },
       (error: any) => {   // Erreur :
-        // gérer erreur ?
+        this.closeProgressModal();
+        this._modal.info('Erreur', 'Erreur pendant l\'upload du fichier', false);
       },
       () => {             // Finally :
         uploadSub.unsubscribe();
-        if (!this._aborted) {
+        if (! this._aborted) {
           this.closeProgressModal();
           this.close();
         }

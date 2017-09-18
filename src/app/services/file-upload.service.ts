@@ -70,7 +70,7 @@ export class FileUploadService {
 
       this._xhr = new XMLHttpRequest();
       
-      // création du formData qui va servir uploader le fichier :
+      // création du formData qui va servir à uploader le fichier :
       formData.append("entity", new Blob([JSON.stringify({[entityType]: entity})], {type: "application/json"}));
       formData.append("file", file, file.name);
 
@@ -98,6 +98,7 @@ export class FileUploadService {
       this._xhr.open('POST', url, true);
       this._xhr.setRequestHeader("Authorization", "Bearer " + JSON.stringify(this._session.authToken));
       this._xhr.setRequestHeader("Accept", "application/json");
+      this._xhr.setRequestHeader("X-File-Size", (file.size).toString());
       this._xhr.send(formData);
     });
   }
