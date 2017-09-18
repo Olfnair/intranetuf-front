@@ -60,8 +60,8 @@
         <datatable-title>
           <h2>{{container.title}} <status-icon [status]="checksStatus(container)"></status-icon></h2>
         </datatable-title>
-        <ng-template let-check="item">
-          
+
+        <ng-template let-check="item">     
           <!-- Infos sur le check -->
           <td><cell-content [content]="check.order_num + 1"></cell-content></td>
           <td><cell-content [content]="check.user.name"></cell-content></td>
@@ -80,6 +80,40 @@
               <md-icon>rotate_left</md-icon>
             </button>
           </td>
+        </ng-template>
+      </datatable>
+    </section>
+
+    <!-- Autres Versions -->
+    <section *ngIf="userIsAdmin()" class="checkContainer">
+      <datatable
+          [options]="{
+            displayToggle: true,
+            emptyMessage: 'Aucune autre version.',
+            emptySearchMessage: 'Aucune version ne correspond à votre recherche.'
+          }"
+          [data]="otherVersions.dataObs"
+          [columns]="[
+            { label: 'Nom',            query: 'filename',    sort: true, search: true, width: '30%' },
+            { label: 'Auteur',         query: 'author',      sort: true, search: true, width: '25%' },
+            { label: 'Version',        query: 'num',         sort: true, search: true, width:  '8%' },
+            { label: 'Date d\'upload', query: 'date_upload', sort: true,               width: '12%' },
+            { label: 'Statut',         query: 'status',      sort: true, search: true, width: '10%' },
+            { label: '',                                                               width: '15%' }
+          ]"
+          (queryParams)="otherVersions.update($event)">
+        <datatable-title>
+          <h2>Autres Versions</h2>
+        </datatable-title>
+
+        <ng-template let-version="item">
+          <!-- Infos sur la version -->
+          <td><cell-content [content]="version.filename"></cell-content></td>
+          <td><cell-content [content]="file.author?.firstname + ' ' + file.author?.name"></cell-content></td>
+          <td><cell-content [content]="version.num"></cell-content></td>
+          <td><cell-content [content]="version.date_upload | date:'inconnue'"></cell-content></td>
+          <td><cell-content [content]="version.status | versionStatus"></cell-content></td>
+          <td><app-download-version-button [version]="version"></app-download-version-button></td>
         </ng-template>
       </datatable>
     </section>

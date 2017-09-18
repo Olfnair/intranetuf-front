@@ -14,7 +14,7 @@
 
 <!-- Liste des contrôles/validations de l'utilisateur -->
 <app-checkslist *ngIf="state == State.List"
-    [whereParams]="whereParams" [title]="title"
+    [checkType]="checkType" [whereParams]="whereParams" [title]="title"
     (checkVersion)="setStateAndEntity(State.Check, $event)"
     (versionDetails)="viewDetails($event)">
 </app-checkslist>

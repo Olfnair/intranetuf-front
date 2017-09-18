@@ -94,7 +94,7 @@ export class DatatableContentManager<T, RestService> {
           this._params.index = this.paginator.pageToIndex(this.paginator.currentPageNum - 1);
           this.load(args);
         }
-        else {
+        else if(this._onLoad) {
           this._onLoad();
         }
       }

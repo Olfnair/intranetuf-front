@@ -174,13 +174,14 @@ export class AddFileComponent extends GuiForm {
 
   /** @property {boolean} isValidForm - indique si le formulaire est valide */
   get isValidForm(): boolean {
-    // On vérifie le form à la main : le champ 'filename' est désactivé pour qu'on ne puisse pas l'éditer.
+    /*// On vérifie le form à la main : le champ 'filename' est désactivé pour qu'on ne puisse pas l'éditer.
     // Malheureusement, un champ désactivé est considéré invalide par défaut...
     // On doit donc vérifier les champs un par un et faire un test particulier pour le champ 'filename'
-    if(this.form.controls.filename.value == '') { return false; }
+    if(this.form.controls.filename.value == '') { return false; }*/
+    if(! this.form.valid) { return false; }
     if(! this._newVersionMode) {
       for(let container of this._userContainers) {
-        if(container.size <= 0) { return false; }
+        if(container.size < 1) { return false; }
       }
     }
     return true;
@@ -327,7 +328,7 @@ export class AddFileComponent extends GuiForm {
    */
   protected buildForm(): FormGroup {
     return new FormGroup({
-      filename: new FormControl({ value: '', disabled: true }, Validators.compose([
+      filename: new FormControl(''/*{ value: '', disabled: true }*/, Validators.compose([
         Validators.required
       ]))
     });

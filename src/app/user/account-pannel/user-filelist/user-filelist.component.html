@@ -5,11 +5,12 @@
     }"
     [data]="dataObs"
     [columns]="[
-      { label: 'Fichier',        query: 'version.filename',    sort: true, search: true, width: '35%' },
-      { label: 'Projet',         query: 'project.name',        sort: true, search: true, width: '30%' },
+      { label: 'Fichier',        query: 'version.filename',    sort: true, search: true, width: '27%' },
+      { label: 'Projet',         query: 'project.name',        sort: true, search: true, width: '23%' },
       { label: 'Version',        query: 'version.num',         sort: true, search: true, width: '10%' },
       { label: 'Date d\'upload', query: 'version.date_upload', sort: true,               width: '13%' },
-      { label: 'Statut',         query: 'version.status',      sort: true, search: true, width: '12%' }
+      { label: 'Statut',         query: 'version.status',      sort: true, search: true, width: '12%' },
+      { label: '',                                                                       width: '15%' }
     ]"
     (queryParams)="update($event, [userId])">
   
@@ -28,5 +29,15 @@
     <td><cell-content [content]="file.version?.num"></cell-content></td>
     <td><cell-content [content]="file.version?.date_upload | date:'inconnue'"></cell-content></td>
     <td><cell-content [content]="file.version?.status | versionStatus"></cell-content></td>
+    <td>
+      <!-- Bouton Télécharger -->
+      <app-download-version-button [version]="file.version"></app-download-version-button>
+
+      <!-- Bouton Nouvelle Version -->
+      <button md-raised-button class="smallButton" color="accent" mdTooltip="Nouvelle version" mdTooltipPosition="above"
+          button="type" (click)="addFile(file)">
+        <md-icon>file_upload</md-icon>
+      </button>
+    </td>
   </ng-template>
 </datatable>

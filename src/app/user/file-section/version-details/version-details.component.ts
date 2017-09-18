@@ -12,8 +12,9 @@ import { SessionService } from "app/services/session.service";
 import { RoleCheckerService } from "app/services/role-checker";
 import { ModalService } from "app/gui/modal.service";
 import { environment } from "environments/environment";
+import { DatatableContentManager, DatatableQueryParams } from 'app/gui/datatable';
 import { File } from "entities/file";
-import { Status as VersionStatus } from "entities/version";
+import { Status as VersionStatus, Version } from "entities/version";
 import { WorkflowCheck, CheckType, Status as CheckStatus } from "entities/workflow-check";
 
 /**
@@ -68,6 +69,22 @@ class CheckContainer {
   }
 }
 
+class VersionList extends DatatableContentManager<Version, RestApiService> { 
+  
+  /**
+   * @constructor
+   * @param restService - service REST utilisé
+   * @param _fileId - id du fichier
+   * @param _versionId - id de la version actuelle
+   */
+  constructor(restService: RestApiService) {
+    super(
+      restService,
+      'fetchOtherVersions'
+    )
+  }
+}
+
 /**
  * Composant qui permet d'afficher les détails de la version courante d'un fichier
  */
@@ -82,6 +99,8 @@ export class VersionDetailsComponent {
   private _file: File = undefined;
   /** conteneurs pour les contrôles et validations */
   private _checkContainers: CheckContainer[] = [];
+
+  private _otherVersions: VersionList = undefined;
 
   /** @event - fermeture du composant */
   private _close$: EventEmitter<void> = new EventEmitter<void>();
@@ -108,6 +127,8 @@ export class VersionDetailsComponent {
     // initialisation des conteneurs :
     this._checkContainers.push(new CheckContainer(CheckType.CONTROL, 'Contrôles'));
     this._checkContainers.push(new CheckContainer(CheckType.VALIDATION, 'Validations'));
+
+    this._otherVersions = new VersionList(this._restService);
   }
 
   /** @property {File} file - le fichier dont on veut voir les détails de version */
@@ -118,7 +139,10 @@ export class VersionDetailsComponent {
   @Input()
   set file(file: File) {
     this._file = file;
-    // chargement des contrôles et validations pour ce fichier :
+    if(this._roleCheckerService.userIsAdmin()) {
+      this._otherVersions.load([this._file.id, this._file.version.id]);
+    }
+    // chargement des contrôles et validations pour la version actuelle de ce fichier :
     let sub: Subscription = this._restService.fetchWorkflowChecksForVersion(this._file.version.id).finally(() => {
       sub.unsubscribe();
     }).subscribe(
@@ -143,6 +167,11 @@ export class VersionDetailsComponent {
   /** @property {CheckContainer[]} checkContainers - conteneurs de contrôles et validations */
   get checkContainers(): CheckContainer[] {
     return this._checkContainers;
+  }
+
+  /** @property {VersionList} - liste des autres versions du fichier */
+  get otherVersions(): VersionList {
+    return this._otherVersions;
   }
 
   /**

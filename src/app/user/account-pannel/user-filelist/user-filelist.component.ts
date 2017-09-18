@@ -11,8 +11,11 @@ import { File } from "entities/file";
 })
 export class UserFilelistComponent extends DatatableContentManager<File, RestApiService> implements OnInit {
 
+  /** @event - l'utilisateur a demandé le détail d'un fichier */
   private _versionDetails$: EventEmitter<File> = new EventEmitter<File>();
-  /** @event - l'utilisateur a demandé à contrôler ou valider un fichier */
+
+  /** @event - l'utilisateur veut uploader une nouvelle version */
+  private _addFile$: EventEmitter<File> = new EventEmitter<File>();
 
   /**
    * @constructor
@@ -49,12 +52,25 @@ export class UserFilelistComponent extends DatatableContentManager<File, RestApi
     return this._versionDetails$;
   }
 
+  @Output('addFile')
+  get addFile$(): EventEmitter<File> {
+    return this._addFile$;
+  }
+
   /**
    * @param {File} file - fichier dont on veut les détails
    * @emits versionDetails - demande pour voir les détails d'un fichier
    */
   versionDetails(file: File): void {
     this._versionDetails$.emit(file);
+  }
+
+  /**
+   * @param {File} file - le fichier auquel on veut ajouter une version
+   * @emits addFile - demande d'ajout d'une nouvelle version à un fichier
+   */
+  addFile(file: File): void {
+    this._addFile$.emit(file);
   }
 
 }

@@ -14,10 +14,16 @@
 
 <!-- Liste des fichiers de l'utilisateur -->
 <app-user-filelist *ngIf="state == State.Filelist"
-    (versionDetails)="setStateAndEntity(State.VersionDetails, $event)">
+    (versionDetails)="setStateAndEntity(State.VersionDetails, $event)"
+    (addFile)="setStateAndEntity(State.AddVersion, $event)">
 </app-user-filelist>
 
 <!-- Details de version d'un fichier -->
 <app-version-details *ngIf="state == State.VersionDetails"
     [file]="entity" (close)="state = State.Filelist">
 </app-version-details>
+
+<!-- Ajout d'une nouvelle version -->
+<app-add-file *ngIf="state == State.AddVersion"
+    [data]="{project: entity.project, file: entity}" (close)="state = State.Filelist">
+</app-add-file>

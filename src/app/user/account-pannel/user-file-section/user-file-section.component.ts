@@ -29,7 +29,8 @@ export class UserFileSectionComponent extends GenericEntitySection<File> {
   constructor() {
     super({
       Filelist:       0,  // Liste des fichiers
-      VersionDetails: 1   // détail de version
+      VersionDetails: 1,  // détail de version
+      AddVersion:     2   // Ajout d'une nouvelle version
     });
   }
 }

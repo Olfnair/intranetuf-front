@@ -15,6 +15,8 @@ export class CheckslistComponent extends DatatableContentManager<WorkflowCheck, 
   public CheckType = CheckType;
   public CheckStatus = Status;
 
+  private _checkType: CheckType = CheckType.CONTROL;
+
   private _checkVersion$: EventEmitter<WorkflowCheck> = new EventEmitter<WorkflowCheck>();
 
   private _whereParams: [string, string][] = [];
@@ -41,10 +43,25 @@ export class CheckslistComponent extends DatatableContentManager<WorkflowCheck, 
     );
   }
 
+  /**
+   * Initialisation
+   */
   ngOnInit(): void {
     let params = new DatatableQueryParams();
     params.limit = DatatableContentManager.PAGE_SIZE;
     this.update(params, [this.userId]);
+  }
+
+  @Input()
+  set checkType(checkType: CheckType) {
+    this._checkType = checkType;
+  }
+
+  get statusColTitle(): string {
+    if(this._checkType == CheckType.VALIDATION) {
+      return 'Statut Validation';
+    }
+    return 'Statut Contrôle';
   }
 
   get title(): string {

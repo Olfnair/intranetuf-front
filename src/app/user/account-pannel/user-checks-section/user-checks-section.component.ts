@@ -1,10 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Subscription } from "rxjs/Subscription";
 import { GenericEntitySection } from "app/shared/generic-entity-section";
 import { Entity } from "entities/entity";
 import { RestApiService } from "app/services/rest-api.service";
 import { File } from "entities/file";
 import { Version } from "entities/version";
-import { Subscription } from "rxjs/Subscription";
+import { CheckType } from "entities/workflow-check";
 
 @Component({
   selector: 'app-user-checks-section',
@@ -12,12 +13,12 @@ import { Subscription } from "rxjs/Subscription";
   styleUrls: ['./user-checks-section.component.css']
 })
 export class UserChecksSectionComponent extends GenericEntitySection<Entity> {
-
   private _title: string = '';
   private _whereParams: [string, string][] = [];
 
   /**
    * @constructor
+   * @param {RestApiService} _restService - service REST utilisé pour récupérer les données
    */
   constructor(private _restService: RestApiService) {
     super({
@@ -25,6 +26,15 @@ export class UserChecksSectionComponent extends GenericEntitySection<Entity> {
       Check:          1,  // effectuer check
       VersionDetails: 2   // detail de version
     });
+  }
+
+  get checkType(): CheckType {  
+    for(let param of this.whereParams) {
+      if(param[0] == 'type') {
+        return parseInt(param[1]);
+      }
+    }
+    return CheckType.CONTROL;
   }
 
   get title(): string {

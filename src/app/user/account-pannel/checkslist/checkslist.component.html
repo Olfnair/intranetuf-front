@@ -5,15 +5,14 @@
     }"
     [data]="dataObs"
     [columns]="[
-      { label: 'Fichier',        query: 'version.filename',    sort: true, search: true, width: '15%' },
+      { label: 'Fichier',        query: 'version.filename',    sort: true, search: true, width: '20%' },
       { label: 'Projet',         query: 'project.name',        sort: true, search: true, width: '15%' },
-      { label: 'Version',        query: 'version.num',         sort: true, search: true, width: ' 5%' },
+      { label: 'Version',        query: 'version.num',         sort: true, search: true, width:  '7%' },
       { label: 'Date d\'upload', query: 'version.date_upload', sort: true,               width: '10%' },
-      { label: 'Statut Fichier', query: 'version.status',      sort: true, search: true, width: '10%' },
-      { label: 'Statut',         query: 'status',              sort: true, search: true, width: '10%' },
-      { label: 'Date Init',      query: 'date_init',           sort: true,               width: '10%' },
-      { label: 'Date Vérif',     query: 'date_checked',        sort: true,               width: '10%' },
-      { label: '',                                                                       width: '10%' }
+      { label: statusColTitle,   query: 'status',              sort: true, search: true, width: '13%' },
+      { label: 'Date Init',      query: 'date_init',           sort: true,               width:  '9%' },
+      { label: 'Date Vérif',     query: 'date_checked',        sort: true,               width:  '9%' },
+      { label: '',                                                                       width: '12%' }
     ]"
     (queryParams)="update($event, [userId])">
 
@@ -32,7 +31,6 @@
     <td><cell-content [content]="check.project?.name"></cell-content></td>
     <td><cell-content [content]="check.version?.num"></cell-content></td>
     <td><cell-content [content]="check.version?.date_upload | date:''"></cell-content></td>
-    <td><cell-content [content]="check.version?.status | versionStatus"></cell-content></td>
     <td><cell-content [content]="check.status | checkStatus"></cell-content></td>
     <td><cell-content [content]="check.date_init | date:''"></cell-content></td>
     <td><cell-content [content]="check.date_checked | date:''"></cell-content></td>

@@ -167,6 +167,33 @@ export class RestApiService {
   }
 
   /**
+   * Récupère les autres versions d'un fichier
+   * @param {number} fileId - id du fichier
+   * @param {number} versionId - id de la version
+   * @param {string} searchParams - paramètres de recherche
+   * @param {string} orderParams - paramètres de tri
+   * @param {number} index - index du début pour la pagination
+   * @param {number} limit - nombre max d'items pour la pagination
+   * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
+   */
+  fetchOtherVersions(
+    fileId: number,
+    versionId: number,
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<File>> {
+    return this._http.get(
+      this._backendURL.version + '/' + versionId + '/other/' + fileId + '/'
+      + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      this.options()
+    ).map((res: Response) => {
+      return res.json().flexQueryResult;
+    });
+  }
+
+  /**
    * Crée l'entité d'un fichier
    * @param {File} file - le fichier à créer
    * @returns {Observable<File>} - le fichier créé 
