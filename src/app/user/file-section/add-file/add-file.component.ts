@@ -224,9 +224,18 @@ export class AddFileComponent extends GuiForm {
     let uploadSub: Subscription = this._uploadService.upload(this._uploadFile, entityType, entity).subscribe(
       (res: void) => {    // OK :
       },
-      (error: any) => {   // Erreur :
-        this.closeProgressModal();
-        this._modal.info('Erreur', 'Erreur pendant l\'upload du fichier', false);
+      (error: number) => {   // Erreur :
+        if (! this._aborted) {
+          this.closeProgressModal();
+          switch(error) {
+            case 413:
+              this._modal.info('Erreur', 'Fichier trop volumineux !', false);
+              break;
+            default:
+              this._modal.info('Erreur', 'Erreur pendant l\'upload du fichier.', false);
+              break;
+          }
+        }
       },
       () => {             // Finally :
         uploadSub.unsubscribe();

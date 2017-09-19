@@ -80,7 +80,7 @@ export class FileUploadService {
           if (this._xhr.status >= 200 && this._xhr.status < 300) {  // réponse OK :
             observer.complete();
           } else {                                                  // Erreur :
-            observer.error(this._xhr.response);
+            observer.error(this._xhr.status);
           }
         }
       };
@@ -98,7 +98,7 @@ export class FileUploadService {
       this._xhr.open('POST', url, true);
       this._xhr.setRequestHeader("Authorization", "Bearer " + JSON.stringify(this._session.authToken));
       this._xhr.setRequestHeader("Accept", "application/json");
-      this._xhr.setRequestHeader("X-File-Size", (file.size).toString());
+      //this._xhr.setRequestHeader("X-File-Size", (file.size).toString());
       this._xhr.send(formData);
     });
   }
