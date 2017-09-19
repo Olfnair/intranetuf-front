@@ -247,14 +247,20 @@ export class SessionService {
    * Méthode de déconnexion
    */
   logout(): void {
+    this._readyForContent = false;
+    this._selectedProject = undefined;
+    this._selectedItemId = [];
+    this._navListItemToIdMap = [];
+    this._navListNameToIdMap.clear();
+    this._currentNavListId = 0;
+    this._updateProjectList = false;
+    this._fetchActiveProjects = true;
     this._userLogin = undefined;
     this._authToken = undefined;
     this._base64AuthToken = undefined;
-    this._restService.authToken = undefined;
     this._logged = false;
+    this._restService.authToken = undefined;
     this._roleCheckerService.reset();
-    this._selectedProject = undefined;
-    this._fetchActiveProjects = true;
   }
 
 }
