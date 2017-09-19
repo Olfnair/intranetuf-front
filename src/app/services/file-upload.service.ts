@@ -71,7 +71,7 @@ export class FileUploadService {
       this._xhr = new XMLHttpRequest();
       
       // création du formData qui va servir à uploader le fichier :
-      formData.append("entity", new Blob([JSON.stringify({[entityType]: entity})], {type: "application/json"}));
+      formData.append("entity", new Blob([JSON.stringify(/*{[entityType]: entity}*/entity)], {type: "application/json"}));
       formData.append("file", file, file.name);
 
       // détecter la fin de l'upload :
