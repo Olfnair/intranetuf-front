@@ -62,6 +62,26 @@ export class SessionService {
     private _roleCheckerService: RoleCheckerService
   ) { }
 
+  /**
+   * Méthode de déconnexion
+   */
+  logout(): void {
+    this._readyForContent = false;
+    this._selectedProject = undefined;
+    this._selectedItemId = [];
+    this._navListItemToIdMap = [];
+    this._navListNameToIdMap.clear();
+    this._currentNavListId = 0;
+    this._updateProjectList = false;
+    this._fetchActiveProjects = true;
+    this._userLogin = undefined;
+    this._authToken = undefined;
+    this._base64AuthToken = undefined;
+    this._logged = false;
+    this._restService.authToken = undefined;
+    this._roleCheckerService.reset();
+  }
+
   /** @property {boolean} readyForContent - indique si la page est prête à afficher du contenu */
   get readyForContent(): boolean {
     return this._readyForContent;
@@ -241,26 +261,6 @@ export class SessionService {
     return this._restService.adminLoginAs(login).map((res: Response) => {
       return this._login(login, res);
     });
-  }
-
-  /**
-   * Méthode de déconnexion
-   */
-  logout(): void {
-    this._readyForContent = false;
-    this._selectedProject = undefined;
-    this._selectedItemId = [];
-    this._navListItemToIdMap = [];
-    this._navListNameToIdMap.clear();
-    this._currentNavListId = 0;
-    this._updateProjectList = false;
-    this._fetchActiveProjects = true;
-    this._userLogin = undefined;
-    this._authToken = undefined;
-    this._base64AuthToken = undefined;
-    this._logged = false;
-    this._restService.authToken = undefined;
-    this._roleCheckerService.reset();
   }
 
 }
