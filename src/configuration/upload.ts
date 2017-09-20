@@ -1,0 +1,2 @@
+export const EXTENSIONS: string = ".pdf, .txt, .zip, .rar, .pptx, .ppt, .ppsx, .pps, .docx, .doc, .xlsx, .xls, .vsd, .odt, .sxw, .ods, .sxc, .odp, .sxi, .odg, .sdx, .odf, .sxm";
+export const MAXFILESIZE: number = 1024 * 1024 * 10; // 10 MB

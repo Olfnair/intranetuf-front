@@ -10,6 +10,8 @@ import { Subscription } from "rxjs/Subscription";
 import { FileUploadService } from "app/services/file-upload.service";
 import { ModalService } from 'app/gui/modal.service';
 import { RestApiService } from "app/services/rest-api.service";
+import { EXTENSIONS, MAXFILESIZE } from 'configuration/upload';
+import { CustomValidators } from 'app/shared/custom-validators';
 import { GuiForm } from "app/gui/gui-form";
 import { GuiProgressComponent } from "app/gui/gui-progress";
 import { UserContainer } from "./user-container";
@@ -44,6 +46,9 @@ class InputData {
   styleUrls: ['./add-file.component.css']
 })
 export class AddFileComponent extends GuiForm {
+
+  /** Liste des extensions autorisées */
+  private _allowedExtensions: string = EXTENSIONS;
   
   /** fichier à uploader */
   private _uploadFile: File = undefined;
@@ -138,9 +143,18 @@ export class AddFileComponent extends GuiForm {
     }
   }
 
-  /** @property {strig} filename - nom du fichier à uploader */
+  /** @property {string} filename - nom du fichier à uploader */
   get filename(): string {
     return this._file && this._uploadFile.name || '';
+  }
+
+  get fileTooBig(): boolean {
+    return this._uploadFile && this._uploadFile.size > MAXFILESIZE;
+  }
+
+  /** @property {string} allowedExtensions - extensions de fichier autorisées pour le téléchargement */
+  get allowedExtensions(): string {
+    return this._allowedExtensions;
   }
 
   /**
@@ -172,6 +186,7 @@ export class AddFileComponent extends GuiForm {
   fileSelect(file: File): void {
     this._uploadFile = file;
     this.form.controls.filename.setValue(this._uploadFile.name);
+    this.form.controls.filename.markAsTouched();
   }
 
   /** @property {boolean} isValidForm - indique si le formulaire est valide */
@@ -228,6 +243,9 @@ export class AddFileComponent extends GuiForm {
         if (! this._aborted) {
           this.closeProgressModal();
           switch(error) {
+            case 406:
+              this._modal.info('Erreur', 'Ce format de fichier n\'est pas pris en charge !', false);
+              break;
             case 413:
               this._modal.info('Erreur', 'Fichier trop volumineux !', false);
               break;
@@ -341,7 +359,7 @@ export class AddFileComponent extends GuiForm {
   protected buildForm(): FormGroup {
     return new FormGroup({
       filename: new FormControl(''/*{ value: '', disabled: true }*/, Validators.compose([
-        Validators.required
+        Validators.required, CustomValidators.fileExtension
       ]))
     });
   }

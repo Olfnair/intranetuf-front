@@ -4,6 +4,7 @@
  */
 
 import { FormControl } from '@angular/forms';
+import { EXTENSIONS } from 'configuration/upload';
 
 
 /**
@@ -20,7 +21,7 @@ export class CustomValidators {
     // email regex
     const regex = /^\w+\.\w+@gmail\.com$/;
     // returns control
-    return regex.test(control.value) ? null : { googleEmail: true }
+    return regex.test(control.value) ? null : { googleEmail: true };
   }
 
   /**
@@ -35,7 +36,7 @@ export class CustomValidators {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     // returns control
-    return regex.test(control.value) ? null : { email: true }
+    return regex.test(control.value) ? null : { email: true };
   }
 
   /**
@@ -47,6 +48,16 @@ export class CustomValidators {
     const regex = /^[a-z0-9]+$/i;
 
     // returns control
-    return regex.test(control.value) ? null : { login: true }
+    return regex.test(control.value) ? null : { login: true };
+  }
+
+  static fileExtension(control: FormControl) {
+    let value: string = control.value;
+    let index: number = value.lastIndexOf('.');
+    if(index < 0 || index == value.length - 1) {
+      return { fileExtension: true };
+    }
+    let ext: string = value.substring(index);
+    return EXTENSIONS.includes(ext) ? null : { fileExtension: true };
   }
 }

@@ -15,14 +15,16 @@
 
     <!-- sélection du fichier -->
     <div class="margin" gui-form-input>
-      <input-file (fileSelect)="fileSelect($event)" [accept]="'*/*'">
+      <input-file (fileSelect)="fileSelect($event)" [accept]="allowedExtensions">
         <span class="buttonText">Choisir un fichier</span>
       </input-file>
+      <span *ngIf="fileTooBig" class="errors">Fichier trop Volumineux !</span>
     </div>
     <!-- num du fichier choisi -->
     <md-input-container gui-form-input>
       <input mdInput readonly type="text" placeholder="Nom du fichier choisi" formControlName="filename" required/>
-      <md-error>Veuillez choisir un fichier à ajouter</md-error>
+      <md-error *ngIf="form.controls.filename.errors?.required">Veuillez choisir un fichier à ajouter.</md-error>
+      <md-error *ngIf="form.controls.filename.errors?.fileExtension">Ce format de fichier n'est pas pris en charge !</md-error>
     </md-input-container>
 
     <!-- choix contrôleurs et valideurs -->
