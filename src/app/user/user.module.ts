@@ -34,7 +34,6 @@ import { CheckslistComponent } from './account-pannel/checkslist/checkslist.comp
 import { UserChecksSectionComponent } from './account-pannel/user-checks-section/user-checks-section.component';
 import { DownloadVersionButtonComponent } from './buttons/download-version-button/download-version-button.component';
 
-
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
     HomeComponent,

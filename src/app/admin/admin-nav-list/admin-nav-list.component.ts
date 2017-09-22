@@ -7,6 +7,7 @@ import { Component } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SimpleNavList } from "app/user/simple-nav-list";
 import { SessionService } from "app/services/session.service";
+import { RoleCheckerService } from "app/services/role-checker";
 
 /**
  * Menu de navigation du panneau d'admin
@@ -23,8 +24,13 @@ export class AdminNavListComponent extends SimpleNavList {
    * @param {DomSanitizer} sanitizer - sanitizer pour le style de couleur du texte
    * @param {SessionService} _session - le service de session global
    */
-  constructor(sanitizer: DomSanitizer, session: SessionService) {
-    super('Admin', [ 'Utilisateurs', 'Projets', 'Logs' ], sanitizer, session);
+  constructor(sanitizer: DomSanitizer, session: SessionService, roleChecker: RoleCheckerService) {
+    super(
+      'Admin',
+      roleChecker.userIsSuperAdmin() ? [ 'Utilisateurs', 'Projets', 'Logs' ] : [ 'Utilisateurs', 'Projets' ],
+      sanitizer,
+      session
+    );
   }
 
 }

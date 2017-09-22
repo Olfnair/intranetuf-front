@@ -3,7 +3,7 @@
  * License : 
  */
 
-import { MdDialogRef, MdDialog, ComponentType } from "@angular/material";
+import { MdDialogRef, MdDialog, ComponentType, MdDialogConfig } from "@angular/material";
 import { Injectable, TemplateRef } from '@angular/core';
 import { GuiModalComponent, GuiModalData } from "app/gui/gui-modal";
 import { Subscription } from "rxjs/Subscription";
@@ -18,7 +18,6 @@ export class ModalService {
 
   /** Référence sur la modale affichée */
   private _dialogRef: MdDialogRef<any> = undefined;
-
   
   /**
    * @constructor
@@ -32,8 +31,9 @@ export class ModalService {
    * @param {any} data - les données du template, contenues dans un objet 'data' de n'importe quel format
    * @returns {Observable<any>} - permet de savoir quand la modale est fermée et ce qu'elle renvoie comme données
    */
-  popup(comp: ComponentType<any> | TemplateRef<any>, data: any = {}): Observable<any> {
-    this._dialogRef = this._dialog.open(comp, {data: data}); // ouverture du composant modal avec ses données
+  popup(comp: ComponentType<any> | TemplateRef<any>, data: any = {}, config: MdDialogConfig = new MdDialogConfig()): Observable<any> {
+    config.data = data;
+    this._dialogRef = this._dialog.open(comp, config); // ouverture du composant modal avec ses données
     return Observable.create((observer: Observer<boolean>) => {
       let modalSub: Subscription = this._dialogRef.afterClosed().finally(() => {
         modalSub.unsubscribe(); // libération des ressources
