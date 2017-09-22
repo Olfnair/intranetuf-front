@@ -14,6 +14,7 @@ export const environment = {
       activate: '/IUF/rest/entities.user/activate',
       download: '/IUF/rest/download',
       file: '/IUF/rest/entities.file',
+      log: '/IUF/rest/entities.log',
       project: '/IUF/rest/entities.project',
       projectRight: '/IUF/rest/entities.projectright',
       user: '/IUF/rest/entities.user',

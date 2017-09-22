@@ -640,6 +640,28 @@ export class RestApiService {
   }
 
   /**
+   * Liste les logs en fonction des paramètres
+   * @param {string} searchParams - paramètres de recherche
+   * @param {string} orderParams - paramètres de tri
+   * @param {number} index - index du début pour la pagination
+   * @param {number} limit - nombre max d'items pour la pagination
+   * @returns {Observable<FlexQueryResult<Project>>} - résultat de la requête
+   */
+  fetchLogs(
+    searchParams: string,
+    orderParams: string,
+    index: number,
+    limit: number
+  ): Observable<FlexQueryResult<User>> {
+    return this._http.get(
+      this._backendURL.log + '/' + RestApiService.encodeQueryParams(searchParams, orderParams, index, limit),
+      this.options()
+    ).map((res: Response) => {
+      return res.json().flexQueryResult;
+    });
+  }
+
+  /**
    * Authentification par le backend en fonction des credentials
    * @param {Credentials} credentials - credentials pour l'authentification (login + mot de pase)
    * @returns {Observable<Response>} - Observable sur la réponse http

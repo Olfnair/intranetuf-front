@@ -27,6 +27,8 @@ import { UserlistComponent } from "./users-section/userlist/userlist.component";
 import { UserRightslistComponent } from "./users-section/user-rightslist/user-rightslist.component";
 import { UserRolesComponent } from './users-section/user-roles/user-roles.component';
 import { UsersSectionComponent } from './users-section/users-section.component';
+import { LogsSectionComponent } from './logs-section/logs-section.component';
+import { LoglistComponent } from './logs-section/loglist/loglist.component';
 
 /**
  * Module Admin
@@ -41,7 +43,9 @@ import { UsersSectionComponent } from './users-section/users-section.component';
     UserlistComponent,
     UserRightslistComponent,
     UserRolesComponent,
-    UsersSectionComponent
+    UsersSectionComponent,
+    LogsSectionComponent,
+    LoglistComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
   ],
@@ -63,7 +67,8 @@ import { UsersSectionComponent } from './users-section/users-section.component';
     UserlistComponent,
     UserRightslistComponent,
     UserRolesComponent,
-    UsersSectionComponent
+    UsersSectionComponent,
+    LogsSectionComponent
   ]
 })
 export class AdminModule {}

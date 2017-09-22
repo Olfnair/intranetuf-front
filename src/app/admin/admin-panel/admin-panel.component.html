@@ -31,7 +31,7 @@
 <section *ngIf="selectedItemId === getItemId('Logs')">
   <md-tab-group [selectedIndex]="getTabIndex('logs')" (selectedIndexChange)="setTabIndex('logs', $event)">
     <md-tab label="Logs">   <!-- Onglet Logs -->
-      <p *ngIf="getTabIndex('logs') === 0">Affichage des logs (WIP)</p>
+      <app-logs-section *ngIf="getTabIndex('logs') === 0" [stateName]="'List'"></app-logs-section>
     </md-tab>
   </md-tab-group>
 </section>

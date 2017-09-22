@@ -1,0 +1,41 @@
+<!--
+  Auteur : Florian
+  License : 
+  
+  Datatable de la liste des logs dans le panneau d'admin
+-->
+
+<datatable
+    [options]="{
+      emptyMessage: 'Il n\'y a pas encore de log',
+      emptySearchMessage: 'Aucun log ne correspond à votre recherche.'
+    }"
+    [data]="dataObs"
+    [columns]="[
+      { label: 'Date',        query: 'logdate',          sort: true,               width: '10' },
+      { label: 'Auteur',      query: 'author.login',     sort: true, search: true, width: '15' },
+      { label: 'Type',        query: 'type',             sort: true, search: true, width: '15' },
+      { label: 'Message',     query: 'message',          sort: true, search: true, width: '15' },
+      { label: 'Utilisateur', query: 'user.login',       sort: true, search: true, width: '15' },
+      { label: 'Projet',      query: 'project.name',     sort: true, search: true, width: '15' },
+      { label: 'Fichier',     query: 'version.filename', sort: true, search: true, width: '15' }
+    ]"
+    (queryParams)="update($event)">
+  <!-- total width: 96% : 4% de width pour la colonne de selection -->
+
+  <datatable-title>
+    <h2>Liste des logs</h2>
+  </datatable-title>
+
+  <!-- template d'affichage du contenu pour une ligne de la datatable : -->
+  <ng-template let-log="item">
+    <!-- contenu des logs -->
+    <td><cell-content [content]="log.logdate | date:''"></cell-content></td>
+    <td><cell-content [content]="log.author.login"></cell-content></td>
+    <td><cell-content [content]="log.type"></cell-content></td>
+    <td><cell-content [content]="log.message"></cell-content></td>
+    <td><cell-content [content]="log.user?.login"></cell-content></td>
+    <td><cell-content [content]="log.project?.name"></cell-content></td>
+    <td><cell-content [content]="log.version?.filename"></cell-content></td>
+  </ng-template>
+</datatable>

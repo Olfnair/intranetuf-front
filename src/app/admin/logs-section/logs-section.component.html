@@ -1,0 +1,12 @@
+<!--
+  Auteur : Florian
+  License : 
+  
+  Template de la section 'logs' du panneau d'administration :
+  - Affiche le bon composant, un seul à la fois, en fonction de la variable (this.)state
+  - Ecoute les évènements du composant affiché pour savoir quand il faut afficher un autre composant
+    et quels paramètres il faut lui donner en entrée
+-->
+
+<!-- Liste des Logs -->
+<app-loglist *ngIf="state == State.List"></app-loglist>

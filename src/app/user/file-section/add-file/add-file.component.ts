@@ -195,7 +195,7 @@ export class AddFileComponent extends GuiForm {
     // Malheureusement, un champ désactivé est considéré invalide par défaut...
     // On doit donc vérifier les champs un par un et faire un test particulier pour le champ 'filename'
     if(this.form.controls.filename.value == '') { return false; }*/
-    if(! this.form.valid) { return false; }
+    if(! this.form.valid || this.fileTooBig) { return false; }
     if(! this._newVersionMode) {
       for(let container of this._userContainers) {
         if(container.size < 1) { return false; }
