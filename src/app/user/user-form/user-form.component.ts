@@ -8,6 +8,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { Subscription } from "rxjs/Subscription";
 import { RestApiService } from "app/services/rest-api.service";
+import { SessionService } from 'app/services/session.service';
 import { RoleCheckerService, BasicRoleChecker } from "app/services/role-checker";
 import { ModalService } from "app/gui/modal.service";
 import { GuiForm } from "app/gui/gui-form";
@@ -47,6 +48,7 @@ export class UserFormComponent extends GuiForm {
    */
   constructor(
     private _restService: RestApiService,
+    private _session: SessionService,
     private _modal: ModalService,
     private _roleCheckerService: RoleCheckerService
   ) {
@@ -168,6 +170,9 @@ export class UserFormComponent extends GuiForm {
         let sub: Subscription = this._modal.info(modalTitle, modalText, true).finally(() => {
           sub.unsubscribe();
         }).subscribe();
+        if(this._userToEdit != undefined) {
+          this._session.userLogin = user.login;
+        }
         this._userToEdit = user;
         this._initialValue = this.form.value;
         this._close$.emit(true);

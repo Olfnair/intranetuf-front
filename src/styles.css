@@ -162,3 +162,8 @@ body {
   width: inherit;
   height: inherit;
 }
+
+.multiline {
+  white-space: pre-line;
+  height: auto;  
+}

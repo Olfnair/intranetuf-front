@@ -202,6 +202,10 @@ export class SessionService {
     return this._userLogin;
   }
 
+  set userLogin(userLogin: string) {
+    this._userLogin = userLogin;
+  }
+
   /** @property {AuthToken} authToken - token d'authentification de l'user courant */
   get authToken(): AuthToken {
     return this._authToken;

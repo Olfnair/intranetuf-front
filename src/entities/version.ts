@@ -37,6 +37,9 @@ export class Version extends Entity {
   
   /** date d'upload de cette version */
   public date_upload: number = undefined;
+
+  /** dernier contrôle ou validation effectué sur cette version */
+  public lastCheck: WorkflowCheck = undefined;
   
   /** liste des checks (contrôles ou validations) de cette version */
   public workflowChecks: WorkflowCheck[] = undefined;

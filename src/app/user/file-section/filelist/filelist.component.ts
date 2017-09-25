@@ -357,6 +357,26 @@ export class FilelistComponent extends DatatableContentManager<File, RestApiServ
     return ! this.hasControl(versionId) && this.hasCheck(CheckType.VALIDATION, versionId);
   }
 
+  getTooltipText(file: File): string {
+    if(file.version == undefined) {
+      return '';
+    }
+    let check: WorkflowCheck = file.version.lastCheck;
+    if(check == undefined) {
+      return 'Aucun contrôle effectué';
+    }
+    else if(check.type == CheckType.CONTROL) {
+      return 'Dernier Contrôle ' + ((check.status == Status.CHECK_OK) ? 'validé' : 'refusé') + ' par '
+        + check.user.firstname + ' ' + check.user.name + ' :\n\n'
+        + check.comment;
+    }
+    else if(check.type == CheckType.VALIDATION) {
+      return 'Dernière Validation ' + ((check.status == Status.CHECK_OK) ? 'validée' : 'refusée') + ' par '
+        + check.user.firstname + ' ' + check.user.name + ' :\n\n'
+        + check.comment;
+    }
+  }
+
   /**
    * Supprime le fichier passé en paramètre (Suppression logique)
    * @param {File} file - fichier à supprimer 

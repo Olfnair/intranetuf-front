@@ -62,7 +62,7 @@
       </button>
 
       <!-- Réinitialisation du mot de passe -->
-      <button *ngIf="! isSuperAdmin(user)" class="smallButton"
+      <button class="smallButton"
           mdTooltip="Ré-envoyer un mail d'activation / Reset mot de passe" mdTooltipPosition="above"
           md-raised-button color="warn" type="button" (click)="resetPassword(user)"
           [disabled]="! user.active">

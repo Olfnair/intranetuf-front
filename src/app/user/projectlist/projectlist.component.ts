@@ -153,15 +153,16 @@ export class ProjectlistComponent extends NavList implements OnInit {
   set selectedProject(project: Project) {
     this._selectedProject = project;
     
-    // on cherche si le projet ajouté fait partie de la liste :
+    // on cherche si le projet sélectionné fait partie de la liste :
     let i: number;
-    let found: boolean = false;
-    for(i = 0; project && i < this._projects.length && ! found; ++i) {
-      found = (this._projects[i].id === project.id);
+    this.selected = undefined;
+    for(i = 0; project && i < this._projects.length; ++i) {
+      if(this._projects[i].id === project.id) {
+        this._selectedProject = this._projects[i];
+        this.selected = this.selectables[i];
+        break;
+      }
     }
-
-    // si c'est le cas : on le sélectionne dans la nav-list :
-    this.selected = found ? this.selectables[i - 1] : undefined;
 
     // mise à jour des données de session :
     this._session.selectedProject = this._selectedProject;

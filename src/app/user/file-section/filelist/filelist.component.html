@@ -66,7 +66,11 @@
     <td><cell-content [content]="file.author?.firstname + ' ' + file.author?.name"></cell-content></td>
     <td><cell-content [content]="file.version?.num"></cell-content></td>
     <td><cell-content [content]="file.version?.date_upload | date:'inconnue'"></cell-content></td>
-    <td><cell-content [content]="file.version?.status | versionStatus"></cell-content></td>
+    <td>
+      <cell-content [content]="file.version?.status | versionStatus"
+          [mdTooltip]="getTooltipText(file)" mdTooltipPosition="above" [mdTooltipClass]="'multiline'">
+      </cell-content>
+    </td>
     
     <!-- Actions sur le fichier (en fonction des droits sur le projet) -->
     <td>
@@ -99,7 +103,7 @@
         </a>
       </ng-container>
     </td>
-    <td>    
+    <td>
       <!-- Supprimer -->
       <ng-container *ngIf="userCanDeleteFile()">
         <button md-raised-button class="smallButton" type="button" color="warn"
