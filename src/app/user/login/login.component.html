@@ -5,11 +5,12 @@
   Template de l'écran de login
 -->
 
-<section class="fullPageContainer">
+<section [class.fullPageContainer]="! isModal" [class.modalContainer]="isModal">
+  <p *ngIf="isModal" class="sessionRenew">Votre session va expirer, veuillez entrer votre mot de passe pour la renouveler.</p>
   <gui-form [formGroup]="form" title="Connexion" submitOnEnter="true" (formSubmit)="submit()">
     
     <!-- Identifiant -->
-    <md-input-container gui-form-input>
+    <md-input-container *ngIf="! isModal" gui-form-input>
       <input mdInput type="text" placeholder="Identifiant" formControlName="login" required>
       <md-error>Veuillez indiquer votre identifiant</md-error>
     </md-input-container>

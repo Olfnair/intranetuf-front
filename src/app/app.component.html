@@ -12,6 +12,8 @@
     (toggleOnLarge)="toggleSidenavOnLarge()">
 </app-header>
 
+<app-token-updater [updateToken]="updateToken"></app-token-updater>
+
 <!-- Layout avec un sidenav (menu de navigation) et contenu scrollable à droite -->
 <sidenav-layout [openSidenavOnSmall]="sidenavShowOnSmall" [openSidenavOnLarge]="sidenavShowOnLarge">
   

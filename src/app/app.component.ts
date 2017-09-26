@@ -56,6 +56,11 @@ export class AppComponent {
     return this._session.logged;
   }
 
+  /** @property {boolean} updateToken - indique s'il faut mettre à jour le token ou pas */
+  get updateToken(): boolean {
+    return this._session.updateToken;
+  }
+
   /** @property {Project} selectedProject - projet sélectionné dans le menu de navigation des projets */
   get selectedProject(): Project {
     return this._session.selectedProject;

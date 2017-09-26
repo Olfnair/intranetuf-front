@@ -92,6 +92,7 @@ export class ProjectlistComponent extends NavList implements OnInit {
   private loadProjects(): void {
     // chargement des projets :
     this._session.readyForContent = false; // on empêche le chargmeent de la page tant que ce n'est pas fait.
+    this.error = undefined; // aucune erreur pour l'instant...
     let sub: Subscription = this._restService.fetchProjects(this.buildSearchParams(), "default", 0, 0).finally(() => {
       sub.unsubscribe();
     }).subscribe(

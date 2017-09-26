@@ -1,0 +1,11 @@
+.modalContainer {
+  overflow: auto;
+  min-width: 450px;
+  width: 65vw;
+  max-height: 80vh;
+}
+
+.sessionRenew {
+  color: #dd2211;
+  text-align: center;
+}

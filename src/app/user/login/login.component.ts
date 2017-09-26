@@ -3,12 +3,20 @@
  * License : 
  */
 
-import { Component } from '@angular/core';
+import { Component, Inject, Optional, OnInit } from '@angular/core';
 import { Response } from "@angular/http";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { MD_DIALOG_DATA } from '@angular/material';
 import { GuiForm } from "app/gui/gui-form";
 import { Subscription } from "rxjs/Subscription";
 import { SessionService } from "app/services/session.service";
+import { ModalService } from 'app/gui/modal.service';
+
+export class Options {
+  constructor(
+    public isModal: boolean = undefined
+  ) { }
+}
 
 /**
  * Composant de login
@@ -18,8 +26,7 @@ import { SessionService } from "app/services/session.service";
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent extends GuiForm {
-  
+export class LoginComponent extends GuiForm implements OnInit {
   /** le login a échoué ? */
   private _loginFail: boolean = false;
   /** message en cas d'échec de login */
@@ -28,9 +35,22 @@ export class LoginComponent extends GuiForm {
   /**
    * @constructor
    * @param {SessionService} _session - données globales de session
+   * @param {ModalService} _modal - service pour gérer les modales
+   * @param {Options} _options - indique si le composant est une modale ou pas
    */
-  constructor(private _session: SessionService) {
+  constructor(
+    private _session: SessionService,
+    private _modal: ModalService,
+    @Optional() @Inject(MD_DIALOG_DATA) private _options: Options = undefined
+  ) {
     super();
+  }
+
+  /** Initialisation */
+  ngOnInit(): void {
+    if(this.isModal) {
+      this.form.controls.login.patchValue(this._session.userLogin);
+    }
   }
 
   /** @property {boolean} loginFail - indique si le login a échoué ou non */
@@ -41,6 +61,13 @@ export class LoginComponent extends GuiForm {
   /** @property {strig} loginFailMessage - Message à afficher en cas d'échec de login */
   get loginFailMessage(): string {
     return this._loginFailMessage;
+  }
+
+  get isModal(): boolean {
+    if(! this._options) {
+      return false;
+    }
+    return this._options.isModal;
   }
 
   /**
@@ -79,7 +106,10 @@ export class LoginComponent extends GuiForm {
       sub.unsubscribe();
     }).subscribe(
       (success: Response) => {
-        this.loginSuccess()
+        this.loginSuccess();
+        if(this.isModal) {
+          this._modal.close();
+        }
       },
       (error: Response) => {
         this.loginFailure(error)

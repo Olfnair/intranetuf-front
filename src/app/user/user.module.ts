@@ -33,6 +33,7 @@ import { UserFileSectionComponent } from './account-pannel/user-file-section/use
 import { CheckslistComponent } from './account-pannel/checkslist/checkslist.component';
 import { UserChecksSectionComponent } from './account-pannel/user-checks-section/user-checks-section.component';
 import { DownloadVersionButtonComponent } from './buttons/download-version-button/download-version-button.component';
+import { TokenUpdaterComponent } from './token-updater/token-updater.component';
 
 @NgModule({
   declarations: [ // tous les composants, pipes, directives du module
@@ -55,11 +56,13 @@ import { DownloadVersionButtonComponent } from './buttons/download-version-butto
     UserFileSectionComponent,
     CheckslistComponent,
     UserChecksSectionComponent,
-    DownloadVersionButtonComponent
+    DownloadVersionButtonComponent,
+    TokenUpdaterComponent
   ],
   entryComponents: [ // Ajouter ici tous les composants qui servent de modal
     AddProjectComponent,
-    ChoseProjectNameComponent
+    ChoseProjectNameComponent,
+    LoginComponent
   ],
   imports: [ // modules importés
     CommonModule,
@@ -88,7 +91,8 @@ import { DownloadVersionButtonComponent } from './buttons/download-version-butto
     UserFormComponent,
     UserFilelistComponent,
     UserFileSectionComponent,
-    DownloadVersionButtonComponent
+    DownloadVersionButtonComponent,
+    TokenUpdaterComponent
   ]
 })
 export class UserModule {}

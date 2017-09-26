@@ -52,6 +52,11 @@ export class SessionService {
   /** true si user courant loggé, sinon false */
   private _logged: boolean = false;
 
+  /** Indique si le token va expirer et qu'il faut demander à l'utilisateur de se relogger pour le renouveler */
+  private _updateToken: boolean = false;
+
+  private _tokenTimeout: any = undefined;
+
   /**
    * @constructor
    * @param {RestApiService} _restService - service REST utilisé
@@ -66,20 +71,27 @@ export class SessionService {
    * Méthode de déconnexion
    */
   logout(): void {
-    this._readyForContent = false;
-    this._selectedProject = undefined;
-    this._selectedItemId = [];
-    this._navListItemToIdMap = [];
-    this._navListNameToIdMap.clear();
-    this._currentNavListId = 0;
-    this._updateProjectList = false;
-    this._fetchActiveProjects = true;
-    this._userLogin = undefined;
+    if(! this._updateToken) {
+      this._readyForContent = false;
+      this._selectedProject = undefined;
+      this._selectedItemId = [];
+      this._navListItemToIdMap = [];
+      this._navListNameToIdMap.clear();
+      this._currentNavListId = 0;
+      this._updateProjectList = false;
+      this._fetchActiveProjects = true;
+      this._userLogin = undefined;
+    }
     this._authToken = undefined;
     this._base64AuthToken = undefined;
     this._logged = false;
     this._restService.authToken = undefined;
     this._roleCheckerService.reset();
+    this._updateToken = false;
+    if(this._tokenTimeout != undefined) {
+      clearTimeout(this._tokenTimeout);
+      this._tokenTimeout = undefined;
+    }
   }
 
   /** @property {boolean} readyForContent - indique si la page est prête à afficher du contenu */
@@ -227,6 +239,11 @@ export class SessionService {
     return this._logged;
   }
 
+  /** @property {boolean} updateToken - indique si le token de session va expirer */
+  get updateToken(): boolean {
+    return this._updateToken;
+  }
+
   /**
    * Méthode de login
    * @param {string} login - login de l'utilisateur 
@@ -239,6 +256,12 @@ export class SessionService {
     this.authToken = res.json();
     this._logged = true;
     this._roleCheckerService.directLoad(this.authToken.r);
+    let now: number = Date.now();
+    let expiration = this._authToken.e * 1000;
+    this._tokenTimeout = setTimeout(() => {
+      this._updateToken = true;
+    }, (expiration - now) - 5000);
+    new Date(this._authToken.e);
     return res;
   }
 
