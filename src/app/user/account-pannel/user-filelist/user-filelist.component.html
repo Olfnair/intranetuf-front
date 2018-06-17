@@ -20,7 +20,7 @@
   </datatable-title>
   
   <!-- Template pour l'affichage des fichiers : -->
-  <ng-template let-file="item">
+  <ng-template datatable-line let-file="item">
     <!-- Infos du fichier -->
     <td>
       <cell-content [content]="file.version?.filename" [link]="true" (click)="versionDetails(file)"></cell-content>

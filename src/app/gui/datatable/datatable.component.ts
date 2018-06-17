@@ -41,6 +41,17 @@ export class DatatableTitle { }
 export class DatatableHeader { }
 
 /**
+ * Template pour une ligne de contenu de la datatable. Utilisation :
+ *   <ng-template datatable-line let-personne="item">
+ *     <td>{{personne.nom}}</td>...<td>{{personne.adresse}}</td>
+ *   </ng-template>
+ */
+@Directive({
+  selector: '[datatable-line]'
+})
+export class DatatableLineTemplate { }
+
+/**
  * Permet d'ajouter une dernière rangée et son contenu à DatatableComponent
  */
 @Directive({
@@ -80,8 +91,8 @@ export class DatatableComponent<T, RestService> {
    * l'utilisateur du composant doit spécifier un template pour l'affichage des lignes de la datatable :
    * <ng-template><td>contenu_cell_1</td>...<td>...</td><ng-template>
    */
-  @ContentChild(TemplateRef)
-  private _content: TemplateRef<Element>;
+  @ContentChild(DatatableLineTemplate, {read: TemplateRef})
+  private _lineTemplate: DatatableLineTemplate;
 
   // Events :
   /** @event - click sur le bouton 'ajouter' */

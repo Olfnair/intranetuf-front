@@ -36,7 +36,7 @@
   </datatable-title>
 
   <!-- Template pour l'affichage d'une ligne de la datatable : -->
-  <ng-template let-user="item">   
+  <ng-template datatable-line let-user="item">   
     <!-- Infos sur l'utilisateur -->
     <td><cell-content [content]="user.login"></cell-content></td>
     <td><cell-content [content]="user.email"></cell-content></td>

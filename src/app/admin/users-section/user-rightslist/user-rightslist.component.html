@@ -36,7 +36,7 @@
   </datatable-title>
   
   <!-- template d'affichage pour une ligne : -->
-  <ng-template let-right="item" let-checked="checked">
+  <ng-template datatable-line let-right="item" let-checked="checked">
     <!-- Infos sur le projet -->
     <td><cell-content [content]="right.project.name"></cell-content></td>
     <td><cell-content [content]="right.project.active | boolToString"></cell-content></td>

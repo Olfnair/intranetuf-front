@@ -75,7 +75,7 @@
         </tr>
         
         <!-- Boucle sur les lignes de contenu : -->
-        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="content" let-index="index" let-event="even" let-odd="odd" let-last="last">
+        <ng-template *ngIf="loaded" ngFor let-item [ngForOf]="content" let-index="index" let-even="even" let-odd="odd" let-first="first" let-last="last">
           <tr [class.oddRow]="odd">           
             <!-- Colonne de sélection -->
             <td *ngIf="options.selectionCol" class="selectionCol">
@@ -87,12 +87,13 @@
             
             <!-- Template qui expose le contexte de la ligne au composant utlisateur -->
             <!-- Permet au composant utilisateur de spécifier l'affichage des lignes -->
-            <ng-container *ngTemplateOutlet="_content; context: {
+            <ng-container *ngTemplateOutlet="_lineTemplate; context: {
               item: item,
               checked: isItemChecked(item, index),
               index: index,
               even: even,
               odd: odd,
+              first: first,
               last: last
             }">
             </ng-container>

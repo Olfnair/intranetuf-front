@@ -10,6 +10,7 @@ export {
   DatatableComponent,
   DatatableTitle,
   DatatableHeader,
+  DatatableLineTemplate,
   DatatableFinalRow,
   DatatableFooter
 } from "./datatable.component";

@@ -22,7 +22,7 @@
   </datatable-title>
 
   <!-- Template pour l'affichage des checks : -->
-  <ng-template let-check="item">
+  <ng-template datatable-line let-check="item">
     <!-- Infos du check -->
     <td>
       <cell-content [content]="check.version?.filename" [link]="true" (click)="versionDetails(check.version)">

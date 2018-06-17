@@ -16,6 +16,7 @@ import {
   DatatableComponent,
   DatatableHeader,
   DatatableTitle,
+  DatatableLineTemplate,
   DatatableFinalRow,
   DatatableFooter
 } from './datatable';
@@ -33,7 +34,7 @@ import { UpDownComponent } from "./up-down";
   declarations: [ // tous les composants, pipes, directives du module
     CellContentComponent,
     ColumnHeaderComponent,
-    DatatableComponent, DatatableHeader, DatatableTitle, DatatableFinalRow, DatatableFooter,
+    DatatableComponent, DatatableHeader, DatatableTitle, DatatableLineTemplate, DatatableFinalRow, DatatableFooter,
     GuiCheckboxComponent,
     GuiFormComponent,
     GuiModalComponent,
@@ -59,7 +60,7 @@ import { UpDownComponent } from "./up-down";
   exports: [ // tous les composants, pipes, directives pour un module qui importe celui-ci
     CellContentComponent,
     ColumnHeaderComponent,
-    DatatableComponent, DatatableHeader, DatatableTitle, DatatableFinalRow, DatatableFooter,
+    DatatableComponent, DatatableHeader, DatatableTitle, DatatableLineTemplate, DatatableFinalRow, DatatableFooter,
     GuiCheckboxComponent,
     GuiFormComponent,
     GuiModalComponent,

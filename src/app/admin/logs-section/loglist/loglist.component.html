@@ -28,7 +28,7 @@
   </datatable-title>
 
   <!-- template d'affichage du contenu pour une ligne de la datatable : -->
-  <ng-template let-log="item">
+  <ng-template datatable-line let-log="item">
     <!-- contenu des logs -->
     <td><cell-content [content]="log.logdate | date:''"></cell-content></td>
     <td><cell-content [content]="log.author.login"></cell-content></td>

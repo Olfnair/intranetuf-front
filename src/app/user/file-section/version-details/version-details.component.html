@@ -61,7 +61,7 @@
           <h2>{{container.title}} <status-icon [status]="checksStatus(container)"></status-icon></h2>
         </datatable-title>
 
-        <ng-template let-check="item">     
+        <ng-template datatable-line let-check="item">     
           <!-- Infos sur le check -->
           <td><cell-content [content]="check.order_num + 1"></cell-content></td>
           <td><cell-content [content]="check.user.name"></cell-content></td>
@@ -106,7 +106,7 @@
           <h2>Autres Versions</h2>
         </datatable-title>
 
-        <ng-template let-version="item">
+        <ng-template datatable-line let-version="item">
           <!-- Infos sur la version -->
           <td><cell-content [content]="version.filename"></cell-content></td>
           <td><cell-content [content]="file.author?.firstname + ' ' + file.author?.name"></cell-content></td>

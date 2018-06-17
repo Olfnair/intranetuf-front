@@ -31,7 +31,7 @@
   </datatable-title>
 
   <!-- template d'affichage du contenu pour une ligne de la datatable : -->
-  <ng-template let-project="item">
+  <ng-template datatable-line let-project="item">
     <!-- infos sur le projet -->
     <td><cell-content [content]="project.name" [link]="true" (click)="filelist(project)"></cell-content></td>
     <td><cell-content [content]="project.active | boolToString"></cell-content></td>
